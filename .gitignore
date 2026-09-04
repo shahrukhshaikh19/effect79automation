@@ -50,7 +50,9 @@ tools/browser/screenshots/
 tools/browser/traces/
 tools/blender-mcp/.cache/
 
-# Local model/runtime artifacts
+# Local import/cache (Phase B transient)
+.tmp-import/
+
 *.gguf
 *.bin
 *.safetensors
