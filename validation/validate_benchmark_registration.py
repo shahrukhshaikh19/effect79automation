@@ -80,6 +80,13 @@ PF1_OWNED_CHANGE_PREFIXES = (
     "IMPLEMENTATION_CHECKLIST.md",
 )
 
+PF2_OWNED_CHANGE_PREFIXES = (
+    "validation/benchmark_execution/",
+    "validation/validate_benchmark_execution.py",
+    "validation/tests/benchmark/test_execution_adversarial.py",
+    "docs/PF2_BENCHMARK_EXECUTION_AUDIT.md",
+)
+
 FOUNDATION_COMPATIBILITY_PREFIXES = (
     "validation/validate_",
     "validation/certify_",
@@ -239,6 +246,13 @@ def validate_foundation_ready(errors: list[str]) -> None:
         fail(errors, "foundation tested_implementation_sha must remain e0bd72b (unchanged by PF-1)")
 
 
+def _pf2_active() -> bool:
+    from benchmark_scope import get_post_foundation_state
+
+    pf = get_post_foundation_state()
+    return pf.get("PF-2") in ("IN_PROGRESS", "COMPLETE")
+
+
 def validate_phase_state(errors: list[str]) -> None:
     phases = load_yaml(REPO / "registry" / "PHASES.yaml", errors)
     if not phases:
@@ -250,9 +264,15 @@ def validate_phase_state(errors: list[str]) -> None:
     pf1 = pf.get("PF-1")
     if pf1 not in ("IN_PROGRESS", "COMPLETE"):
         fail(errors, f"PF-1 must be IN_PROGRESS or COMPLETE, got {pf1}")
-    for other in ("PF-2", "PF-3", "PF-4", "PF-5"):
+    pf2 = pf.get("PF-2", "NOT_STARTED")
+    if pf1 == "COMPLETE":
+        if pf2 not in ("NOT_STARTED", "IN_PROGRESS", "COMPLETE"):
+            fail(errors, f"PF-2 execution state invalid: {pf2}")
+    elif pf2 != "NOT_STARTED":
+        fail(errors, "PF-2 must remain NOT_STARTED until PF-1 COMPLETE")
+    for other in ("PF-3", "PF-4", "PF-5"):
         if pf.get(other) != "NOT_STARTED":
-            fail(errors, f"{other} must remain NOT_STARTED during PF-1")
+            fail(errors, f"{other} must remain NOT_STARTED during PF-1/PF-2")
 
 
 def validate_registry_data(
@@ -264,8 +284,8 @@ def validate_registry_data(
 ) -> None:
     load_fn = load_file_from_commit if load_from_commit is None else load_from_commit
     find_fn = find_first_freeze_attestation_commit if find_first_attestation is None else find_first_attestation
-    if registry.get("phase") != "PF-1":
-        fail(errors, "BENCHMARKS.yaml phase must be PF-1")
+    if registry.get("phase") not in ("PF-1", "PF-2"):
+        fail(errors, "BENCHMARKS.yaml phase must be PF-1 or PF-2")
     benchmarks = registry.get("benchmarks")
     if benchmarks is None or not isinstance(benchmarks, list):
         fail(errors, "BENCHMARKS.yaml benchmarks must be a list")
@@ -656,7 +676,7 @@ def validate_registration_file(reg_path: Path, errors: list[str]) -> None:
     }:
         fail(errors, f"{bid}: invalid status {status}")
 
-    if status in ("EXECUTION_STARTED", "COMPLETED"):
+    if status in ("EXECUTION_STARTED", "COMPLETED") and not _pf2_active():
         fail(errors, f"{bid}: PF-2 execution status forbidden during PF-1")
 
     op = data.get("operator_input") or {}
@@ -664,10 +684,11 @@ def validate_registration_file(reg_path: Path, errors: list[str]) -> None:
         fail(errors, f"{bid}: operator_input.original_text must be preserved")
 
     exec_state = data.get("execution_state") or {}
-    if exec_state.get("benchmark_result") not in (None, "NOT_EXECUTED"):
-        fail(errors, f"{bid}: benchmark_result must be NOT_EXECUTED before execution")
-    if exec_state.get("benchmark_score") not in (None, "null"):
-        fail(errors, f"{bid}: benchmark_score must be null before execution")
+    if not _pf2_active():
+        if exec_state.get("benchmark_result") not in (None, "NOT_EXECUTED"):
+            fail(errors, f"{bid}: benchmark_result must be NOT_EXECUTED before execution")
+        if exec_state.get("benchmark_score") not in (None, "null"):
+            fail(errors, f"{bid}: benchmark_score must be null before execution")
 
     _validate_executable_contract_fields(data, str(bid), errors)
 
@@ -762,6 +783,8 @@ def validate_benchmark_directories(errors: list[str]) -> None:
 
 
 def validate_no_execution_artifacts(errors: list[str]) -> None:
+    if _pf2_active():
+        return
     from benchmark_scope import is_forbidden_execution_artifact
 
     for path in (REPO / "benchmarks").rglob("*"):
@@ -794,6 +817,11 @@ def _is_forbidden_foundation_change(path: str) -> bool:
     return False
 
 
+def _is_allowed_pf2_owned_change(path: str) -> bool:
+    norm = _normalize_changed_path(path)
+    return any(norm == prefix or norm.startswith(prefix) for prefix in PF2_OWNED_CHANGE_PREFIXES)
+
+
 def classify_changed_paths(
     changed_paths: list[str],
     lock_paths: set[str] | None = None,
@@ -807,6 +835,8 @@ def classify_changed_paths(
         if _is_forbidden_foundation_change(path):
             violations.append(f"forbidden foundation path changed: {path}")
         elif _is_allowed_pf1_owned_change(path):
+            continue
+        elif _pf2_active() and _is_allowed_pf2_owned_change(path):
             continue
         elif _is_locked_compatibility_change(path, locked):
             continue
@@ -877,7 +907,14 @@ def main() -> int:
         print("VALIDATION: PASSED (framework only — BENCHMARK_INPUT_REQUIRED)")
     else:
         print(f"VALIDATION: PASSED ({benchmark_count} benchmark(s) registered)")
-    print("PF-2 remains NOT_STARTED.")
+    pf = load_yaml(REPO / "registry" / "PHASES.yaml", errors) or {}
+    pf2 = (pf.get("execution_state") or {}).get("post_foundation", {}).get("PF-2", "NOT_STARTED")
+    if pf2 == "NOT_STARTED":
+        print("PF-2 remains NOT_STARTED.")
+    elif pf2 == "IN_PROGRESS":
+        print("PF-2 IN_PROGRESS.")
+    else:
+        print(f"PF-2 {pf2}.")
     return 0
 
 

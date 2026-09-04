@@ -19,6 +19,9 @@ BENCHMARKS_INFRA_PREFIXES = (
 
 BENCHMARKS_REGISTRATION_PREFIX = "benchmarks/BM-"
 
+# PF-2: canonical BM-001 execution subtree (implementation + evidence + run records)
+BENCHMARKS_EXECUTION_PREFIX = "benchmarks/BM-001/execution/"
+
 EXECUTION_ARTIFACT_SUFFIXES = frozenset(
     {".html", ".css", ".js", ".jsx", ".tsx", ".vue", ".glb", ".gltf", ".blend", ".png", ".jpg", ".jpeg", ".webp"}
 )
@@ -28,11 +31,17 @@ def rel_path(path: Path) -> str:
     return str(path.relative_to(REPO)).replace("\\", "/")
 
 
+def is_pf2_execution_path(path: Path) -> bool:
+    return rel_path(path).startswith(BENCHMARKS_EXECUTION_PREFIX)
+
+
 def is_allowed_benchmarks_path(path: Path) -> bool:
     rel = rel_path(path)
     if rel in BENCHMARKS_INFRA_FILES:
         return True
     if any(rel.startswith(prefix) for prefix in BENCHMARKS_INFRA_PREFIXES):
+        return True
+    if is_pf2_execution_path(path):
         return True
     if rel.startswith(BENCHMARKS_REGISTRATION_PREFIX):
         allowed_names = {
@@ -52,11 +61,33 @@ def is_forbidden_execution_artifact(path: Path) -> bool:
     rel = rel_path(path)
     if not rel.startswith("benchmarks/"):
         return False
+    if is_pf2_execution_path(path):
+        return False
     if is_allowed_benchmarks_path(path):
         if path.suffix.lower() in EXECUTION_ARTIFACT_SUFFIXES:
             return True
         return False
     return path.is_file() and path.stat().st_size > 0
+
+
+def get_post_foundation_state() -> dict[str, str]:
+    """Read execution_state.post_foundation from registry/PHASES.yaml."""
+    phases_path = REPO / "registry" / "PHASES.yaml"
+    if not phases_path.is_file():
+        return {}
+    try:
+        import yaml
+
+        phases = yaml.safe_load(phases_path.read_text(encoding="utf-8")) or {}
+    except Exception:
+        return {}
+    pf = phases.get("execution_state", {}).get("post_foundation", {})
+    return pf if isinstance(pf, dict) else {}
+
+
+def pf2_active() -> bool:
+    pf = get_post_foundation_state()
+    return pf.get("PF-2") in ("IN_PROGRESS", "COMPLETE")
 
 
 def scan_benchmarks_and_projects(errors: list[str], fail_fn) -> None:

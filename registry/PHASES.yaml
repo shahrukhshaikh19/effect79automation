@@ -69,7 +69,7 @@ execution_state:
     G: COMPLETE
   post_foundation:
     PF-1: COMPLETE
-    PF-2: NOT_STARTED
+    PF-2: COMPLETE
     PF-3: NOT_STARTED
     PF-4: NOT_STARTED
     PF-5: NOT_STARTED

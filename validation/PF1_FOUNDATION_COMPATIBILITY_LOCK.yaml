@@ -11,9 +11,9 @@ files:
   validation/validate_foundation.py:
     sha256: cae0b5e7ac2a73c3be452561c688c08262785345b60ee0ef37c14cfff337d1b0
   validation/validate_cross_phase_consistency.py:
-    sha256: 1e57c09c8049ebcc136ca1ba5abd1fa645dc0b5c9e60540f51d3960a55ea092e
+    sha256: d6206a1eeee6c27b73bcb2c12952e8f2825712c81ef92cae0aa332dd7722d720
   validation/validate_runtime_integration.py:
-    sha256: 684749cb39fe6204a5afd2d577ed525330470b8ba73bf1cc59892b113dfede8e
+    sha256: 093d74852416f4c6b36ffc860a59735aa672af7c41f1c3dc9259350af4de7e68
   validation/validate_external_skills.py:
     sha256: 3f9faada199cb187850d7afeef378febe6de339b654aca2956734d26fbe30c9b
   validation/validate_proprietary_skills.py:

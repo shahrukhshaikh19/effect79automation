@@ -234,9 +234,17 @@ def validate_phase_map(errors: list[str]) -> None:
         pf1 = pf_state.get("PF-1")
         if pf1 not in ("NOT_STARTED", "IN_PROGRESS", "COMPLETE"):
             fail(errors, f"PF-1 execution state invalid: {pf1}")
-        for pf_id in ("PF-2", "PF-3", "PF-4", "PF-5"):
+        pf2 = pf_state.get("PF-2", "NOT_STARTED")
+        if pf1 == "COMPLETE" and pf2 not in ("NOT_STARTED", "IN_PROGRESS", "COMPLETE"):
+            fail(errors, f"PF-2 execution state invalid: {pf2}")
+        for pf_id in ("PF-3", "PF-4", "PF-5"):
             if pf_state.get(pf_id) != "NOT_STARTED":
-                fail(errors, f"{pf_id} must remain NOT_STARTED during PF-1")
+                fail(errors, f"{pf_id} must remain NOT_STARTED during PF-1/PF-2")
+        if pf1 != "COMPLETE" and pf2 != "NOT_STARTED":
+            fail(errors, "PF-2 must remain NOT_STARTED until PF-1 COMPLETE")
+        if pf2 in ("IN_PROGRESS", "COMPLETE"):
+            if not (REPO / "validation" / "validate_benchmark_execution.py").is_file():
+                fail(errors, "PF-2 requires validation/validate_benchmark_execution.py")
         if pf1 in ("IN_PROGRESS", "COMPLETE"):
             if not (REPO / "registry" / "BENCHMARKS.yaml").is_file():
                 fail(errors, "PF-1 requires registry/BENCHMARKS.yaml")

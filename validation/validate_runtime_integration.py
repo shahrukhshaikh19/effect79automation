@@ -396,8 +396,20 @@ def validate_phase_boundaries(errors: list[str]) -> None:
             fail(errors, f"foundation_ready certification_result missing: {result_ref}")
     pf_state = phases.get("execution_state", {}).get("post_foundation")
     if isinstance(pf_state, dict):
-        if pf_state.get("PF-2") != "NOT_STARTED":
-            fail(errors, "PF-2 must remain NOT_STARTED")
+        pf2 = pf_state.get("PF-2", "NOT_STARTED")
+        if pf_state.get("PF-1") != "COMPLETE":
+            if pf2 != "NOT_STARTED":
+                fail(errors, "PF-2 must remain NOT_STARTED until PF-1 COMPLETE")
+        elif pf2 not in ("NOT_STARTED", "IN_PROGRESS", "COMPLETE"):
+            fail(errors, f"PF-2 execution state invalid: {pf2}")
+        if pf2 in ("IN_PROGRESS", "COMPLETE"):
+            exec_validator = REPO / "validation" / "validate_benchmark_execution.py"
+            if not exec_validator.is_file():
+                fail(errors, "PF-2 requires validation/validate_benchmark_execution.py")
+        if pf2 == "COMPLETE":
+            report = REPO / "benchmarks" / "BM-001" / "execution" / "run" / "EXECUTION_REPORT.yaml"
+            if not report.is_file():
+                fail(errors, "PF-2 COMPLETE requires BM-001 EXECUTION_REPORT.yaml")
     elif pf_state != "NOT_STARTED":
         fail(errors, "post_foundation must remain NOT_STARTED")
     ledger = REPO / "docs" / "PROGRESS_LEDGER.md"

@@ -209,10 +209,13 @@ class BenchmarkRegistrationAdversarialTests(unittest.TestCase):
         self.assertTrue(any("hash mismatch" in e or "revision.version" in e for e in errors))
 
     def test_pf1_a03_score_before_execution(self) -> None:
+        from unittest.mock import patch
+
         reg = _minimal_registration(
             execution_state={"benchmark_score": 95, "benchmark_result": "NOT_EXECUTED"}
         )
-        errors = self._validate(reg)
+        with patch("validation.validate_benchmark_registration._pf2_active", return_value=False):
+            errors = self._validate(reg)
         self.assertTrue(errors)
 
     def test_pf1_a04_manual_skill_activation(self) -> None:
@@ -277,8 +280,11 @@ class BenchmarkRegistrationAdversarialTests(unittest.TestCase):
         self.assertTrue(errors)
 
     def test_pf1_a09_pf2_started_forbidden(self) -> None:
+        from unittest.mock import patch
+
         reg = _minimal_registration(status="EXECUTION_STARTED")
-        errors = self._validate(reg)
+        with patch("validation.validate_benchmark_registration._pf2_active", return_value=False):
+            errors = self._validate(reg)
         self.assertTrue(any("PF-2 execution" in e for e in errors))
 
     def test_pf1_a10_foundation_ready_required(self) -> None:
