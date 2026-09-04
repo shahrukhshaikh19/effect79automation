@@ -95,9 +95,9 @@ evidence_plan:
     required_when: meaningful_3d_used_in_deliverable
     capture_stage: post_execution
     acceptance_use: evaluate_3d_quality_when_meaningful_3d_present
-    evaluation:
-      critic_skills_via_routing:
-        - acos-3d-critic
+    evaluation_requirements:
+      independent_3d_critique: required_when_applicable
+      critic_selection: normal_acos_routing
       quality_gate: required_when_applicable
     not_required_when: no_meaningful_3d_in_deliverable
 

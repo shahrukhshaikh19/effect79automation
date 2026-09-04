@@ -267,7 +267,7 @@ acceptance_contract:
       applicable_when: meaningful_3d_used_in_deliverable
       activation_criteria:
         meaningful_3d_used_in_deliverable:
-          definition: 'Deliverable includes material 3D content (WebGL, Three.js, shaders, or Blender-sourced assets) that meaningfully contributes to the experience — not decorative CSS-only pseudo-3D, unused assets, or 3D forced without creative justification.
+          definition: 'Deliverable materially implements a three-dimensional scene, object, or spatial experience that meaningfully contributes to the benchmark — e.g. navigable 3D space, dimensional product/object presentation, or spatial interaction. WebGL, shaders, or Three.js alone do NOT automatically qualify; they count only when used to implement such a three-dimensional scene/object/spatial experience. Excludes decorative CSS-only pseudo-3D, shader-only effects without dimensional spatial content, unused assets, or 3D forced without creative justification.
 
             '
           determination: post_execution_evidence_and_routing_provenance_review
@@ -280,9 +280,9 @@ acceptance_contract:
       - E-011
       evidence_required: []
       evaluator_type: human
-      evaluation_via_routing:
-        critic_skills:
-        - acos-3d-critic
+      evaluation_requirements:
+        independent_3d_critique: required_when_applicable
+        critic_selection: normal_acos_routing
         quality_gate: required_when_applicable
       not_applicable_when: no_meaningful_3d_in_deliverable
       not_applicable_reason: three_d_optional_excluded_from_scoring_when_not_used
@@ -295,7 +295,7 @@ acceptance_contract:
       evidence_required:
       - E-007
       evaluator_type: human
-  hard_failures: &id001
+  hard_failures:
   - copies_existing_website
   - recreates_supplied_commercial_design
   - imitates_recognizable_brand
@@ -358,9 +358,9 @@ acceptance_contract:
   revision:
     version: '1.1'
     parent_version: '1.0'
-    reason: conditional_3d_quality_evaluation_and_frozen_weight_profiles
+    reason: remove_hardcoded_skill_ids_from_3d_evaluation_semantics
     changed_by: system_integrity_correction
-    changed_at: '2026-09-04T21:00:00Z'
+    changed_at: '2026-09-04T21:15:00Z'
 evidence_plan:
 - evidence_id: E-001
   dimension: responsive
@@ -444,12 +444,32 @@ evidence_plan:
   required_when: meaningful_3d_used_in_deliverable
   capture_stage: post_execution
   acceptance_use: evaluate_3d_quality_when_meaningful_3d_present
-  evaluation:
-    critic_skills_via_routing:
-    - acos-3d-critic
+  evaluation_requirements:
+    independent_3d_critique: required_when_applicable
+    critic_selection: normal_acos_routing
     quality_gate: required_when_applicable
   not_required_when: no_meaningful_3d_in_deliverable
-hard_failures: *id001
+hard_failures:
+- copies_existing_website
+- recreates_supplied_commercial_design
+- imitates_recognizable_brand
+- generic_saas_landing_template
+- predictable_gradient_heavy_ai_aesthetics
+- arbitrary_glassmorphism
+- excessive_glow_without_purpose
+- random_floating_cards
+- meaningless_decorative_animation
+- forced_unjustified_3d
+- poor_3d_quality_when_meaningful_3d_used
+- usability_sacrificed_for_effects
+- unjustified_performance_sacrifice
+- desktop_only_designed_experience
+- placeholder_quality_visual_assets
+- not_a_functional_web_experience
+- obvious_layout_breakage
+- obvious_console_runtime_errors
+- broken_navigation_or_interaction
+- benchmark_aesthetic_cross_system_memory_promotion_forbidden
 capability_expectations:
   visual_work: true
   three_d_possible: true
@@ -507,7 +527,7 @@ execution_state:
 revision:
   version: '1.1'
   parent_version: '1.0'
-  reason: conditional_3d_quality_evaluation_and_frozen_weight_profiles_pending_operator_confirmation
+  reason: remove_hardcoded_skill_ids_from_3d_evaluation_semantics_pending_operator_confirmation
   changed_by: system_integrity_correction
   changed_at: '2026-09-04T20:45:00Z'
 global_memory_promotion: false
