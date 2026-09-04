@@ -1,0 +1,92 @@
+schema_version: "1.2"
+authority: core/WORKFLOW.md
+description: Normalized task intake contract for Phase F runtime.
+
+required_fields:
+  - task_id
+  - request
+  - normalized_goal
+  - task_signals
+
+fields:
+  task_id:
+    type: string
+    format: "task-{uuid-or-sequence}"
+  request:
+    type: string
+    description: Raw user/caller request (preserved, not rewritten as fact).
+  normalized_goal:
+    type: string
+    description: Domain-neutral normalized objective.
+  deliverables:
+    type: array
+    items: string
+  constraints:
+    type: array
+    items: string
+  available_inputs:
+    type: object
+    fields:
+      user_stated_facts: {type: array}
+      runtime_observed_facts: {type: array}
+      retrieved_memory: {type: array}
+      inferred_assumptions: {type: array}
+      unknowns: {type: array}
+  reference_assets:
+    type: array
+    items:
+      ref: string
+      type: string
+  runtime_capabilities:
+    type: object
+    description: Truthful tool family states from registry/runtime probes.
+    fields:
+      browser: {type: enum, values: [AVAILABLE, RESTRICTED, BLOCKED, UNAVAILABLE, UNKNOWN]}
+      blender: {type: enum, values: [AVAILABLE, RESTRICTED, BLOCKED, UNAVAILABLE, UNKNOWN]}
+      git: {type: enum, values: [AVAILABLE, RESTRICTED, BLOCKED, UNAVAILABLE, UNKNOWN]}
+      shell: {type: enum, values: [AVAILABLE, RESTRICTED, BLOCKED, UNAVAILABLE, UNKNOWN]}
+      filesystem: {type: enum, values: [AVAILABLE, RESTRICTED, BLOCKED, UNAVAILABLE, UNKNOWN]}
+  prohibited_assumptions:
+    type: array
+    items: string
+  risk_flags:
+    type: array
+    items: string
+  project_scope:
+    type: object
+    fields:
+      project_id: {type: string, required: false}
+      bounded: {type: boolean}
+  prior_evidence_refs:
+    type: array
+    items: string
+  prior_memory_refs:
+    type: array
+    items: string
+  task_signals:
+    type: object
+    description: Domain-neutral capability signals — router input, not invented defaults.
+    fields:
+      deliverable_profile:
+        type: enum
+        values: [standard_application, visual_experience, interactive_3d, reference_reconstruction, authored_3d_asset]
+      requires_creative_direction: {type: boolean}
+      requires_visual_output: {type: boolean}
+      requires_3d: {type: boolean}
+      requires_motion: {type: boolean}
+      requires_responsive: {type: boolean}
+      requires_accessibility: {type: boolean}
+      requires_frontend: {type: boolean}
+      requires_reference_analysis: {type: boolean}
+      reconstruction_path:
+        type: enum
+        values: [procedural_browser, blender_authoring, none]
+      license_review_acknowledged: {type: boolean, default: false}
+  license_overrides:
+    type: object
+    description: Explicit acknowledgments only — never silent license resolution.
+
+provenance_rules:
+  - user_stated_facts must not be silently upgraded to runtime_observed_facts
+  - inferred_assumptions must remain labeled assumptions
+  - unknowns must remain unknown

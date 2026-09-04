@@ -1,0 +1,41 @@
+schema_version: "1.2"
+authority: core/QUALITY_GATES.md
+description: Defect correction routing with bounded retry budget.
+
+required_fields:
+  - correction_id
+  - task_id
+  - source_gate_or_critic
+  - defect_ids
+  - severity
+  - responsible_skill_ids
+  - retry_number
+  - retry_budget
+  - status
+
+fields:
+  correction_id: {type: string}
+  task_id: {type: string}
+  source_gate_or_critic: {type: string}
+  defect_ids: {type: array, items: string}
+  severity:
+    type: enum
+    values: [critical, major, minor]
+  responsible_skill_ids:
+    type: array
+    items: string
+    note: Smallest responsible upstream skill/stage.
+  artifact_refs: {type: array}
+  evidence_refs: {type: array}
+  required_changes: {type: array, items: string}
+  preserve_constraints: {type: array, items: string}
+  retry_number: {type: integer, minimum: 1}
+  retry_budget: {type: integer, minimum: 0}
+  status:
+    type: enum
+    values: [REQUESTED, IN_PROGRESS, COMPLETED, BUDGET_EXHAUSTED, HUMAN_REVIEW_REQUIRED, BLOCKED]
+
+budget_policy:
+  authority: registry/RUNTIME_POLICY.yaml
+  default_retry_budget: 2
+  exhausted_escalation: HUMAN_REVIEW_REQUIRED

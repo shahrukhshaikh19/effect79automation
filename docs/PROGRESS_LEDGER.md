@@ -1,7 +1,30 @@
 # ACOS v1.2 — Implementation Progress Ledger
 
 **Last updated:** 2026-09-04  
-**Current phase:** E — Thin platform/model adapters (COMPLETE)
+**Current phase:** F — Routing + memory + quality integration (COMPLETE)
+
+---
+
+## Phase F — Task log
+
+| Task | Status | Evidence |
+|---|---|---|
+| F0 — A–E precondition | COMPLETE | All validators PASSED before implementation |
+| F1 — Runtime schemas | COMPLETE | `runtime/schemas/*.schema.yaml` (8 contracts) |
+| F2 — Routing engine | COMPLETE | `runtime/routing/engine.py` owns `activated_skill_ids` |
+| F3 — Intake/handoff/evidence | COMPLETE | `runtime/intake/`, `handoff/`, `evidence/` |
+| F4 — Quality + critics | COMPLETE | `runtime/quality/gate.py` HR/EB precedence |
+| F5 — Correction budget | COMPLETE | `runtime/correction/budget.py` bounded retries |
+| F6 — Memory integration | COMPLETE | `runtime/memory/records.py` promotion/retrieval/conflicts |
+| F7 — Execution state/resume | COMPLETE | `runtime/state/execution.py` file-backed persistence |
+| F8 — Adapter packets | COMPLETE | `runtime/adapter/packet.py` phase_f_router source |
+| F9 — Policy registries | COMPLETE | `registry/ROUTING_POLICY.yaml`, `registry/RUNTIME_POLICY.yaml` |
+| F10 — Runtime validator | COMPLETE | `validation/validate_runtime_integration.py` PASSED |
+| F11 — Scenario tests T1–T18 | COMPLETE | `validation/tests/runtime/test_scenarios.py` (20 tests) |
+| F12 — Smoke test | COMPLETE | `runtime/smoke.py` executable flow |
+| F13 — Audit documentation | COMPLETE | `docs/PHASE_F_RUNTIME_INTEGRATION_AUDIT.md` |
+
+**FOUNDATION_READY:** not declared (Phase G required)
 
 ---
 
@@ -73,7 +96,7 @@ See `docs/FOUNDATION_CERTIFICATION_HARDENING.md` for full audit trail.
 | C | Implement 14 proprietary ACOS skills | COMPLETE |
 | D | Production tool layer | COMPLETE |
 | E | Thin platform/model adapters | COMPLETE |
-| F | Routing + memory + quality integration | NOT STARTED |
+| F | Routing + memory + quality integration | COMPLETE |
 | G | Foundation validation / certification | NOT STARTED |
 
 **Post-foundation (PF-*):** NOT STARTED — see `registry/PHASES.yaml`

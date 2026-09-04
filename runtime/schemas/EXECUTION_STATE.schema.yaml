@@ -1,0 +1,63 @@
+schema_version: "1.2"
+authority: core/WORKFLOW.md
+description: Auditable execution state with append-only event semantics.
+
+required_fields:
+  - task_id
+  - current_stage
+  - completed_stages
+  - active_skill_ids
+  - gate_states
+  - status
+
+fields:
+  task_id: {type: string}
+  current_stage: {type: string}
+  completed_stages: {type: array, items: string}
+  active_skill_ids: {type: array, items: string}
+  gate_states:
+    type: object
+    fields:
+      design_gate: {type: enum, values: [NOT_APPLICABLE, PENDING, APPROVED, REJECTED, BLOCKED_INSUFFICIENT_EVIDENCE]}
+      quality_gate: {type: enum, values: [NOT_EVALUATED, APPROVED, REJECTED, BLOCKED_INSUFFICIENT_EVIDENCE]}
+  critic_states:
+    type: object
+    additional_properties:
+      type: enum
+      values: [not_run, pass, fail, blocked_insufficient_evidence]
+  correction_attempts:
+    type: array
+    items:
+      correction_id: string
+      retry_number: integer
+      status: string
+  memory_candidates:
+    type: array
+    items: string
+  evidence_refs: {type: array, items: string}
+  blocked_reasons: {type: array, items: string}
+  events:
+    type: array
+    items:
+      event_type: string
+      timestamp: string
+      payload_ref: string
+    note: Append-only — do not silently mutate away audit history.
+  status:
+    type: enum
+    values: [ACTIVE, BLOCKED, COMPLETED, HUMAN_REVIEW_REQUIRED]
+
+event_types:
+  - TASK_NORMALIZED
+  - ROUTING_CREATED
+  - SKILL_ACTIVATED
+  - HANDOFF_CREATED
+  - EVIDENCE_REGISTERED
+  - CRITIC_COMPLETED
+  - GATE_BLOCKED
+  - GATE_REJECTED
+  - CORRECTION_REQUESTED
+  - CORRECTION_COMPLETED
+  - GATE_APPROVED
+  - MEMORY_CANDIDATE_CREATED
+  - EXECUTION_RESUMED

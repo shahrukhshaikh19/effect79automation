@@ -77,21 +77,25 @@ Skills:
 - [x] migration path documented — canonical ACOS unchanged if platform removed
 - [x] `validation/validate_adapters.py` PASSED
 
-## F — Routing + memory + quality integration (NOT STARTED)
-- [ ] knowledge memory runtime
-- [ ] taste memory runtime
-- [ ] projects memory runtime
-- [ ] failures memory runtime
-- [ ] successes memory runtime
-- [ ] model-compatibility memory runtime
-- [ ] promotion lifecycle implemented
-- [ ] scoped retrieval strategy
-- [ ] standard application task does not activate 3D unnecessarily
-- [ ] interactive 3D task activates relevant route
-- [ ] reference-image procedural object route can select img2threejs
-- [ ] high-fidelity authored 3D route can select Blender
-- [ ] active skill set remains scoped
-- [ ] defects can route back to responsible skill
+## F — Routing + memory + quality integration
+- [x] knowledge memory runtime
+- [x] taste memory runtime
+- [x] projects memory runtime
+- [x] failures memory runtime
+- [x] successes memory runtime
+- [x] model-compatibility memory runtime
+- [x] promotion lifecycle implemented
+- [x] scoped retrieval strategy
+- [x] standard application task does not activate 3D unnecessarily
+- [x] interactive 3D task activates relevant route
+- [x] reference-image procedural object route can select img2threejs
+- [x] high-fidelity authored 3D route can select Blender
+- [x] active skill set remains scoped
+- [x] defects can route back to responsible skill
+- [x] `runtime/` integration modules + schemas
+- [x] `registry/ROUTING_POLICY.yaml` + `registry/RUNTIME_POLICY.yaml`
+- [x] `validation/validate_runtime_integration.py` PASSED
+- [x] `validation/tests/runtime/test_scenarios.py` T1–T18 PASSED
 
 ## G — Foundation validation / certification (NOT STARTED)
 - [ ] integrated foundation validation pass

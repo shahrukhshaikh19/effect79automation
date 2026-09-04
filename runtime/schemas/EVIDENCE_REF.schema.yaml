@@ -1,0 +1,39 @@
+schema_version: "1.2"
+authority: core/QUALITY_GATES.md
+description: Evidence reference with provenance — claim is not evidence.
+
+required_fields:
+  - evidence_id
+  - type
+  - producer
+  - artifact_ref
+  - source
+  - timestamp
+  - status
+
+fields:
+  evidence_id: {type: string}
+  type:
+    type: enum
+    values: [browser_capture, render, console_log, test_result, tool_health, diff, critic_report, gate_report, human_decision, measurement, runtime_inspection]
+  producer: {type: string, description: Skill, tool, or human role that produced artifact}
+  artifact_ref: {type: string, description: URI or path reference — not embedded binary}
+  source: {type: string, description: Provenance chain}
+  timestamp: {type: string, format: ISO-8601}
+  runtime_context: {type: object}
+  integrity:
+    type: object
+    fields:
+      hash: {type: string, required: false}
+      verified: {type: boolean}
+  status:
+    type: enum
+    values: [registered, verified, stale, invalid, rejected]
+
+forbidden_as_evidence:
+  - "looks good"
+  - "tested"
+  - "passed"
+  - unverified agent claims
+  - compilation success alone for visual quality
+  - screenshot alone for functional correctness

@@ -1,0 +1,38 @@
+schema_version: "1.2"
+authority: core/WORKFLOW.md
+description: Stage handoff contract preserving constraints and evidence.
+
+required_fields:
+  - handoff_id
+  - task_id
+  - from_stage
+  - to_stage
+  - producer_skill_id
+  - consumer_skill_ids
+  - artifact_refs
+  - evidence_refs
+  - constraints_preserved
+  - status
+
+fields:
+  handoff_id: {type: string}
+  task_id: {type: string}
+  from_stage: {type: string}
+  to_stage: {type: string}
+  producer_skill_id: {type: string}
+  consumer_skill_ids: {type: array, items: string}
+  artifact_refs: {type: array, items: string}
+  evidence_refs:
+    type: array
+    items: string
+    note: Claim-only strings are forbidden — must reference registered evidence.
+  decisions: {type: object}
+  open_questions: {type: array, items: string}
+  known_defects: {type: array, items: string}
+  constraints_preserved:
+    type: array
+    items: string
+    note: Downstream must not guess upstream decisions.
+  status:
+    type: enum
+    values: [PENDING, ACCEPTED, REJECTED, BLOCKED]

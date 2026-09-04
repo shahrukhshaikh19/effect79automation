@@ -1,0 +1,42 @@
+schema_version: "1.2"
+authority: registry/ADAPTERS.yaml
+description: Phase F adapter-ready task packet — extends adapters/local/TASK_PACKET.schema.yaml semantics.
+
+required_fields:
+  - acos_version
+  - task_id
+  - routing
+  - allowed_tools
+  - evidence_requirements
+
+fields:
+  acos_version: {type: string, value: "1.2"}
+  task_id: {type: string}
+  adapter_target: {type: enum, values: [claude, cursor, codex, local]}
+  routing:
+    source: phase_f_router
+    routing_id: string
+    activated_skill_ids: array
+    routing_evidence_ref: string
+    status: enum [ok, routing_required, insufficient_routing_input, blocked_capability]
+    decision_reasons: array
+  activated_skills:
+    type: array
+    items:
+      skill_id: string
+      skill_path: string
+      load_level: enum [L2]
+      activation_reason: string
+  allowed_tools:
+    type: array
+    items:
+      family: string
+      status: enum [AVAILABLE, RESTRICTED, BLOCKED, UNAVAILABLE, UNKNOWN]
+  memory_refs: {type: array}
+  evidence_requirements: {type: array}
+  stage: {type: object}
+  output_contract: {type: object}
+
+ownership:
+  routing_supplied_by: phase_f_router
+  adapter_must_not: classify_or_reroute

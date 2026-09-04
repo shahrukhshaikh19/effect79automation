@@ -14,7 +14,7 @@ except ImportError:
     yaml = None  # type: ignore[assignment]
 
 REPO = Path(__file__).resolve().parent.parent
-PHASE = "A-D certification"
+PHASE = "A-F certification"
 
 GATE_STATUSES = {
     "APPROVED",
@@ -208,17 +208,35 @@ def validate_phase_map(errors: list[str]) -> None:
         if foundation_state.get(letter) != "COMPLETE":
             fail(errors, f"PHASES.yaml execution_state.{letter} must be COMPLETE")
     e_state = foundation_state.get("E")
+    f_state = foundation_state.get("F")
+    g_state = foundation_state.get("G")
     if e_state not in ("COMPLETE", "NOT_STARTED"):
         fail(errors, f"PHASES.yaml execution_state.E invalid: {e_state}")
-    for letter in ("F", "G"):
-        if foundation_state.get(letter) != "NOT_STARTED":
-            fail(errors, f"PHASES.yaml execution_state.{letter} must be NOT_STARTED")
+    if f_state not in ("COMPLETE", "NOT_STARTED"):
+        fail(errors, f"PHASES.yaml execution_state.F invalid: {f_state}")
+    if g_state != "NOT_STARTED":
+        fail(errors, "PHASES.yaml execution_state.G must be NOT_STARTED")
+    if f_state == "NOT_STARTED":
+        if foundation_state.get("F") != "NOT_STARTED":
+            fail(errors, "PHASES.yaml execution_state.F must be NOT_STARTED before Phase F")
+    elif f_state == "COMPLETE":
+        if e_state != "COMPLETE":
+            fail(errors, "Phase F complete requires Phase E COMPLETE")
     if exec_state.get("post_foundation") != "NOT_STARTED":
         fail(errors, "PHASES.yaml post_foundation must be NOT_STARTED")
 
     if e_state == "COMPLETE":
         if not (REPO / "registry" / "ADAPTERS.yaml").is_file():
             fail(errors, "Phase E complete requires registry/ADAPTERS.yaml")
+
+    if f_state == "COMPLETE":
+        runtime = REPO / "runtime"
+        if not runtime.is_dir():
+            fail(errors, "Phase F complete requires runtime/ directory")
+        if not (REPO / "validation" / "validate_runtime_integration.py").is_file():
+            fail(errors, "Phase F complete requires validate_runtime_integration.py")
+        if (REPO / "runtime" / "orchestrator.py").is_file():
+            fail(errors, "Forbidden runtime/orchestrator.py monolith")
 
     checklist = load_text(REPO / "IMPLEMENTATION_CHECKLIST.md")
     ledger = load_text(REPO / "docs" / "PROGRESS_LEDGER.md")
@@ -268,11 +286,18 @@ def validate_phase_map(errors: list[str]) -> None:
     else:
         if "[x]" in e_section[:600]:
             fail(errors, "IMPLEMENTATION_CHECKLIST must not mark Phase E complete before execution_state.E is COMPLETE")
-    for section_marker in ("## F ", "## G "):
-        if section_marker in checklist:
-            section = checklist.split(section_marker)[1].split("##")[0]
-            if "[x]" in section[:800]:
-                fail(errors, f"IMPLEMENTATION_CHECKLIST must not mark {section_marker.strip()} complete")
+    f_section = checklist.split("## F")[1].split("## G")[0] if "## F" in checklist else ""
+    if f_state == "COMPLETE":
+        if f_section.count("- [x]") < 5:
+            fail(errors, "IMPLEMENTATION_CHECKLIST Phase F must reflect completion when F is COMPLETE")
+        if "NOT STARTED" in f_section[:400].upper():
+            fail(errors, "IMPLEMENTATION_CHECKLIST Phase F must not say NOT STARTED when F is COMPLETE")
+    else:
+        if "[x]" in f_section[:800]:
+            fail(errors, "IMPLEMENTATION_CHECKLIST must not mark Phase F complete before execution_state.F is COMPLETE")
+    g_section = checklist.split("## G")[1].split("## POST")[0] if "## G" in checklist else ""
+    if "[x]" in g_section[:800]:
+        fail(errors, "IMPLEMENTATION_CHECKLIST must not mark Phase G complete")
 
 
 def validate_blender_documentation(errors: list[str]) -> None:
@@ -420,6 +445,30 @@ def _phase_e_complete() -> bool:
     return foundation.get("E") == "COMPLETE"
 
 
+def _phase_f_complete() -> bool:
+    path = REPO / "registry" / "PHASES.yaml"
+    if not path.is_file() or yaml is None:
+        return False
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        return False
+    exec_state = data.get("execution_state", {})
+    foundation = exec_state.get("foundation", {}) if isinstance(exec_state, dict) else {}
+    return foundation.get("F") == "COMPLETE"
+
+
+def validate_phase_f_boundaries(errors: list[str]) -> None:
+    """Phase F runtime must not contaminate G/PF or declare FOUNDATION_READY."""
+    if not _phase_f_complete():
+        return
+    runtime_py = list((REPO / "runtime").rglob("*.py"))
+    combined = "\n".join(load_text(p) for p in runtime_py if p.is_file())
+    if re.search(r"FOUNDATION_READY\s*=\s*true", combined, re.I):
+        fail(errors, "Phase F runtime must not declare FOUNDATION_READY true")
+    if "benchmark_registration" in combined.lower() and "pf-1" in combined.lower():
+        fail(errors, "Phase F runtime must not start PF benchmark work")
+
+
 def validate_adapter_routing_contamination(errors: list[str]) -> None:
     """Phase E adapters must not own routing classification/selection."""
     local = REPO / "adapters" / "local" / "LOCAL_LLM_BOOTSTRAP.md"
@@ -468,6 +517,8 @@ def run_regression(errors: list[str]) -> None:
     ]
     if _phase_e_complete():
         scripts.append("validate_adapters.py")
+    if _phase_f_complete():
+        scripts.append("validate_runtime_integration.py")
     for script in scripts:
         result = subprocess.run(
             [sys.executable, str(REPO / "validation" / script)],
@@ -498,6 +549,7 @@ def main() -> int:
     validate_openai_license_metadata(errors)
     validate_domain_neutrality(errors)
     validate_adapter_routing_contamination(errors)
+    validate_phase_f_boundaries(errors)
     validate_phase_boundaries(errors)
     run_regression(errors)
 

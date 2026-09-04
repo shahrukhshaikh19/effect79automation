@@ -1,0 +1,168 @@
+version: "1.2"
+authority: core/ROUTING.md
+relationship: >
+  Machine-readable routing metadata consumed by runtime/routing/engine.py.
+  Does not replace canonical prose in core/ROUTING.md or registry/SKILLS.yaml.
+
+principles:
+  - skill_availability_does_not_imply_activation
+  - smallest_sufficient_subset
+  - domain_neutral_signals_only
+  - license_restrictions_enforced
+  - tool_capability_truth_required
+
+# Domain-neutral task signals — intake must supply these; router does not invent defaults.
+task_signal_fields:
+  deliverable_profile:
+    values:
+      - standard_application
+      - visual_experience
+      - interactive_3d
+      - reference_reconstruction
+      - authored_3d_asset
+  requires_creative_direction: boolean
+  requires_visual_output: boolean
+  requires_3d: boolean
+  requires_motion: boolean
+  requires_responsive: boolean
+  requires_accessibility: boolean
+  requires_frontend: boolean
+  requires_reference_analysis: boolean
+  reconstruction_path:
+    values: [procedural_browser, blender_authoring, none]
+
+license_restricted_skills:
+  EXT-FE-01:
+    license: LICENSE_REVIEW_REQUIRED
+    commercial_redistribution_status: blocked_pending_license_review
+    activation_requires: license_review_acknowledged
+  EXT-FE-02:
+    license: LICENSE_REVIEW_REQUIRED
+    commercial_redistribution_status: blocked_pending_license_review
+    activation_requires: license_review_acknowledged
+
+operational_restricted_skills:
+  EXT-IMG3D-01:
+    operational_status: restricted
+    activation_requires: explicit_reconstruction_path_procedural_browser
+
+skill_domains:
+  ACOS-01: {domains: [creative], cost_tier: medium, stage: CREATIVE_DIRECTION}
+  ACOS-02: {domains: [reference], cost_tier: low, stage: REFERENCE_ANALYSIS}
+  ACOS-03: {domains: [creative], cost_tier: low, stage: DESIGN_EXPERIENCE}
+  ACOS-04: {domains: [creative, visual], cost_tier: medium, stage: DESIGN_EXPERIENCE}
+  ACOS-05: {domains: [creative, experience], cost_tier: medium, stage: DESIGN_EXPERIENCE}
+  ACOS-06: {domains: [3d, creative], cost_tier: high, stage: SPECIALIST_ROUTING}
+  ACOS-07: {domains: [motion], cost_tier: medium, stage: SPECIALIST_ROUTING}
+  ACOS-08: {domains: [responsive, visual], cost_tier: medium, stage: PRODUCTION}
+  ACOS-09: {domains: [performance, 3d], cost_tier: medium, stage: PRODUCTION}
+  ACOS-10: {domains: [critic, visual], cost_tier: low, stage: INDEPENDENT_CRITICS, role: critic}
+  ACOS-11: {domains: [critic, creative], cost_tier: low, stage: INDEPENDENT_CRITICS, role: critic}
+  ACOS-12: {domains: [critic, 3d], cost_tier: low, stage: INDEPENDENT_CRITICS, role: critic}
+  ACOS-13: {domains: [gate], cost_tier: low, stage: QUALITY_GATE, role: gate}
+  ACOS-14: {domains: [memory], cost_tier: low, stage: MEMORY_CANDIDATES, role: memory}
+  EXT-A11Y-01: {domains: [accessibility, frontend], cost_tier: low, stage: PRODUCTION}
+  EXT-DES-01: {domains: [design], cost_tier: low, stage: DESIGN_EXPERIENCE}
+  EXT-3DWEB-01: {domains: [3d, frontend], cost_tier: medium, stage: PRODUCTION}
+  EXT-3DWEB-08: {domains: [3d, performance], cost_tier: medium, stage: PRODUCTION}
+  EXT-R3F-01: {domains: [3d, frontend], cost_tier: medium, stage: PRODUCTION}
+  EXT-MOTION-01: {domains: [motion], cost_tier: medium, stage: PRODUCTION}
+  EXT-IMG3D-01: {domains: [3d, reconstruction], cost_tier: high, stage: SPECIALIST_ROUTING}
+  EXT-BLD-01: {domains: [3d, blender], cost_tier: high, stage: SPECIALIST_ROUTING}
+
+routing_rules:
+  - id: insufficient_input_guard
+    when_missing: [normalized_goal, task_signals.deliverable_profile]
+    status: ROUTING_BLOCKED_INSUFFICIENT_INPUT
+
+  - id: standard_application_baseline
+    when:
+      deliverable_profile: standard_application
+      requires_3d: false
+      requires_visual_output: false
+    activate:
+      - {skill_id: EXT-A11Y-01, reason: accessibility required when frontend deliverable, if: requires_accessibility}
+      - {skill_id: ACOS-13, reason: quality gate required for completion path, if: always_on_completion}
+    exclude_domains: [3d, motion, critic_visual_unless_visual, blender, reconstruction]
+
+  - id: visual_creative_route
+    when:
+      requires_visual_output: true
+      requires_creative_direction: true
+      requires_3d: false
+    activate:
+      - {skill_id: ACOS-01, reason: creative direction requested by task signals}
+      - {skill_id: ACOS-04, reason: visual art direction for visual deliverable}
+      - {skill_id: ACOS-05, reason: experience architecture for visual experience}
+      - {skill_id: ACOS-03, reason: anti-generic guard for differentiated visual work}
+      - {skill_id: ACOS-10, reason: independent visual critic for visual output}
+      - {skill_id: ACOS-11, reason: independent creative critic for creative concept}
+      - {skill_id: ACOS-08, reason: responsive art direction when responsive required, if: requires_responsive}
+      - {skill_id: EXT-A11Y-01, reason: accessibility checks when required, if: requires_accessibility}
+
+  - id: interactive_3d_route
+    when:
+      requires_3d: true
+      deliverable_profile: interactive_3d
+    activate:
+      - {skill_id: ACOS-06, reason: cinematic 3D direction for interactive 3D deliverable}
+      - {skill_id: EXT-3DWEB-01, reason: Three.js core implementation for browser 3D}
+      - {skill_id: EXT-R3F-01, reason: R3F production rules when browser 3D runtime}
+      - {skill_id: ACOS-09, reason: WebGL performance validation for 3D runtime}
+      - {skill_id: ACOS-12, reason: independent 3D critic for meaningful 3D output}
+      - {skill_id: ACOS-07, reason: motion direction when motion required, if: requires_motion}
+      - {skill_id: EXT-MOTION-01, reason: GSAP motion implementation when motion required, if: requires_motion}
+
+  - id: reference_reconstruction_route
+    when:
+      deliverable_profile: reference_reconstruction
+      reconstruction_path: procedural_browser
+    activate:
+      - {skill_id: ACOS-02, reason: reference analysis for reconstruction input}
+      - {skill_id: ACOS-06, reason: cinematic 3D direction before reconstruction}
+      - {skill_id: EXT-IMG3D-01, reason: procedural browser-native reconstruction path selected}
+      - {skill_id: EXT-3DWEB-01, reason: Three.js runtime for reconstructed asset}
+      - {skill_id: ACOS-12, reason: 3D critic for reconstruction output}
+
+  - id: authored_blender_route
+    when:
+      deliverable_profile: authored_3d_asset
+      reconstruction_path: blender_authoring
+    activate:
+      - {skill_id: ACOS-06, reason: cinematic 3D direction for authored asset}
+      - {skill_id: EXT-BLD-01, reason: Blender director for high-fidelity asset production}
+      - {skill_id: ACOS-12, reason: 3D critic for authored asset fidelity}
+
+  - id: reference_analysis_optional
+    when:
+      requires_reference_analysis: true
+    activate:
+      - {skill_id: ACOS-02, reason: reference/asset analysis requested by task signals}
+
+  - id: completion_gate
+    when: always_on_completion
+    activate:
+      - {skill_id: ACOS-13, reason: quality gate mandatory for ship/no-ship decision}
+      - {skill_id: ACOS-14, reason: failure-learning for memory candidate creation post-gate}
+
+tool_family_requirements:
+  interactive_3d:
+    required: [browser]
+    optional: [blender]
+  authored_3d_asset:
+    required: [blender]
+    fallback: ROUTING_BLOCKED_CAPABILITY
+  reference_reconstruction:
+    required: [browser]
+    optional: [blender]
+
+critic_requirements:
+  visual_output: [ACOS-10]
+  creative_concept: [ACOS-11]
+  meaningful_3d: [ACOS-12]
+
+design_gate:
+  applies_when:
+    - requires_creative_direction
+    - requires_visual_output
+  required_before_stages: [PRODUCTION, SPECIALIST_ROUTING]

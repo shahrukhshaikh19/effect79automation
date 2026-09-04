@@ -1,0 +1,72 @@
+schema_version: "1.2"
+authority: core/ROUTING.md
+description: Machine-readable routing decision produced by Phase F router.
+
+required_fields:
+  - routing_id
+  - task_id
+  - stage
+  - activated_skill_ids
+  - skill_activations
+  - decision_reasons
+  - status
+
+fields:
+  routing_id: {type: string}
+  task_id: {type: string}
+  stage: {type: string}
+  activated_skill_ids:
+    type: array
+    items: string
+    note: Smallest sufficient subset — every ID must exist in registry/SKILLS.yaml or EXTERNAL_SKILLS_LOCK.
+  rejected_candidate_skill_ids:
+    type: array
+    items:
+      skill_id: string
+      reason: string
+  skill_activations:
+    type: array
+    items:
+      skill_id: string
+      activation_reason: string
+      stage: string
+      required_inputs: {type: array}
+      expected_output: {type: string}
+      allowed_tools: {type: array}
+      evidence_required: {type: array}
+      handoff_target: {type: string}
+  required_tool_families:
+    type: array
+    items: string
+  required_critic_ids:
+    type: array
+    items: string
+  quality_gate_required: {type: boolean}
+  decision_reasons:
+    type: array
+    items: string
+    note: Every activated skill must have a corresponding reason.
+  evidence_refs: {type: array}
+  memory_refs: {type: array}
+  capability_constraints:
+    type: object
+    fields:
+      blocked_tools: {type: array}
+      restricted_skills: {type: array}
+      license_blocked_skills: {type: array}
+  fallbacks:
+    type: array
+    items:
+      condition: string
+      action: string
+  design_gate_state:
+    type: enum
+    values: [NOT_APPLICABLE, PENDING, APPROVED, REJECTED, BLOCKED_INSUFFICIENT_EVIDENCE]
+  status:
+    type: enum
+    values: [ROUTED, ROUTING_BLOCKED_INSUFFICIENT_INPUT, ROUTING_BLOCKED_CAPABILITY, ROUTING_REQUIRES_HUMAN_DECISION]
+
+ownership:
+  phase_f_owns: activated_skill_ids
+  adapters_consume: activated_skill_ids
+  adapters_must_not: classify_tasks_or_select_skills

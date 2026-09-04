@@ -1,0 +1,92 @@
+version: "1.2"
+authority: core/WORKFLOW.md
+relationship: >
+  Configurable runtime policy for Phase F integration.
+  Conservative defaults; transparent and auditable.
+
+correction:
+  default_retry_budget: 2
+  budget_exhausted_status: HUMAN_REVIEW_REQUIRED
+  track_attempts_in_execution_state: true
+  require_evidence_per_attempt: true
+
+quality_gate:
+  terminal_statuses:
+    - APPROVED
+    - REJECTED
+    - BLOCKED_INSUFFICIENT_EVIDENCE
+  hard_reject_ids: [HR-01, HR-02, HR-03, HR-04, HR-05, HR-06, HR-07, HR-08, HR-09, HR-10]
+  evidence_blocker_ids: [EB-01]
+  forbidden_ids: [HR-11]
+  precedence:
+    - validate_required_evidence
+    - if_insufficient: BLOCKED_INSUFFICIENT_EVIDENCE
+    - evaluate_demonstrated_defects
+    - if_hard_reject: REJECTED
+    - else: APPROVED
+  scores_cannot_override_terminal: true
+
+critics:
+  producer_cannot_self_approve: true
+  independence_required: true
+
+memory:
+  categories: [knowledge, taste, projects, failures, successes, model_compatibility]
+  promotion_levels:
+    - observation
+    - project-rule
+    - candidate-global
+    - validated-global
+    - deprecated
+  prohibited_promotion_shortcuts:
+    - observation_to_validated_global
+    - single_failure_to_validated_global
+    - single_success_to_validated_global
+    - project_aesthetic_to_validated_global_without_validation
+  memory_cannot_override:
+    - core/CONSTITUTION.md
+    - core/QUALITY_GATES.md
+    - core/ROUTING.md
+    - registry/SKILLS.yaml
+    - registry/TOOLS.yaml
+  conflict_status: MEMORY_CONFLICT_REQUIRES_RESOLUTION
+
+evidence:
+  claim_is_not_evidence: true
+  required_provenance_fields:
+    - evidence_id
+    - type
+    - producer
+    - artifact_ref
+    - source
+    - timestamp
+    - status
+
+execution_state:
+  append_only_events: true
+  persist_path: validation/evidence/runtime/state
+  resume_supported: true
+
+tool_capability_states:
+  - AVAILABLE
+  - RESTRICTED
+  - BLOCKED
+  - UNAVAILABLE
+  - UNKNOWN
+
+design_gate_states:
+  - NOT_APPLICABLE
+  - PENDING
+  - APPROVED
+  - REJECTED
+  - BLOCKED_INSUFFICIENT_EVIDENCE
+
+routing_statuses:
+  - ROUTED
+  - ROUTING_BLOCKED_INSUFFICIENT_INPUT
+  - ROUTING_BLOCKED_CAPABILITY
+  - ROUTING_REQUIRES_HUMAN_DECISION
+
+smoke_test:
+  domain_neutral: true
+  save_evidence_under: validation/evidence/runtime/smoke

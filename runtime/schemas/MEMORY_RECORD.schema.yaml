@@ -1,0 +1,53 @@
+schema_version: "1.2"
+authority: core/MEMORY_POLICY.md
+description: >
+  Phase F memory record contract aligned with acos-failure-learning references.
+  Does not duplicate full memory-record-schema.yaml prose.
+
+required_fields:
+  - memory_id
+  - category
+  - scope
+  - statement
+  - source_task_id
+  - evidence_refs
+  - confidence
+  - promotion_level
+  - created_at
+  - status
+
+fields:
+  memory_id: {type: string}
+  category:
+    type: enum
+    values: [knowledge, taste, projects, failures, successes, model_compatibility]
+  scope:
+    type: enum
+    values: [task, project, project_specific, model_specific, skill_specific, reusable_system, taste_scoped, candidate_global, validated_global]
+    note: Align with core/MEMORY_POLICY.md promotion lifecycle.
+  statement: {type: string}
+  source_task_id: {type: string}
+  evidence_refs:
+    type: array
+    items: string
+    min_items: 1
+  confidence:
+    type: enum
+    values: [low, medium, high]
+  promotion_level:
+    type: enum
+    values: [observation, project-rule, candidate-global, validated-global, deprecated]
+  created_at: {type: string, format: ISO-8601}
+  validated_at: {type: string, format: ISO-8601, required: false}
+  supersedes: {type: string, required: false}
+  model_profile: {type: string, required: false}
+  status:
+    type: enum
+    values: [draft, active, superseded, rejected, deprecated, conflict_pending]
+
+promotion_rules:
+  prohibited_shortcuts:
+    - observation directly to validated-global
+    - single project observation to validated-global
+    - model_specific to validated-global without validation
+  memory_cannot_override_canonical_authority: true
