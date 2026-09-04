@@ -1,0 +1,37 @@
+version: "1.0"
+adapter_id: ADAPTER-LOCAL-01
+platform: local
+authority: registry/TOOLS.yaml
+
+notes: >
+  Many local deployments have no MCP. Tools may be UNAVAILABLE or require
+  external orchestrator to invoke scripts directly.
+
+canonical_families:
+  browser:
+    canonical_id: TOOL-BROWSER-01
+    local_invocation: node tools/browser/scripts/capture-evidence.mjs
+    runtime_status_source: validation/check_browser_tool.py
+
+  blender:
+    canonical_id: TOOL-BLENDER-01
+    local_invocation: requires MCP or manual Blender — often UNAVAILABLE locally
+    runtime_status_source: validation/check_blender_tool.py
+    health_script_default: RESTRICTED
+
+  git:
+    canonical_id: TOOL-GIT-01
+    local_invocation: git CLI
+    runtime_status_source: validation/check_git_tool.py
+
+  shell:
+    canonical_id: TOOL-SHELL-01
+    local_invocation: subprocess per shell-policy.yaml
+    runtime_status_source: validation/check_shell_tool.py
+
+  filesystem:
+    canonical_id: TOOL-FS-01
+    local_invocation: workspace-scoped file ops
+    runtime_status_source: validation/check_filesystem_tool.py
+
+status_semantics: [AVAILABLE, RESTRICTED, BLOCKED, UNAVAILABLE, UNKNOWN]

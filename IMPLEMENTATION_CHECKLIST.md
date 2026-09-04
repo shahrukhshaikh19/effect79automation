@@ -66,15 +66,16 @@ Skills:
 - [x] tools do not masquerade as skills
 - [x] A–D certification hardening (DPR integrity, gate semantics, cross-phase validator)
 
-## E — Thin platform/model adapters (NOT STARTED)
-- [ ] Claude adapter
-- [ ] Cursor adapter
-- [ ] Codex adapter
-- [ ] generic local/open-source adapter
-- [ ] adapters thin
-- [ ] model profile template
-- [ ] migration workflow
-- [ ] canonical intelligence not trapped in adapter/model
+## E — Thin platform/model adapters
+- [x] Claude adapter (`adapters/claude/`, ADAPTER-CLAUDE-01)
+- [x] Cursor adapter (`adapters/cursor/`, `.cursor/rules/acos-bootstrap.mdc`)
+- [x] Codex adapter (`adapters/codex/`)
+- [x] generic local/open-source adapter (`adapters/local/`)
+- [x] shared contract `registry/ADAPTERS.yaml`
+- [x] adapters thin — reference canonical authority, no skill body duplication
+- [x] model profile template compatible; `registry/MODELS.yaml` remains empty pending benchmarks
+- [x] migration path documented — canonical ACOS unchanged if platform removed
+- [x] `validation/validate_adapters.py` PASSED
 
 ## F — Routing + memory + quality integration (NOT STARTED)
 - [ ] knowledge memory runtime

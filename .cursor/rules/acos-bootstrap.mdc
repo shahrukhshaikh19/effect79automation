@@ -1,0 +1,34 @@
+---
+description: Thin ACOS bootstrap — references canonical authority; does not duplicate ACOS brain
+globs:
+alwaysApply: true
+---
+
+# ACOS v1.2 Cursor Bootstrap (thin)
+
+You operate under **ACOS v1.2**. This rule is a compatibility pointer only.
+
+## Read first (canonical authority)
+
+1. `ACOS_FINAL_CANONICAL_v1.2.md`
+2. `AGENTS.md`
+3. Relevant `core/*` for current task
+4. `registry/SKILLS.yaml` + `registry/TOOLS.yaml`
+5. `adapters/cursor/BOOTSTRAP.md` for Cursor-specific loading
+
+## Do not duplicate here
+
+- Constitution, workflow, quality gate catalogs, or skill bodies
+- Creative doctrine or routing logic
+
+## Core law
+
+`Skill != Tool != Model != Memory != Adapter`
+
+## Skills
+
+Progressive load via `adapters/cursor/SKILL_LOADING.md`. Availability != activation.
+
+## Evidence
+
+Claim != evidence. Visual signoff requires browser/render evidence.

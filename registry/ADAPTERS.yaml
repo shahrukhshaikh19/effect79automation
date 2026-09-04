@@ -1,0 +1,211 @@
+version: "1.0"
+authority: ACOS_FINAL_CANONICAL_v1.2.md
+phase: E
+contract_schema_version: "1.0"
+domain_neutral: true
+
+shared_contract:
+  instruction_precedence:
+    description: >
+      ACOS logical authority order. Host platform technical instruction hierarchy
+      may differ; adapter obeys host while preserving ACOS semantics where possible.
+    order:
+      - user_project_request_and_valid_runtime_constraints
+      - acos_canonical_constitutional_policy_authority
+      - activated_acos_skill_instructions
+      - tool_specific_operational_contracts
+      - adapter_platform_compatibility_behavior
+      - model_specific_optimization_hints
+  skill_loading:
+    levels:
+      L1: skill name + description/metadata from registry
+      L2: full SKILL.md only when skill activated for task
+      L3: references/scripts/assets only when required by activated skill
+    inventory_source: registry/SKILLS.yaml
+    external_skill_count: 36
+    proprietary_skill_count: 14
+    rule: skill availability != skill activation
+  context_strategy:
+    sequence:
+      - minimum bootstrap
+      - authority summary references
+      - task classification
+      - relevant skill metadata
+      - activated SKILL.md
+      - on_demand references scripts
+  tool_status_semantics:
+    - AVAILABLE
+    - RESTRICTED
+    - BLOCKED
+    - UNAVAILABLE
+    - UNKNOWN
+  canonical_tool_families:
+    - browser
+    - blender
+    - git
+    - shell
+    - filesystem
+  prohibited_duplication:
+    - creative doctrine
+    - quality policy catalogs
+    - routing intelligence
+    - proprietary skill bodies
+    - memory knowledge
+    - benchmark conclusions
+    - project-specific taste
+
+adapters:
+  - id: ADAPTER-CLAUDE-01
+    platform: claude
+    status: configured
+    adapter_version: "1.0.0"
+    directory: adapters/claude
+    entrypoint: adapters/claude/BOOTSTRAP.md
+    canonical_authority: ACOS_FINAL_CANONICAL_v1.2.md
+    canonical_files_loaded:
+      - ACOS_FINAL_CANONICAL_v1.2.md
+      - AGENTS.md
+      - core/CONSTITUTION.md
+      - core/WORKFLOW.md
+      - core/ROUTING.md
+      - core/QUALITY_GATES.md
+      - core/MEMORY_POLICY.md
+      - core/MODEL_COMPATIBILITY.md
+      - registry/SKILLS.yaml
+      - registry/TOOLS.yaml
+    skill_registry: registry/SKILLS.yaml
+    model_registry: registry/MODELS.yaml
+    skill_loading_doc: adapters/claude/SKILL_LOADING.md
+    context_strategy_doc: adapters/claude/CONTEXT_STRATEGY.md
+    tool_mapping: adapters/claude/TOOL_MAPPING.yaml
+    instruction_precedence: shared_contract.instruction_precedence
+    context_strategy: shared_contract.context_strategy
+    skill_loading_strategy: shared_contract.skill_loading
+    tool_mapping_strategy: canonical_family_to_host_tool_with_runtime_status
+    unsupported_or_platform_specific_behavior:
+      - Native Claude Agent Skills discovery when host provides it
+      - Claude MCP tool naming differs from canonical TOOL-* IDs
+    fallback_behavior: Load canonical files explicitly; bounded skill batches
+    prohibited_duplication: shared_contract.prohibited_duplication
+    validation: validation/validate_adapters.py
+
+  - id: ADAPTER-CURSOR-01
+    platform: cursor
+    status: configured
+    adapter_version: "1.0.0"
+    directory: adapters/cursor
+    entrypoint: adapters/cursor/BOOTSTRAP.md
+    cursor_rules: .cursor/rules/acos-bootstrap.mdc
+    canonical_authority: ACOS_FINAL_CANONICAL_v1.2.md
+    canonical_files_loaded:
+      - ACOS_FINAL_CANONICAL_v1.2.md
+      - AGENTS.md
+      - core/CONSTITUTION.md
+      - core/WORKFLOW.md
+      - core/ROUTING.md
+      - core/QUALITY_GATES.md
+      - core/MEMORY_POLICY.md
+      - core/MODEL_COMPATIBILITY.md
+      - registry/SKILLS.yaml
+      - registry/TOOLS.yaml
+    skill_registry: registry/SKILLS.yaml
+    model_registry: registry/MODELS.yaml
+    skill_loading_doc: adapters/cursor/SKILL_LOADING.md
+    context_strategy_doc: adapters/cursor/CONTEXT_STRATEGY.md
+    tool_mapping: adapters/cursor/TOOL_MAPPING.yaml
+    instruction_precedence: shared_contract.instruction_precedence
+    context_strategy: shared_contract.context_strategy
+    skill_loading_strategy: shared_contract.skill_loading
+    tool_mapping_strategy: canonical_family_to_host_tool_with_runtime_status
+    unsupported_or_platform_specific_behavior:
+      - Cursor rules/MCP namespace naming
+      - IDE workspace shell integration
+    fallback_behavior: Reference canonical authority; minimal rules only
+    prohibited_duplication: shared_contract.prohibited_duplication
+    validation: validation/validate_adapters.py
+
+  - id: ADAPTER-CODEX-01
+    platform: codex
+    status: configured
+    adapter_version: "1.0.0"
+    directory: adapters/codex
+    entrypoint: adapters/codex/BOOTSTRAP.md
+    agents_integration: adapters/codex/AGENTS_INTEGRATION.md
+    canonical_authority: ACOS_FINAL_CANONICAL_v1.2.md
+    canonical_files_loaded:
+      - ACOS_FINAL_CANONICAL_v1.2.md
+      - AGENTS.md
+      - core/CONSTITUTION.md
+      - core/WORKFLOW.md
+      - core/ROUTING.md
+      - core/QUALITY_GATES.md
+      - core/MEMORY_POLICY.md
+      - core/MODEL_COMPATIBILITY.md
+      - registry/SKILLS.yaml
+      - registry/TOOLS.yaml
+    skill_registry: registry/SKILLS.yaml
+    model_registry: registry/MODELS.yaml
+    skill_loading_doc: adapters/codex/SKILL_LOADING.md
+    context_strategy_doc: adapters/codex/CONTEXT_STRATEGY.md
+    tool_mapping: adapters/codex/TOOL_MAPPING.yaml
+    instruction_precedence: shared_contract.instruction_precedence
+    context_strategy: shared_contract.context_strategy
+    skill_loading_strategy: shared_contract.skill_loading
+    tool_mapping_strategy: canonical_family_to_host_tool_with_runtime_status
+    unsupported_or_platform_specific_behavior:
+      - Codex CLI tool surface naming
+    fallback_behavior: Shared AGENTS.md remains canonical; Codex consumes, does not own
+    prohibited_duplication: shared_contract.prohibited_duplication
+    validation: validation/validate_adapters.py
+
+  - id: ADAPTER-LOCAL-01
+    platform: local
+    status: configured
+    adapter_version: "1.0.0"
+    directory: adapters/local
+    entrypoint: adapters/local/LOCAL_LLM_BOOTSTRAP.md
+    task_packet_schema: adapters/local/TASK_PACKET.schema.yaml
+    fallback_boundary: adapters/local/FALLBACK_BOUNDARY.md
+    canonical_authority: ACOS_FINAL_CANONICAL_v1.2.md
+    canonical_files_loaded:
+      - ACOS_FINAL_CANONICAL_v1.2.md
+      - AGENTS.md
+      - core/CONSTITUTION.md
+      - core/WORKFLOW.md
+      - core/ROUTING.md
+      - core/QUALITY_GATES.md
+      - core/MEMORY_POLICY.md
+      - core/MODEL_COMPATIBILITY.md
+      - registry/SKILLS.yaml
+      - registry/TOOLS.yaml
+    skill_registry: registry/SKILLS.yaml
+    model_registry: registry/MODELS.yaml
+    skill_loading_doc: adapters/local/SKILL_LOADING.md
+    context_strategy_doc: adapters/local/CONTEXT_STRATEGY.md
+    tool_mapping: adapters/local/TOOL_MAPPING.yaml
+    instruction_precedence: shared_contract.instruction_precedence
+    context_strategy: shared_contract.context_strategy
+    skill_loading_strategy: shared_contract.skill_loading
+    tool_mapping_strategy: canonical_family_to_external_orchestrator_with_runtime_status
+    unsupported_or_platform_specific_behavior:
+      - No native Agent Skills support
+      - No MCP support on many local deployments
+      - Weaker instruction following
+    fallback_behavior: Bounded task packet; external validation between stages
+    prohibited_duplication: shared_contract.prohibited_duplication
+    validation: validation/validate_adapters.py
+
+licensing_preservation:
+  EXT-FE-01: LICENSE_REVIEW_REQUIRED
+  EXT-FE-02: LICENSE_REVIEW_REQUIRED
+  commercial_redistribution: blocked_pending_license_review
+  rule: adapters must not copy restricted external skill bodies into prompts or files
+
+phase_f_boundary:
+  adapters_may_declare: receive activated_skill_ids from canonical routing layer
+  adapters_must_not_implement:
+    - autonomous task router
+    - memory retrieval runtime
+    - quality aggregation runtime
+    - benchmark runner
+    - multi-agent orchestration engine

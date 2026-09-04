@@ -64,7 +64,7 @@ execution_state:
     B: COMPLETE
     C: COMPLETE
     D: COMPLETE
-    E: NOT_STARTED
+    E: COMPLETE
     F: NOT_STARTED
     G: NOT_STARTED
   post_foundation: NOT_STARTED

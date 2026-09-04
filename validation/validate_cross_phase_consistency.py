@@ -207,11 +207,18 @@ def validate_phase_map(errors: list[str]) -> None:
     for letter in ("A", "B", "C", "D"):
         if foundation_state.get(letter) != "COMPLETE":
             fail(errors, f"PHASES.yaml execution_state.{letter} must be COMPLETE")
-    for letter in ("E", "F", "G"):
+    e_state = foundation_state.get("E")
+    if e_state not in ("COMPLETE", "NOT_STARTED"):
+        fail(errors, f"PHASES.yaml execution_state.E invalid: {e_state}")
+    for letter in ("F", "G"):
         if foundation_state.get(letter) != "NOT_STARTED":
             fail(errors, f"PHASES.yaml execution_state.{letter} must be NOT_STARTED")
     if exec_state.get("post_foundation") != "NOT_STARTED":
         fail(errors, "PHASES.yaml post_foundation must be NOT_STARTED")
+
+    if e_state == "COMPLETE":
+        if not (REPO / "registry" / "ADAPTERS.yaml").is_file():
+            fail(errors, "Phase E complete requires registry/ADAPTERS.yaml")
 
     checklist = load_text(REPO / "IMPLEMENTATION_CHECKLIST.md")
     ledger = load_text(REPO / "docs" / "PROGRESS_LEDGER.md")
@@ -253,8 +260,14 @@ def validate_phase_map(errors: list[str]) -> None:
             fail(errors, f"PROGRESS_LEDGER missing Phase {phase} completion evidence")
 
     e_section = checklist.split("## E")[1].split("## F")[0] if "## E" in checklist else ""
-    if "[x]" in e_section[:600]:
-        fail(errors, "IMPLEMENTATION_CHECKLIST must not mark Phase E complete")
+    if e_state == "COMPLETE":
+        if e_section.count("- [x]") < 5:
+            fail(errors, "IMPLEMENTATION_CHECKLIST Phase E must reflect completion when E is COMPLETE")
+        if "NOT STARTED" in e_section[:400].upper():
+            fail(errors, "IMPLEMENTATION_CHECKLIST Phase E must not say NOT STARTED when E is COMPLETE")
+    else:
+        if "[x]" in e_section[:600]:
+            fail(errors, "IMPLEMENTATION_CHECKLIST must not mark Phase E complete before execution_state.E is COMPLETE")
     for section_marker in ("## F ", "## G "):
         if section_marker in checklist:
             section = checklist.split(section_marker)[1].split("##")[0]
@@ -395,22 +408,53 @@ def validate_domain_neutrality(errors: list[str]) -> None:
             fail(errors, "registry/SKILLS.yaml must not embed default brand/product/industry")
 
 
+def _phase_e_complete() -> bool:
+    path = REPO / "registry" / "PHASES.yaml"
+    if not path.is_file() or yaml is None:
+        return False
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        return False
+    exec_state = data.get("execution_state", {})
+    foundation = exec_state.get("foundation", {}) if isinstance(exec_state, dict) else {}
+    return foundation.get("E") == "COMPLETE"
+
+
 def validate_phase_boundaries(errors: list[str]) -> None:
-    for adapter in ("claude", "cursor", "codex"):
+    for name in ("benchmarks", "projects"):
+        for item in (REPO / name).rglob("*"):
+            if item.name == ".gitkeep":
+                continue
+            if item.is_file() and item.stat().st_size > 0:
+                fail(errors, f"{name}/ must remain empty: {item.relative_to(REPO)}")
+
+    if _phase_e_complete():
+        for family in ("claude", "cursor", "codex", "local"):
+            ad = REPO / "adapters" / family
+            if not ad.is_dir():
+                fail(errors, f"Phase E complete but missing adapters/{family}/")
+        if (REPO / "CLAUDE.md").exists():
+            fail(errors, "Root CLAUDE.md forbidden — use adapters/claude/")
+        return
+
+    for adapter in ("claude", "cursor", "codex", "local"):
         ad = REPO / "adapters" / adapter
         if ad.is_dir():
             for f in ad.iterdir():
-                if f.name != ".gitkeep" and f.is_file():
-                    fail(errors, f"Phase E adapter file: {f.relative_to(REPO)}")
+                if f.name != ".gitkeep" and f.is_file() and f.name != "LOCAL_LLM_BOOTSTRAP.md":
+                    fail(errors, f"Phase E adapter file before Phase E complete: {f.relative_to(REPO)}")
 
 
 def run_regression(errors: list[str]) -> None:
-    for script in (
+    scripts = [
         "validate_foundation.py",
         "validate_external_skills.py",
         "validate_proprietary_skills.py",
         "validate_tools.py",
-    ):
+    ]
+    if _phase_e_complete():
+        scripts.append("validate_adapters.py")
+    for script in scripts:
         result = subprocess.run(
             [sys.executable, str(REPO / "validation" / script)],
             capture_output=True,

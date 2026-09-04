@@ -1,0 +1,56 @@
+version: "1.0"
+schema: acos_local_task_packet
+description: >
+  Bounded task packet for local/open-source models without native Agent Skills.
+  External orchestrator compiles this; model does not receive entire ACOS brain.
+
+task_packet:
+  acos_version: "1.2"
+  adapter_id: ADAPTER-LOCAL-01
+
+  canonical_refs:
+    - ACOS_FINAL_CANONICAL_v1.2.md
+    - AGENTS.md
+    core_policies: []  # e.g. core/WORKFLOW.md when relevant
+    registries:
+      - registry/SKILLS.yaml
+      - registry/TOOLS.yaml
+
+  task:
+    classification: ""  # domain-neutral task type
+    scope_boundary: ""
+    forbidden_assumptions: []
+
+  activated_skills:
+    # L2 load list — ids from registry only
+    - skill_id: ""
+      skill_path: ""
+      load_level: L2
+
+  allowed_tools:
+    # canonical family + runtime status
+    - family: browser
+      status: UNKNOWN
+    - family: blender
+      status: RESTRICTED
+    - family: git
+      status: UNKNOWN
+    - family: shell
+      status: UNKNOWN
+    - family: filesystem
+      status: UNKNOWN
+
+  output_contract:
+    deliverables: []
+    handoff_schema: ""
+    evidence_required: []
+
+  stage:
+    id: ""
+    of: ""
+    prior_stage_evidence_ref: null
+
+notes:
+  - Packet must stay bounded — no full skill library embed
+  - Phase F routing may supply activated_skill_ids later
+  - Validate outputs externally between stages

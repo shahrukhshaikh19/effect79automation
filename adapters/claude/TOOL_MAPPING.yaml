@@ -1,0 +1,47 @@
+version: "1.0"
+adapter_id: ADAPTER-CLAUDE-01
+platform: claude
+authority: registry/TOOLS.yaml
+
+mapping_rule: >
+  Map canonical ACOS tool families to Claude/MCP host tool names.
+  Canonical capability != host tool name. Report runtime status truthfully.
+
+canonical_families:
+  browser:
+    canonical_id: TOOL-BROWSER-01
+    host_examples: [playwright, browser, mcp_browser]
+    runtime_status_source: validation/check_browser_tool.py
+    notes: Host name varies; capability is evidence capture not quality judgment
+
+  blender:
+    canonical_id: TOOL-BLENDER-01
+    host_examples: [blender_mcp, user-blender, execute_blender_code]
+    runtime_status_source: validation/check_blender_tool.py
+    evidence_distinction:
+      tcp_socket_reachable: not_protocol_handshake
+      protocol_handshake: requires_live_mcp_client_or_health_contract
+    default_health_script_status: RESTRICTED
+
+  git:
+    canonical_id: TOOL-GIT-01
+    host_examples: [git, shell_git]
+    runtime_status_source: validation/check_git_tool.py
+
+  shell:
+    canonical_id: TOOL-SHELL-01
+    host_examples: [shell, bash, powershell]
+    runtime_status_source: validation/check_shell_tool.py
+    policy: tools/shell/shell-policy.yaml
+
+  filesystem:
+    canonical_id: TOOL-FS-01
+    host_examples: [read, write, filesystem]
+    runtime_status_source: validation/check_filesystem_tool.py
+
+status_semantics:
+  AVAILABLE: dependency installed and health check passed in environment
+  RESTRICTED: partial capability or unresolved verification
+  BLOCKED: required dependency unavailable
+  UNAVAILABLE: host does not expose tool
+  UNKNOWN: insufficient evidence — do not claim AVAILABLE

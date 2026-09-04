@@ -1,0 +1,33 @@
+version: "1.0"
+adapter_id: ADAPTER-CODEX-01
+platform: codex
+authority: registry/TOOLS.yaml
+
+canonical_families:
+  browser:
+    canonical_id: TOOL-BROWSER-01
+    host_examples: [shell node capture-evidence.mjs]
+    runtime_status_source: validation/check_browser_tool.py
+
+  blender:
+    canonical_id: TOOL-BLENDER-01
+    host_examples: [MCP if host configured]
+    runtime_status_source: validation/check_blender_tool.py
+    health_script_default: RESTRICTED
+
+  git:
+    canonical_id: TOOL-GIT-01
+    host_examples: [git CLI via shell]
+    runtime_status_source: validation/check_git_tool.py
+
+  shell:
+    canonical_id: TOOL-SHELL-01
+    host_examples: [codex exec/shell]
+    runtime_status_source: validation/check_shell_tool.py
+
+  filesystem:
+    canonical_id: TOOL-FS-01
+    host_examples: [read/write workspace files]
+    runtime_status_source: validation/check_filesystem_tool.py
+
+status_semantics: [AVAILABLE, RESTRICTED, BLOCKED, UNAVAILABLE, UNKNOWN]

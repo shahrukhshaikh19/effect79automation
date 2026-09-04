@@ -1,0 +1,34 @@
+version: "1.0"
+adapter_id: ADAPTER-CURSOR-01
+platform: cursor
+authority: registry/TOOLS.yaml
+
+canonical_families:
+  browser:
+    canonical_id: TOOL-BROWSER-01
+    host_examples: [Shell node tools/browser, playwright MCP if configured]
+    runtime_status_source: validation/check_browser_tool.py
+
+  blender:
+    canonical_id: TOOL-BLENDER-01
+    host_examples: [user-blender MCP namespace, CallDynamicTool]
+    runtime_status_source: validation/check_blender_tool.py
+    tcp_not_handshake: true
+    health_script_default: RESTRICTED
+
+  git:
+    canonical_id: TOOL-GIT-01
+    host_examples: [Shell git, gh]
+    runtime_status_source: validation/check_git_tool.py
+
+  shell:
+    canonical_id: TOOL-SHELL-01
+    host_examples: [Shell tool in Cursor agent]
+    runtime_status_source: validation/check_shell_tool.py
+
+  filesystem:
+    canonical_id: TOOL-FS-01
+    host_examples: [Read, Write, StrReplace, Glob, Grep]
+    runtime_status_source: validation/check_filesystem_tool.py
+
+status_semantics: [AVAILABLE, RESTRICTED, BLOCKED, UNAVAILABLE, UNKNOWN]

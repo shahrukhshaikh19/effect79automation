@@ -282,6 +282,18 @@ def validate_git_shell_fs(errors: list[str]) -> None:
             fail(errors, "Shell arbitrary_execution_default must be false")
 
 
+def _phase_e_complete() -> bool:
+    path = REPO / "registry" / "PHASES.yaml"
+    if not path.is_file() or yaml is None:
+        return False
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        return False
+    exec_state = data.get("execution_state", {})
+    foundation = exec_state.get("foundation", {}) if isinstance(exec_state, dict) else {}
+    return foundation.get("E") == "COMPLETE"
+
+
 def check_phase_boundaries(errors: list[str]) -> None:
     for name in ("benchmarks", "projects"):
         base = REPO / name
@@ -290,6 +302,9 @@ def check_phase_boundaries(errors: list[str]) -> None:
                 continue
             if item.is_file() and item.stat().st_size > 0:
                 fail(errors, f"{name}/ must remain empty: {item.relative_to(REPO)}")
+
+    if _phase_e_complete():
+        return
 
     adapter_files = []
     for adapter in ("claude", "cursor", "codex"):
@@ -301,10 +316,11 @@ def check_phase_boundaries(errors: list[str]) -> None:
     if adapter_files:
         fail(errors, f"Phase E adapter contamination: {adapter_files}")
 
-    forbidden = [REPO / "CLAUDE.md", REPO / ".cursor" / "rules"]
-    for p in forbidden:
-        if p.exists():
-            fail(errors, f"Phase E contamination: {p.relative_to(REPO)}")
+    if (REPO / "CLAUDE.md").exists():
+        fail(errors, "Phase E contamination: CLAUDE.md")
+    cursor_rules = REPO / ".cursor" / "rules"
+    if cursor_rules.is_dir() and any(cursor_rules.iterdir()):
+        fail(errors, "Phase E contamination: .cursor/rules before Phase E complete")
 
 
 def scan_obvious_secrets(errors: list[str]) -> None:

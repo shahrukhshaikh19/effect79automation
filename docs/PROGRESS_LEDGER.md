@@ -1,11 +1,11 @@
 # ACOS v1.2 — Implementation Progress Ledger
 
 **Last updated:** 2026-09-04  
-**Current phase:** D — Production Tool Layer (COMPLETE) + A–D certification hardening (COMPLETE)
+**Current phase:** E — Thin platform/model adapters (COMPLETE)
 
 ---
 
-## Certification hardening — 2026-09-04
+## Final certification corrections — 2026-09-04
 
 | Task | Status | Evidence |
 |---|---|---|
@@ -20,6 +20,24 @@
 | H9 — Full validation sequence | COMPLETE | 5 structural validators + 5 health checks |
 
 See `docs/FOUNDATION_CERTIFICATION_HARDENING.md` for full audit trail.
+
+---
+
+## Phase E — Task log
+
+| Task | Status | Evidence |
+|---|---|---|
+| E0 — A–D precondition | COMPLETE | All five validators PASSED before implementation |
+| E1 — Shared adapter contract | COMPLETE | `registry/ADAPTERS.yaml` |
+| E2 — Claude adapter | COMPLETE | `adapters/claude/` |
+| E3 — Cursor adapter | COMPLETE | `adapters/cursor/`, `.cursor/rules/acos-bootstrap.mdc` |
+| E4 — Codex adapter | COMPLETE | `adapters/codex/` |
+| E5 — Local adapter | COMPLETE | `adapters/local/` + TASK_PACKET schema |
+| E6 — Adapter validator | COMPLETE | `validation/validate_adapters.py` PASSED |
+| E7 — Cross-phase update | COMPLETE | Phase-aware boundaries in cross-phase + tools validators |
+| E8 — Audit documentation | COMPLETE | `docs/PHASE_E_ADAPTER_AUDIT.md` |
+
+**FOUNDATION_READY:** not declared (Phase G required)
 
 ---
 
@@ -44,7 +62,7 @@ See `docs/FOUNDATION_CERTIFICATION_HARDENING.md` for full audit trail.
 | B | Import approved external skills | COMPLETE |
 | C | Implement 14 proprietary ACOS skills | COMPLETE |
 | D | Production tool layer | COMPLETE |
-| E | Thin platform/model adapters | NOT STARTED |
+| E | Thin platform/model adapters | COMPLETE |
 | F | Routing + memory + quality integration | NOT STARTED |
 | G | Foundation validation / certification | NOT STARTED |
 
