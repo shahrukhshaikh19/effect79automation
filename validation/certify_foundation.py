@@ -404,11 +404,11 @@ def write_manifest(payload: dict[str, Any]) -> None:
     MANIFEST_PATH.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
 
-def write_result(payload: dict[str, Any]) -> None:
+def write_certification_result(payload: dict[str, Any]) -> None:
     RESULT_PATH.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
 
-def run_certification(*, write_result: bool = False, tested_sha: str | None = None) -> dict[str, Any]:
+def run_certification(*, emit_result: bool = False, tested_sha: str | None = None) -> dict[str, Any]:
     if yaml is None:
         print("PyYAML required", file=sys.stderr)
         sys.exit(1)
@@ -459,12 +459,12 @@ def run_certification(*, write_result: bool = False, tested_sha: str | None = No
         "baseline_sha": "0fb45835c4d6b694fde28591ca12899630c7a1d4",
         "tested_implementation_sha": implementation_sha,
         "certified_sha": implementation_sha if all_pass else None,
-        "attestation_sha": git_sha() if write_result else None,
+        "attestation_sha": git_sha() if emit_result else None,
         "generated_at": _now(),
     }
 
-    if write_result and all_pass:
-        write_result(result_payload)
+    if emit_result and all_pass:
+        write_certification_result(result_payload)
 
     return {
         "manifest": manifest,
@@ -487,7 +487,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    outcome = run_certification(write_result=args.write_result, tested_sha=args.tested_sha)
+    outcome = run_certification(emit_result=args.write_result, tested_sha=args.tested_sha)
     manifest = outcome["manifest"]
 
     print(json.dumps({

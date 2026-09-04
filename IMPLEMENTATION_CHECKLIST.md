@@ -97,14 +97,14 @@ Skills:
 - [x] `validation/validate_runtime_integration.py` PASSED
 - [x] `validation/tests/runtime/test_scenarios.py` T1–T18 PASSED
 
-## G — Foundation validation / certification (IN PROGRESS)
-- [ ] integrated foundation validation pass
-- [ ] hard reject + evidence blocker rules validated end-to-end
-- [ ] creator/critic separation validated operationally
-- [ ] visual signoff requires render/browser evidence (runtime)
-- [ ] domain-neutrality audit pass
-- [ ] no benchmark/project contamination in foundation
-- [ ] foundation ready marker (FOUNDATION_READY) declared with evidence
+## G — Foundation validation / certification (COMPLETE)
+- [x] integrated foundation validation pass
+- [x] hard reject + evidence blocker rules validated end-to-end
+- [x] creator/critic separation validated operationally
+- [x] visual signoff requires render/browser evidence (runtime)
+- [x] domain-neutrality audit pass
+- [x] no benchmark/project contamination in foundation
+- [x] foundation ready marker (FOUNDATION_READY) declared with evidence
 
 ## POST-FOUNDATION — PF roadmap (NOT STARTED)
 
