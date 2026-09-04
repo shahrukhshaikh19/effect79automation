@@ -259,14 +259,33 @@ acceptance_contract:
       evaluator_type: human
       not_applicable_reason: no_reference_design_supplied
     three_d_quality:
+      applicability: conditional
+      default_state: NOT_APPLICABLE
       applicable: false
       weight: 0
+      weight_when_applicable: 10
+      applicable_when: meaningful_3d_used_in_deliverable
+      activation_criteria:
+        meaningful_3d_used_in_deliverable:
+          definition: 'Deliverable includes material 3D content (WebGL, Three.js, shaders, or Blender-sourced assets) that meaningfully contributes to the experience — not decorative CSS-only pseudo-3D, unused assets, or 3D forced without creative justification.
+
+            '
+          determination: post_execution_evidence_and_routing_provenance_review
+          routing: normal_acos_routing_only_no_manual_skill_activation
       minimum_score: null
       hard_fail_conditions:
       - forced_unjustified_3d
+      - poor_3d_quality_when_meaningful_3d_used
+      evidence_required_when_applicable:
+      - E-011
       evidence_required: []
       evaluator_type: human
-      not_applicable_reason: three_d_not_mandatory_evaluated_only_if_used
+      evaluation_via_routing:
+        critic_skills:
+        - acos-3d-critic
+        quality_gate: required_when_applicable
+      not_applicable_when: no_meaningful_3d_in_deliverable
+      not_applicable_reason: three_d_optional_excluded_from_scoring_when_not_used
     motion_quality:
       applicable: true
       weight: 5
@@ -287,6 +306,7 @@ acceptance_contract:
   - random_floating_cards
   - meaningless_decorative_animation
   - forced_unjustified_3d
+  - poor_3d_quality_when_meaningful_3d_used
   - usability_sacrificed_for_effects
   - unjustified_performance_sacrifice
   - desktop_only_designed_experience
@@ -297,14 +317,50 @@ acceptance_contract:
   - broken_navigation_or_interaction
   - benchmark_aesthetic_cross_system_memory_promotion_forbidden
   weight_normalization:
-    rule: applicable_dimension_weights_sum_to_100
+    rule: frozen_conditional_dimension_profiles
     enforced: true
+    post_execution_weight_mutation: forbidden
+    conditional_dimensions:
+    - three_d_quality
+    default_profile: no_meaningful_3d
+    selection_rule: 'Profile selected at scoring from deliverable evidence only. If meaningful 3D is absent, use no_meaningful_3d. If meaningful 3D is present, use meaningful_3d_used. Weights are fixed at contract freeze — never adjusted after execution results are known.
+
+      '
+    profiles:
+      no_meaningful_3d:
+        condition: no_meaningful_3d_in_deliverable
+        three_d_quality_state: NOT_APPLICABLE
+        dimensions:
+          functional: 15
+          visual: 20
+          creative: 20
+          responsive: 15
+          performance: 10
+          accessibility: 5
+          engineering: 10
+          motion_quality: 5
+        sum: 100
+      meaningful_3d_used:
+        condition: meaningful_3d_used_in_deliverable
+        three_d_quality_state: APPLICABLE
+        dimensions:
+          functional: 13.5
+          visual: 18
+          creative: 18
+          responsive: 13.5
+          performance: 9
+          accessibility: 4.5
+          engineering: 9
+          motion_quality: 4.5
+          three_d_quality: 10
+        sum: 100
+        base_pool_redistribution: proportional_90_percent_of_default_profile_weights
   revision:
     version: '1.1'
     parent_version: '1.0'
-    reason: Integrity correction — pending operator confirmation
+    reason: conditional_3d_quality_evaluation_and_frozen_weight_profiles
     changed_by: system_integrity_correction
-    changed_at: '2026-09-04T20:45:00Z'
+    changed_at: '2026-09-04T21:00:00Z'
 evidence_plan:
 - evidence_id: E-001
   dimension: responsive
@@ -381,6 +437,18 @@ evidence_plan:
   required: true
   capture_stage: post_execution
   acceptance_use: acos_quality_gate_decision_provenance
+- evidence_id: E-011
+  dimension: three_d_quality
+  type: conditional_3d_quality_review
+  required: conditional
+  required_when: meaningful_3d_used_in_deliverable
+  capture_stage: post_execution
+  acceptance_use: evaluate_3d_quality_when_meaningful_3d_present
+  evaluation:
+    critic_skills_via_routing:
+    - acos-3d-critic
+    quality_gate: required_when_applicable
+  not_required_when: no_meaningful_3d_in_deliverable
 hard_failures: *id001
 capability_expectations:
   visual_work: true
@@ -415,7 +483,7 @@ constraint_evaluation:
   original_request: 3D may be used only if the system determines that it materially improves the experience. 3D is NOT mandatory.
   status: APPROVED_CONSTRAINT
   reason_code: OPTIONAL_3D
-  reason: three_d_quality dimension not applicable unless 3D used; forced unjustified 3D is hard failure.
+  reason: 3D optional; three_d_quality conditional NOT_APPLICABLE unless meaningful 3D used; fixed weight profile at freeze.
 - source_ref: operator_input
   original_request: No visual reference website is supplied.
   status: APPROVED_CONSTRAINT
@@ -439,7 +507,7 @@ execution_state:
 revision:
   version: '1.1'
   parent_version: '1.0'
-  reason: Correct unverified operator_confirmation in frozen v1.0; preserve v1.0 history without mutation.
+  reason: conditional_3d_quality_evaluation_and_frozen_weight_profiles_pending_operator_confirmation
   changed_by: system_integrity_correction
   changed_at: '2026-09-04T20:45:00Z'
 global_memory_promotion: false
@@ -450,3 +518,4 @@ integrity_correction:
   v1_0_integrity_defect: operator_confirmation_marked_confirmed_without_explicit_operator_approval
   v1_0_preservation: v1.0 remains immutable in Git history; not rewritten or amended
   corrected_at: '2026-09-04T20:45:00Z'
+  pending_correction: conditional_3d_quality_and_weight_normalization

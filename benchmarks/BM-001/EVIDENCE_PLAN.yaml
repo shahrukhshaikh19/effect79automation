@@ -88,6 +88,19 @@ evidence_plan:
     capture_stage: post_execution
     acceptance_use: acos_quality_gate_decision_provenance
 
+  - evidence_id: E-011
+    dimension: three_d_quality
+    type: conditional_3d_quality_review
+    required: conditional
+    required_when: meaningful_3d_used_in_deliverable
+    capture_stage: post_execution
+    acceptance_use: evaluate_3d_quality_when_meaningful_3d_present
+    evaluation:
+      critic_skills_via_routing:
+        - acos-3d-critic
+      quality_gate: required_when_applicable
+    not_required_when: no_meaningful_3d_in_deliverable
+
 hash_note: >
   benchmark_contract_sha256 covers frozen registration fields only.
   Excludes execution timestamps, runtime results, scores, and evidence outputs.

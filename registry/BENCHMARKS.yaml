@@ -32,7 +32,7 @@ benchmarks:
     operator_confirmation_status: pending
     revision:
       parent_version: "1.0"
-      reason: integrity_correction_unverified_operator_confirmation_in_v1_0
+      reason: conditional_3d_quality_pending_operator_confirmation
     versions:
       - contract_version: "1.0"
         parent_version: null
