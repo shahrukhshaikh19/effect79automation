@@ -1,0 +1,77 @@
+# 3D Creative Direction — output schema (ACOS-06)
+# Use for structured deliverables from acos-cinematic-3d-director
+
+schema_version: 1
+skill: acos-cinematic-3d-director
+
+artifact:
+  status: approved | conditional | rejected | deferred
+
+  justification:
+    purpose_statement: string
+    removal_test:
+      without_3d_substitute: string
+      loss_if_removed:
+        - string
+      severity: none | minor | moderate | severe
+      verdict: justified | rejected | deferred
+      # Canonical test:
+      # If removing the 3D does not meaningfully damage the intended experience,
+      # reconsider whether 3D is justified.
+
+  scene_roles:
+    - beat_id: string
+      role: hero | support | transition | ambient | interactive
+      narrative_function: string
+
+  composition:
+    focal_hierarchy: string
+    scale_notes: string
+    depth_layers:
+      - layer: foreground | midground | background
+        content: string
+
+  camera:
+    beats:
+      - beat_id: string
+        framing_intent: string
+        lens_feel: wide | normal | telephoto | custom_intent
+        movement_motivation: string | static
+    static_vs_dynamic: string
+
+  lighting_intent:
+    mood: string
+    readability_requirements: []
+    key_fill_rim_logic: string
+
+  material_intent:
+    - surface_id: string
+      character: string
+      readability_notes: string
+
+  staging:
+    dom_3d_relationship:
+      - beat_id: string
+        focus_leader: dom | 3d | shared | handoff
+        overlap_notes: string
+    scene_state_transitions:
+      - from_state: string
+        to_state: string
+        creative_transition_intent: string
+
+  risks: []
+  performance_flags: []
+  open_questions: []
+
+handoff:
+  status:
+  inputs_used: []
+  decisions: []
+  constraints: []
+  open_risks: []
+  evidence:
+    planning_only: true
+    removal_test_recorded: boolean
+  deliverables: []
+  next_owner: {}
+  rejection_route: []

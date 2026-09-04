@@ -295,6 +295,28 @@ def validate_script_security(entries: list[dict], errors: list[str]) -> None:
             )
 
 
+def check_proprietary_skills_phase(errors: list[str]) -> None:
+    """Allow zero proprietary skills (Phase B) or exactly 14 registry skills (Phase C+)."""
+    skill_files = sorted((REPO / "skills" / "acos").rglob("SKILL.md"))
+    if not skill_files:
+        return
+    registry = load_yaml(REPO / "registry" / "SKILLS.yaml", errors)
+    if not isinstance(registry, dict):
+        return
+    expected = {
+        item["name"]
+        for item in registry.get("proprietary", [])
+        if isinstance(item, dict) and "name" in item
+    }
+    actual = {p.parent.name for p in skill_files}
+    if actual == expected and len(actual) == 14:
+        return
+    fail(
+        errors,
+        f"Proprietary skills must be absent (Phase B) or complete set of 14 (Phase C+): {actual}",
+    )
+
+
 def main() -> int:
     errors: list[str] = []
     print(f"ACOS v1.2 Phase {PHASE} External Skills Validator (hardened)")
@@ -388,10 +410,7 @@ def main() -> int:
 
     validate_directory_allowlists(entries, errors)
     validate_script_security(entries, errors)
-
-    acos_skills = list((REPO / "skills" / "acos").rglob("SKILL.md"))
-    if acos_skills:
-        fail(errors, f"Proprietary SKILL.md must not exist in Phase B: {acos_skills}")
+    check_proprietary_skills_phase(errors)
 
     for name in ("benchmarks", "projects"):
         base = REPO / name
@@ -428,7 +447,11 @@ def main() -> int:
     print(f"Verified {len(entries)} locked external skill entries.")
     print("Directory allowlists derived from lockfile: OK")
     print("Script security inventory: OK")
-    print("Phase C (proprietary skills): NOT VALIDATED (not started)")
+    skill_count = len(list((REPO / "skills" / "acos").rglob("SKILL.md")))
+    if skill_count == 14:
+        print("Phase C proprietary skills present: 14 (structural check only; use validate_proprietary_skills.py)")
+    else:
+        print("Phase C (proprietary skills): NOT VALIDATED (not started)")
     return 0
 
 

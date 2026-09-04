@@ -1,0 +1,48 @@
+# Reference Intelligence Artifact — output schema for acos-reference-analysis
+# Produce as YAML or JSON conforming to this shape.
+
+artifact_version: "1.0"
+skill: acos-reference-analysis
+project_id: "<project identifier or task scope>"
+
+reference_inventory:
+  - id: ref-001
+    type: image | url | video | document | description
+    source: "<path, URL, or citation>"
+    access_status: available | broken | partial
+    stated_role: "<why stakeholder provided this>"
+    analysis_dimensions: [composition, hierarchy, typography, spacing, lighting, camera, materials, motion, interaction, narrative, depth, responsive]
+
+analysis_by_dimension:
+  composition:
+    observations:
+      - ref_id: ref-001
+        statement: "<neutral observable fact>"
+    interpretations:
+      - ref_id: ref-001
+        statement: "<what the observation likely achieves>"
+        confidence: high | medium | low
+    reusable_principles:
+      - id: comp-p1
+        statement: "<transferable decision rule>"
+        project_relevance: direct | adapted | not_applicable
+        adaptation_note: "<if adapted, how>"
+    non_copy_boundaries:
+      - ref_id: ref-001
+        do_not_copy: ["<specific literal element>"]
+
+  # Repeat structure for each applicable dimension; omit or mark na: true for N/A
+
+conflicts:
+  - between: [ref-001, ref-002]
+    description: "<how references disagree>"
+    resolution: defer_to_brief | flag_for_creative_director | not_resolved
+
+gaps_and_questions:
+  - "<missing reference type or unclear intent>"
+
+overall_confidence: high | medium | low
+
+routing_hints:
+  primary_consumer: acos-creative-director
+  secondary_consumers: []

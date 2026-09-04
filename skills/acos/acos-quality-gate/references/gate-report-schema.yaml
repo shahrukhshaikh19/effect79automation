@@ -1,0 +1,157 @@
+# ACOS Quality Gate Report Schema v1.2
+# Used by acos-quality-gate for machine-readable gate aggregation.
+# Human-readable summary must still be produced alongside this structure.
+
+gate_report:
+  schema_version: "1.2"
+  skill: acos-quality-gate
+  project_ref: "<project identifier>"
+  evaluated_at: "<ISO-8601 timestamp>"
+
+  # Exactly one terminal status — gate authority
+  status: APPROVE | REJECT | BLOCKED_INSUFFICIENT_EVIDENCE
+
+  # Dimensions evaluated — omit N/A dimensions; do not score uninvented evidence
+  applicable_dimensions:
+    - functional
+    - visual
+    - creative
+    - responsive
+    - 3d
+    - motion
+    - performance
+    - accessibility
+    - engineering
+
+  # Subordinate critic / QA inputs consumed
+  inputs_used:
+    critic_reports:
+      - skill: acos-visual-critic
+        status: pass | pass_with_observations | fail | blocked_insufficient_evidence | not_run
+        ref: "<artifact ref>"
+      - skill: acos-creative-critic
+        status: pass | pass_with_observations | fail | blocked_insufficient_evidence | not_run
+        ref: "<artifact ref>"
+      - skill: acos-3d-critic
+        status: pass | pass_with_observations | fail | blocked_insufficient_evidence | not_applicable | not_run
+        ref: "<artifact ref>"
+    qa_evidence:
+      - type: functional | visual | runtime | performance | accessibility | engineering
+        ref: "<artifact ref>"
+        coverage: "<scope description>"
+
+  decisions:
+    # Gate verdict rationale — one primary reason minimum
+    primary_reason: "<concise gate decision basis>"
+    hard_reject_triggered: false
+    hard_reject_ids: []  # from hard_rejects list when triggered
+
+  # 0–10 only for applicable dimensions with evidence
+  scores:
+    creative_originality: null
+    brand_project_distinctiveness: null
+    concept_strength: null
+    composition: null
+    typography: null
+    visual_hierarchy: null
+    3d_quality: null
+    3d_ui_integration: null
+    lighting_material_quality: null
+    motion_choreography: null
+    storytelling_experience_flow: null
+    responsive_art_direction: null
+    performance: null
+    accessibility: null
+    engineering_quality: null
+
+  # Canonical hard rejects from core/QUALITY_GATES.md — list triggered only
+  hard_rejects:
+    - id: HR-01
+      condition: broken_primary_flow
+      triggered: false
+      evidence_ref: null
+    - id: HR-02
+      condition: serious_console_runtime_errors
+      triggered: false
+      evidence_ref: null
+    - id: HR-03
+      condition: unusable_required_viewport
+      triggered: false
+      evidence_ref: null
+    - id: HR-04
+      condition: critical_accessibility_blocker
+      triggered: false
+      evidence_ref: null
+    - id: HR-05
+      condition: unacceptable_target_device_performance
+      triggered: false
+      evidence_ref: null
+    - id: HR-06
+      condition: missing_critical_fallback
+      triggered: false
+      evidence_ref: null
+    - id: HR-07
+      condition: major_required_reference_asset_mismatch
+      triggered: false
+      evidence_ref: null
+    - id: HR-08
+      condition: visible_3d_credibility_defect
+      triggered: false
+      evidence_ref: null
+    - id: HR-09
+      condition: visual_work_breaks_business_logic
+      triggered: false
+      evidence_ref: null
+    - id: HR-10
+      condition: materially_generic_despite_differentiated_brief
+      triggered: false
+      evidence_ref: null
+    - id: HR-11
+      condition: required_evidence_not_collected
+      triggered: false
+      evidence_ref: null
+
+  evidence:
+    - id: GE-001
+      type: browser_capture | test_log | measurement | critic_report | runtime_inspection
+      dimension: visual | functional | 3d | performance | accessibility | engineering | creative
+      ref: "<uri or path>"
+      notes: "<coverage note>"
+
+  # Every REJECT must populate required_corrections fully
+  required_corrections:
+    - correction_id: GC-001
+      failed_gate: visual | creative | 3d | functional | performance | accessibility | engineering | responsive | motion
+      description: "<what failed>"
+      evidence_ref: GE-001
+      severity: critical | major
+      responsible_owner: "<upstream skill or role>"
+      required_correction: "<specific fix>"
+      retest_requirement: "<evidence to collect before re-gate>"
+
+  open_risks:
+    - "<uncovered viewport>"
+    - "<missing critic independence>"
+
+  deliverables:
+    - quality_gate_report
+    - gate_report_yaml
+
+  next_owner:
+    APPROVE: acos-failure-learning  # success/failure learning when applicable
+    REJECT: "<highest severity responsible_owner from required_corrections>"
+    BLOCKED_INSUFFICIENT_EVIDENCE: "<party who must collect evidence>"
+
+  rejection_route: []  # populated on REJECT — mirror required_corrections routing
+
+  # Standard handoff fields (phase-C minimum shape)
+  handoff:
+    status: APPROVE | REJECT | BLOCKED_INSUFFICIENT_EVIDENCE
+    inputs_used: []
+    decisions: {}
+    constraints: []
+    open_risks: []
+    evidence: []
+    deliverables: []
+    next_owner: ""
+    rejection_route: []

@@ -1,0 +1,322 @@
+# ACOS Memory Record Schema — reference for acos-failure-learning
+# Authoritative policy: core/MEMORY_POLICY.md
+# Phase C: schema definition only — do not populate real records during foundation implementation.
+
+schema_version: "1.2"
+authority: core/MEMORY_POLICY.md
+
+# Canonical promotion lifecycle (required order; no stage may be skipped)
+promotion_lifecycle:
+  stages:
+    - id: observation
+      description: >
+        Raw, evidence-linked note from a single observed event.
+        Default entry point for all learning. Not yet a rule.
+    - id: project-rule
+      description: >
+        Lesson validated within one project context with linked evidence
+        and correction outcome. Applies only to that project unless promoted.
+    - id: candidate-global
+      description: >
+        Proposed reusable lesson supported by repeated evidence across
+        sufficiently different projects or conditions. Awaiting validation.
+    - id: validated-global
+      description: >
+        Reusable system lesson approved for cross-project retrieval under
+        declared scope and constraints.
+    - id: deprecated
+      description: >
+        Former rule retired due to contradiction, obsolescence, or
+        insufficient continued evidence. Retain reason and evidence history.
+
+  promotion_requirements:
+    observation_to_project_rule:
+      - linked primary evidence exists
+      - root cause or success mechanism stated
+      - scope tag assigned
+      - affected skills or model profile identified when applicable
+      - correction or reuse guidance recorded when applicable
+    project_rule_to_candidate_global:
+      - same lesson pattern observed in at least two sufficiently different project contexts
+      - evidence bundle per occurrence is complete
+      - scope is not project-aesthetic-specific unless explicitly scoped to taste memory with validation
+      - no single failure or single success alone triggers promotion
+    candidate_global_to_validated_global:
+      - human or designated validation authority approves
+      - recurrence and non-contradiction checks pass
+      - retrieval scope and expiry/review criteria defined
+      - not derived from one model run, one benchmark, or one visual style preference
+    any_to_deprecated:
+      - contradicting evidence documented, or
+      - underlying workflow/tool/model context obsolete, or
+      - scope no longer applicable
+
+  prohibited_shortcuts:
+    - observation directly to validated-global
+    - single failure to global law
+    - single success to global rule
+    - project aesthetic to taste-global without cross-project validation
+    - benchmark-specific content to canonical foundation
+
+# Scope taxonomy — every record must declare exactly one primary scope
+scope_taxonomy:
+  project_specific:
+    store_hint: memory/projects/
+    description: Brief, decisions, implementation history, project-local rules.
+  model_specific:
+    store_hint: memory/model-compatibility/
+    description: Model/version strengths, weaknesses, quirks, tool constraints.
+  skill_specific:
+    store_hint: memory/knowledge/ or memory/failures/ or memory/successes/
+    description: Lesson tied to one ACOS or external skill procedure or effectiveness.
+  reusable_system:
+    store_hint: memory/knowledge/
+    description: Cross-project technical or process knowledge validated for reuse.
+  taste_scoped:
+    store_hint: memory/taste/
+    description: >
+      Validated aesthetic preference with explicit scope.
+      Never convert one project's look into universal ACOS house style.
+
+# Memory store routing (aligned with MEMORY_POLICY.md)
+stores:
+  knowledge:
+    path: memory/knowledge/
+    accepts: [validated-global, candidate-global, reusable_system, skill_specific]
+  taste:
+    path: memory/taste/
+    accepts: [taste_scoped]
+    note: Requires explicit scope; never default global aesthetic.
+  projects:
+    path: memory/projects/
+    accepts: [observation, project-rule, project_specific]
+  failures:
+    path: memory/failures/
+    accepts: [observation, project-rule, failure]
+  successes:
+    path: memory/successes/
+    accepts: [observation, project-rule, success]
+  model_compatibility:
+    path: memory/model-compatibility/
+    accepts: [model_specific]
+
+# Shared fields for all learning records
+common_fields:
+  id:
+    type: string
+    required: true
+    format: "mem-{type}-{project_or_global}-{sequence}"
+  record_type:
+    type: enum
+    required: true
+    values: [observation, failure, success, promotion_proposal, deprecation]
+  project:
+    type: string
+    required: false
+    note: Required for project-scoped records; omit or null for global candidates.
+  date:
+    type: string
+    required: true
+    format: ISO-8601
+  domain:
+    type: string
+    required: true
+    note: Task domain label from project brief — not a default industry preset.
+  scope:
+    type: enum
+    required: true
+    values: [project_specific, model_specific, skill_specific, reusable_system, taste_scoped]
+  promotion_status:
+    type: enum
+    required: true
+    values: [observation, project-rule, candidate-global, validated-global, deprecated]
+  confidence:
+    type: enum
+    required: true
+    values: [low, medium, high]
+    note: High requires strong, linked, non-contradictory evidence.
+  evidence:
+    type: array
+    required: true
+    items:
+      evidence_id: string
+      evidence_type: enum [planning, implementation, runtime, visual, measurement, gate_verdict, critic_report]
+      source_skill: string
+      artifact_ref: string
+      summary: string
+  affected_skills:
+    type: array
+    required: false
+    items: string
+  model_profile:
+    type: string
+    required: false
+    note: Required when scope is model_specific.
+  recurrence:
+    type: object
+    required: false
+    fields:
+      count: integer
+      project_ids: array
+      first_seen: string
+      last_seen: string
+  status:
+    type: enum
+    required: true
+    values: [draft, active, superseded, rejected, deprecated]
+
+# Failure record (memory/failures/)
+failure_record:
+  extends: common_fields
+  required_fields:
+    - id
+    - project
+    - date
+    - domain
+    - problem
+    - evidence
+    - root_cause
+    - correction
+    - affected_skills
+    - scope
+    - confidence
+    - status
+    - promotion_status
+  fields:
+    problem:
+      type: string
+      description: What failed, observable and specific.
+    root_cause:
+      type: enum
+      values: [process_gap, skill_procedure, model_limitation, tool_constraint, integration_error, evidence_missing, scope_mismatch, requirement_ambiguity, environmental, unknown]
+      description: Classified cause — not blame assignment.
+    correction:
+      type: object
+      fields:
+        action_taken: string
+        responsible_owner: string
+        verified: boolean
+        re_test_evidence: string
+    skill_effectiveness:
+      type: object
+      optional: true
+      fields:
+        skill_id: string
+        outcome: enum [helped, neutral, insufficient, misleading]
+        notes: string
+
+# Success record (memory/successes/)
+success_record:
+  extends: common_fields
+  required_fields:
+    - id
+    - project
+    - date
+    - domain
+    - outcome
+    - evidence
+    - mechanism
+    - reuse_scope
+    - scope
+    - confidence
+    - status
+    - promotion_status
+  fields:
+    outcome:
+      type: string
+      description: What worked and under what conditions.
+    mechanism:
+      type: string
+      description: Why it worked — not merely that it looked good.
+    constraints:
+      type: array
+      description: Conditions required for reuse.
+    reuse_scope:
+      type: string
+      description: Explicit boundary for where this success may apply.
+  note: Success does not automatically become a global rule.
+
+# Observation stub (minimum viable learning entry)
+observation_record:
+  extends: common_fields
+  required_fields:
+    - id
+    - date
+    - domain
+    - summary
+    - evidence
+    - scope
+    - promotion_status
+    - status
+  fields:
+    summary:
+      type: string
+    trigger_event:
+      type: enum
+      values: [gate_reject, gate_blocked, critic_defect, runtime_failure, correction_verified, gate_approve, notable_success, model_quirk, skill_gap]
+    candidate_lesson:
+      type: string
+      optional: true
+      note: Hypothesis only — not a rule until promoted with evidence.
+
+# Promotion proposal (for candidate-global and validated-global transitions)
+promotion_proposal:
+  required_fields:
+    - proposal_id
+    - source_record_ids
+    - target_promotion_status
+    - scope
+    - lesson_statement
+    - evidence_bundle_summary
+    - cross_project_evidence
+    - contradiction_check
+    - house_style_check
+    - approver
+  fields:
+    cross_project_evidence:
+      type: object
+      required_for: candidate-global
+      fields:
+        minimum_distinct_projects: 2
+        project_ids: array
+        condition_diversity: string
+    house_style_check:
+      type: object
+      required: true
+      fields:
+        is_aesthetic: boolean
+        scoped_to_project: boolean
+        would_create_acos_house_style: boolean
+        passed: boolean
+    contradiction_check:
+      type: object
+      fields:
+        conflicting_record_ids: array
+        resolution: string
+    approver:
+      type: string
+      note: Human or designated validation authority for validated-global.
+
+# Model compatibility entry (memory/model-compatibility/)
+model_compatibility_record:
+  extends: common_fields
+  scope: model_specific
+  fields:
+    provider: string
+    model: string
+    version: string
+    deployment: string
+    strengths: array
+    weaknesses: array
+    quirks: array
+    tool_constraints: array
+    benchmark_refs: array
+  note: One model weakness is not universal ACOS policy.
+
+# Retrieval contract
+retrieval:
+  rule: Retrieve only memory relevant to current task, phase, scope, and active skills.
+  prohibited:
+    - dump all historical memory into context
+    - inject deprecated records as active guidance
+    - promote taste memory without scope filter

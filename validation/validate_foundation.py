@@ -97,15 +97,33 @@ def parse_yaml(path: Path, errors: list[str]) -> dict | list | None:
     return data
 
 
-def check_no_skill_md_in_acos(errors: list[str]) -> None:
+def check_proprietary_skills_phase(errors: list[str]) -> None:
+    """Allow zero proprietary skills (Phase A/B) or exactly 14 registry skills (Phase C+)."""
     acos_dir = REPO_ROOT / "skills" / "acos"
-    skill_files = list(acos_dir.rglob("SKILL.md"))
-    if skill_files:
+    skill_files = sorted(acos_dir.rglob("SKILL.md")) if acos_dir.is_dir() else []
+    if not skill_files:
+        return
+
+    registry = REPO_ROOT / "registry" / "SKILLS.yaml"
+    if yaml is None or not registry.is_file():
         rel = [str(p.relative_to(REPO_ROOT)) for p in skill_files]
-        fail(
-            errors,
-            f"Phase A: proprietary SKILL.md files must not exist yet (Phase C): {rel}",
-        )
+        fail(errors, f"Unexpected proprietary SKILL.md before registry check: {rel}")
+        return
+
+    data = yaml.safe_load(registry.read_text(encoding="utf-8"))
+    expected = {
+        item["name"]
+        for item in data.get("proprietary", [])
+        if isinstance(item, dict) and "name" in item
+    }
+    actual = {p.parent.name for p in skill_files}
+    if actual == expected and len(actual) == 14:
+        return
+    rel = [str(p.relative_to(REPO_ROOT)) for p in skill_files]
+    fail(
+        errors,
+        f"Proprietary skills must be absent (Phase A/B) or exactly 14 registry skills (Phase C+): {rel}",
+    )
 
 
 def check_benchmarks_projects_empty(errors: list[str]) -> None:
@@ -189,7 +207,7 @@ def main() -> int:
     check_no_duplicate_masters(errors)
     validate_skills_registry(errors)
     validate_models_registry(errors)
-    check_no_skill_md_in_acos(errors)
+    check_proprietary_skills_phase(errors)
     check_benchmarks_projects_empty(errors)
 
     if errors:

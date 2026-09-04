@@ -1,0 +1,62 @@
+# Motion Intent — output schema (ACOS-07)
+# Creative motion direction only — no library/API implementation fields
+
+schema_version: 1
+skill: acos-motion-director
+
+artifact:
+  status: approved | conditional | rejected
+
+  motion_principles:
+    - string
+
+  tempo_character: urgent | measured | playful | solemn | neutral | custom
+  density_ceiling: string  # e.g. max concurrent moving element groups per viewport
+
+  groups:
+    - id: string
+      purpose: string  # required one-sentence purpose
+      role: communicative | spatial | narrative | interaction
+      choreography: string
+      timing_relationship: string
+      hierarchy_notes: string
+      transition_logic: string
+      restraint_notes: string
+
+  scroll_choreography:  # omit if not applicable
+    phases:
+      - phase_id: string
+        narrative_meaning: string
+        emphasis_shift: string
+        pause_intent: string
+
+  interaction_feedback:
+    - interaction: hover | focus | active | disabled | loading | success | error
+      feedback_intent: string
+      non_motion_fallback: string
+
+  reduced_motion:
+    strategy: substitute | simplify | disable | hybrid
+    substitutes:
+      - motion_group_id: string
+        replacement: string
+
+  rejected_motion:
+    - item: string
+      reason: decorative | unreadable | redundant | generic_trope
+
+  open_questions: []
+
+handoff:
+  status:
+  inputs_used: []
+  decisions: []
+  constraints:
+    no_gratuitous_motion: true
+  open_risks: []
+  evidence:
+    planning_only: true
+    purpose_tests_documented: boolean
+  deliverables: []
+  next_owner: {}
+  rejection_route: []

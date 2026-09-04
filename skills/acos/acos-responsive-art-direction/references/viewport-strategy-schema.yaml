@@ -1,0 +1,74 @@
+# Viewport Strategy — output schema (ACOS-08)
+# Responsive art direction — mobile is NOT desktop scaled down
+
+schema_version: 1
+skill: acos-responsive-art-direction
+
+artifact:
+  status: approved | conditional | rejected
+
+  viewport_classes:
+    - mobile | tablet | desktop | large_desktop | custom
+
+  primary_device_priority: mobile-first | desktop-first | balanced
+  anti_scale_down_rationale: string  # required
+
+  sections:
+    - id: string
+      desktop:
+        composition: string
+        hierarchy: string
+      mobile:
+        composition: string       # must be independently defined
+        hierarchy: string
+        content_priority_changes: []
+      tablet:                     # optional explicit deltas
+        composition: string
+        hierarchy: string
+
+  typography_relationships:
+    - role: display | headline | body | caption | label
+      desktop_dominance: primary | secondary | tertiary
+      mobile_dominance: primary | secondary | tertiary
+      notes: string
+
+  interaction_adaptation:
+    - pattern: string
+      desktop_behavior: string
+      mobile_behavior: string
+
+  three_d_adaptation:  # conditional — only when 3D in scope
+    - beat_id: string
+      desktop_framing: string
+      mobile_framing: string
+      simplification_notes: string
+
+  motion_adaptation:  # conditional
+    - motion_group_id: string
+      desktop_density: string
+      mobile_density: string
+
+  simplification_tiers:  # conditional — coordinate with acos-webgl-performance
+    - viewport_class: string
+      visual_simplification: string
+      performance_tier_ref: string
+
+  open_questions: []
+
+validation:
+  mobile_not_desktop_scaled_down: boolean  # must be true to pass
+  material_composition_differences_documented: boolean
+
+handoff:
+  status:
+  inputs_used: []
+  decisions: []
+  constraints:
+    mobile_not_desktop_scaled_down: true
+  open_risks: []
+  evidence:
+    planning_only: true
+    anti_scale_down_documented: boolean
+  deliverables: []
+  next_owner: {}
+  rejection_route: []

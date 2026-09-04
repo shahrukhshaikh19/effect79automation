@@ -1,0 +1,102 @@
+# Performance Evidence — output schema (ACOS-09)
+# Distinguish planned budget vs measured evidence vs optimization vs compromise
+
+schema_version: 1
+skill: acos-webgl-performance
+
+artifact:
+  status: approved | conditional | rejected
+  rendering_scope_confirmed: true
+
+  target_device_classes:
+    - id: string
+      description: string  # e.g. mid-range mobile, integrated GPU laptop
+      priority: must_pass | should_pass | best_effort
+
+  planned_budgets:
+    label: planned_budget  # never confuse with achieved
+    geometry:
+      hero_poly_intent: string
+      environment_poly_intent: string
+      instancing_notes: string
+    textures:
+      max_resolution_tiers: []
+      channel_budget_notes: string
+    materials:
+      transparency_limit: string
+      reflection_limit: string
+    draw_calls_awareness: string
+    dpr_caps:
+      - device_class_id: string
+        max_dpr: number
+    post_processing_allowance: string
+
+  adaptive_quality_tiers:
+    - tier_id: string
+      description: string
+      triggers: []  # intent-level, e.g. sustained fps below threshold
+      reductions: []
+
+  loading_strategy:
+    initial_load: []
+    deferred_load: []
+    placeholder_intent: string
+
+  memory_flags: []
+
+  fallback_strategy:
+    tiers:
+      - order: number
+        state: string
+    terminal_fallback: static_image | simplified_3d | dom_substitute | disable_3d
+
+  evidence_requirements:
+    - claim_id: string
+      claim: string
+      type: planned | measured
+      required_measurement: string
+      device_class_id: string
+      pass_threshold: string
+      owner: string
+
+  optimization_log:
+    - entry_id: string
+      classification: optimization_decision | visual_compromise | experience_reduction
+      description: string
+      before_state: string
+      after_state: string
+      escalation_required: boolean
+      upstream_owner_if_escalated: string
+
+  measured_results:  # populate only with runtime captures
+    - claim_id: string
+      type: measured_evidence
+      device_class_id: string
+      method: string
+      value: string
+      pass: boolean
+      captured_at: string
+
+  open_risks: []
+
+four_way_distinction:
+  planned_budget: Pre-implementation ceiling — not proof of achievement
+  measured_evidence: Runtime/profile capture on stated device class
+  optimization_decision: Technical change with no meaningful visual/experience loss
+  visual_compromise: Visible quality reduction — must be documented and approved
+
+handoff:
+  status:
+  inputs_used: []
+  decisions: []
+  constraints:
+    no_achieved_claims_without_measurement: true
+    experience_reduction_requires_escalation: true
+  open_risks: []
+  evidence:
+    planned_budgets_documented: boolean
+    measured_results_attached: boolean
+    distinction_four_way_maintained: boolean
+  deliverables: []
+  next_owner: {}
+  rejection_route: []

@@ -1,0 +1,57 @@
+# Creative Direction Artifact — output schema for acos-creative-director
+# Produce as YAML or JSON conforming to this shape.
+
+artifact_version: "1.0"
+skill: acos-creative-director
+project_id: "<project identifier>"
+
+creative_problem: "<core communicative problem the experience must resolve>"
+
+central_creative_thesis: "<single prioritized big-idea statement>"
+
+conceptual_tension:
+  forces: ["<abstract opposing or complementary force>"]
+  resolution: "<how the thesis navigates the tension>"
+
+experience_principles:
+  - id: ep-1
+    statement: "<decision-guiding principle>"
+    downstream_use: "<art|experience|motion|3d|general>"
+
+creative_constraints:
+  hard:
+    - "<must/not boundary>"
+  soft:
+    - "<should/prefer guidance>"
+
+territory_exploration:
+  - id: territory-a
+    summary: "<distinct concept mechanism>"
+    selected: true | false
+    rejection_reason: "<if not selected>"
+  - id: territory-b
+    summary: "<distinct concept mechanism>"
+    selected: false
+    rejection_reason: "<why discarded>"
+
+project_specificity:
+  name_swap_test: pass | fail
+  justification: "<why this thesis belongs to this project>"
+
+reference_alignment:
+  principles_used: ["<ref principle ids>"]
+  non_copy_respected: true | false
+
+specialized_direction_flags:
+  three_d: required | conditional | not_applicable
+  three_d_rationale: "<communicative reason if required/conditional>"
+  motion: required | conditional | not_applicable
+  motion_rationale: "<communicative reason if required/conditional>"
+  immersive: required | conditional | not_applicable
+
+open_questions:
+  - "<stakeholder or feasibility question>"
+
+routing_hints:
+  next_skill: acos-anti-generic-design
+  parallel_after_pass: [acos-art-director, acos-experience-architect]
