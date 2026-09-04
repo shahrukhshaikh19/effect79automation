@@ -16,10 +16,15 @@ fields:
   routing:
     source: phase_f_router
     routing_id: string
+    planned_skill_ids: array
     activated_skill_ids: array
+    design_gate_state: string
     routing_evidence_ref: string
     status: enum [ok, routing_required, insufficient_routing_input, blocked_capability]
     decision_reasons: array
+    note: >
+      activated_skill_ids = currently executable skills (may differ from initial routing snapshot
+      after Design Gate approval). planned_skill_ids preserves original route provenance.
   activated_skills:
     type: array
     items:

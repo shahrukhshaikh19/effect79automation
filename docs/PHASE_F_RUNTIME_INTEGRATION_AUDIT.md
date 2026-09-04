@@ -235,3 +235,30 @@ FOUNDATION_READY: undeclared
 - Model-specific scope cannot silently migrate to global.
 
 **Correction claim:** PHASE F CERTIFICATION CORRECTIONS COMPLETE — awaiting independent review.
+
+---
+
+## Design Gate unlock correction (2026-09-04)
+
+### Gate state authority
+
+- `authoritative_design_gate()` — execution-state gate wins over stale `routing_decision.design_gate_state`.
+- Historical routing snapshots preserved for provenance only.
+
+### Unlock flow
+
+```text
+route_task() → planned_skill_ids + initial active_skill_ids
+Design Gate PENDING → gated skills planned but not active
+Design Gate APPROVED → unlock_planned_skills() → active_skill_ids refreshed
+No rerouting — same routing_id preserved
+```
+
+Functions: `bind_routing_to_execution()`, `refresh_executable_activations()`, `unlock_planned_skills()`.
+
+### Adapter packet
+
+- `build_adapter_packet(intake, routing, execution_state=state)` uses current `active_skill_ids`.
+- Packet exposes `planned_skill_ids`, current `activated_skill_ids`, and current `design_gate_state`.
+
+**Unlock claim:** PHASE F DESIGN GATE UNLOCK CORRECTION COMPLETE — awaiting independent review.

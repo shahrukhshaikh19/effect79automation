@@ -34,6 +34,15 @@
 | F-C4 — Memory promotion/conflict hardening | COMPLETE | `create_memory_observation` + `promote_memory` + subject_key conflicts |
 | F-C5 — Tests T19–T34 + validator hardening | COMPLETE | 37 tests PASSED |
 
+## Phase F design gate unlock — 2026-09-04
+
+| Task | Status | Evidence |
+|---|---|---|
+| F-DG1 — Execution state gate authority | COMPLETE | `authoritative_design_gate()` |
+| F-DG2 — Skill unlock without rerouting | COMPLETE | `unlock_planned_skills()` + `bind_routing_to_execution()` |
+| F-DG3 — Adapter packet current executable state | COMPLETE | `build_adapter_packet(..., execution_state=)` |
+| F-DG4 — Tests T35–T42 + lifecycle smoke | COMPLETE | 45 tests PASSED |
+
 **FOUNDATION_READY:** not declared (Phase G required)
 
 ---

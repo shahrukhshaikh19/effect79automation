@@ -20,8 +20,10 @@ def _now() -> str:
 def create_execution_state(task_id: str) -> dict[str, Any]:
     return {
         "task_id": task_id,
+        "routing_id": None,
         "current_stage": "INTAKE",
         "completed_stages": [],
+        "planned_skill_ids": [],
         "active_skill_ids": [],
         "gate_states": {
             "design_gate": "NOT_APPLICABLE",

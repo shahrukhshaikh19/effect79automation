@@ -219,33 +219,99 @@ def validate_correction_routing_policy(errors: list[str]) -> None:
 
 
 def validate_design_gate_guard(errors: list[str]) -> None:
-    """F-C3: Design Gate must be enforced via transition guard."""
+    """F-C3 + unlock: Design Gate transition guard and complete unlock flow."""
     transitions = REPO / "runtime" / "state" / "transitions.py"
     if not transitions.is_file():
         fail(errors, "Missing runtime/state/transitions.py")
         return
     text = load_text(transitions)
-    if "can_transition" not in text:
-        fail(errors, "transitions.py must implement can_transition")
+    for fn in ("can_transition", "unlock_planned_skills", "refresh_executable_activations", "bind_routing_to_execution"):
+        if fn not in text:
+            fail(errors, f"transitions.py must implement {fn}")
     if "TRANSITION_BLOCKED_DESIGN_GATE" not in text:
         fail(errors, "Design gate block reason missing")
+    if "authoritative_design_gate" not in text:
+        fail(errors, "Execution state must use authoritative_design_gate")
+
+    engine_text = load_text(REPO / "runtime" / "routing" / "engine.py")
+    if "routing_decision" in text and "design_gate_state" in text:
+        if "routing_decision[\"design_gate_state\"]" in text.replace(" ", "") and "authoritative" not in text:
+            pass  # checked via authoritative_design_gate
+
+    packet_text = load_text(REPO / "runtime" / "adapter" / "packet.py")
+    if "execution_state" not in packet_text:
+        fail(errors, "build_adapter_packet must accept execution_state")
 
     sys.path.insert(0, str(REPO))
     try:
+        from runtime.adapter.packet import build_adapter_packet
+        from runtime.intake.normalize import normalize_intake
+        from runtime.routing.engine import route_task
         from runtime.state.execution import create_execution_state
-        from runtime.state.transitions import can_transition, set_design_gate_state
+        from runtime.state.transitions import (
+            bind_routing_to_execution,
+            can_transition,
+            set_design_gate_state,
+            unlock_planned_skills,
+        )
 
         state = create_execution_state("probe")
         set_design_gate_state(state, "PENDING")
-        blocked = can_transition(state, "PRODUCTION")
-        if blocked.get("allowed"):
+        if can_transition(state, "PRODUCTION").get("allowed"):
             fail(errors, "PRODUCTION must be blocked when Design Gate PENDING")
         set_design_gate_state(state, "APPROVED")
-        allowed = can_transition(state, "PRODUCTION")
-        if not allowed.get("allowed"):
+        if not can_transition(state, "PRODUCTION").get("allowed"):
             fail(errors, "PRODUCTION must be allowed when Design Gate APPROVED")
+
+        # T35 — stale routing must not override execution-state APPROVED
+        stale = {"design_gate_state": "PENDING"}
+        if not can_transition(state, "PRODUCTION", stale).get("allowed"):
+            fail(errors, "Execution-state APPROVED must override stale routing PENDING")
+
+        # Full unlock lifecycle probe
+        intake = normalize_intake(
+            {
+                "task_id": "val-dg-unlock",
+                "request": "visual",
+                "normalized_goal": "Deliver visual experience.",
+                "task_signals": {
+                    "deliverable_profile": "visual_experience",
+                    "requires_visual_output": True,
+                    "requires_creative_direction": True,
+                    "requires_responsive": True,
+                },
+                "runtime_capabilities": {"browser": "AVAILABLE"},
+            }
+        )
+        routing = route_task(intake)
+        if routing.get("design_gate_state") != "PENDING":
+            fail(errors, "Visual intake must produce PENDING design gate")
+        if "ACOS-08" not in routing.get("planned_skill_ids", []):
+            fail(errors, "ACOS-08 must be in planned_skill_ids for responsive visual task")
+        if "ACOS-08" in routing.get("executable_active_skill_ids", []):
+            fail(errors, "ACOS-08 must not be executable before gate approval")
+
+        dg_state = create_execution_state("val-dg-unlock")
+        bind_routing_to_execution(dg_state, routing)
+        routing_id = routing["routing_id"]
+        packet_before = build_adapter_packet(intake, routing, execution_state=dg_state)
+        if "ACOS-08" in packet_before["routing"]["activated_skill_ids"]:
+            fail(errors, "Packet must exclude gated skill before approval")
+
+        set_design_gate_state(dg_state, "APPROVED")
+        unlock_planned_skills(dg_state, routing)
+        if "ACOS-08" not in dg_state["active_skill_ids"]:
+            fail(errors, "ACOS-08 must unlock after gate approval")
+        if not can_transition(dg_state, "PRODUCTION", routing).get("allowed"):
+            fail(errors, "Production must be allowed after gate approval")
+
+        packet_after = build_adapter_packet(intake, routing, execution_state=dg_state)
+        if "ACOS-08" not in packet_after["routing"]["activated_skill_ids"]:
+            fail(errors, "Packet must include unlocked skill after approval")
+        if packet_after["routing"]["routing_id"] != routing_id:
+            fail(errors, "routing_id must be preserved across gate unlock")
     except Exception as exc:
-        fail(errors, f"Design gate probe failed: {exc}")
+        fail(errors, f"Design gate unlock probe failed: {exc}")
 
 
 def validate_memory_semantics(errors: list[str]) -> None:
@@ -344,7 +410,7 @@ def validate_tests_exist(errors: list[str]) -> None:
         fail(errors, "Missing validation/tests/runtime/test_scenarios.py")
         return
     text = load_text(tests)
-    for tid in range(1, 35):
+    for tid in range(1, 43):
         if f"test_t{tid}" not in text.lower() and f"t{tid}_" not in text.lower():
             fail(errors, f"Test scenario T{tid} not found in test_scenarios.py")
 

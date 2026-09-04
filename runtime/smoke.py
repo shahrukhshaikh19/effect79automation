@@ -18,7 +18,7 @@ from runtime.evidence.register import register_evidence
 from runtime.handoff.validate import build_handoff, validate_handoff
 from runtime.intake.normalize import normalize_intake
 from runtime.intake.validate import validate_intake
-from runtime.memory.records import create_memory_observation, promote_memory
+from runtime.memory.records import create_memory_observation
 from runtime.quality.gate import evaluate_gate, validate_producer_independence
 from runtime.routing.engine import route_task, validate_routing_decision
 from runtime.state.execution import (
@@ -27,9 +27,63 @@ from runtime.state.execution import (
     persist_state,
     resume_execution,
 )
-from runtime.state.transitions import can_transition, set_design_gate_state
+from runtime.state.transitions import (
+    bind_routing_to_execution,
+    can_transition,
+    set_design_gate_state,
+    unlock_planned_skills,
+)
 
 SMOKE_DIR = REPO / "validation" / "evidence" / "runtime" / "smoke"
+
+
+def run_design_gate_lifecycle_probe() -> dict:
+    """Visual synthetic intake → gate pending → approve → unlock → packet update."""
+    task_id = f"task-dg-{uuid.uuid4().hex[:8]}"
+    intake = normalize_intake(
+        {
+            "task_id": task_id,
+            "request": "Deliver bounded visual layout module.",
+            "normalized_goal": "Create responsive visual layout with art direction.",
+            "deliverables": ["layout", "visual_evidence"],
+            "constraints": ["domain_neutral"],
+            "task_signals": {
+                "deliverable_profile": "visual_experience",
+                "requires_visual_output": True,
+                "requires_creative_direction": True,
+                "requires_responsive": True,
+            },
+            "runtime_capabilities": {"browser": "AVAILABLE", "blender": "RESTRICTED"},
+        }
+    )
+    routing = route_task(intake)
+    state = create_execution_state(task_id)
+    bind_routing_to_execution(state, routing)
+    routing_id = routing["routing_id"]
+
+    blocked_before = can_transition(state, "PRODUCTION", routing)
+    packet_before = build_adapter_packet(intake, routing, execution_state=state)
+
+    set_design_gate_state(state, "APPROVED")
+    append_event(state, "DESIGN_GATE_APPROVED", routing_id)
+    unlock_planned_skills(state, routing)
+    append_event(state, "EXECUTABLE_SKILLS_REFRESHED", routing_id)
+
+    allowed_after = can_transition(state, "PRODUCTION", routing)
+    packet_after = build_adapter_packet(intake, routing, execution_state=state)
+
+    return {
+        "task_id": task_id,
+        "routing_id": routing_id,
+        "routing_id_unchanged": packet_after["routing"]["routing_id"] == routing_id,
+        "design_gate_before": "PENDING",
+        "production_blocked_before": not blocked_before["allowed"],
+        "acos_08_planned": "ACOS-08" in state["planned_skill_ids"],
+        "acos_08_inactive_before": "ACOS-08" not in packet_before["routing"]["activated_skill_ids"],
+        "acos_08_active_after": "ACOS-08" in state["active_skill_ids"],
+        "acos_08_in_packet_after": "ACOS-08" in packet_after["routing"]["activated_skill_ids"],
+        "production_allowed_after": allowed_after["allowed"],
+    }
 
 
 def run_smoke() -> dict:
@@ -65,9 +119,7 @@ def run_smoke() -> dict:
     routing = route_task(intake)
     validate_routing_decision(routing)
     append_event(state, "ROUTING_CREATED", routing["routing_id"])
-    state["active_skill_ids"] = routing["executable_active_skill_ids"]
-    state["planned_skill_ids"] = routing.get("planned_skill_ids", [])
-    state["gate_states"]["design_gate"] = routing.get("design_gate_state", "NOT_APPLICABLE")
+    bind_routing_to_execution(state, routing)
     dg_probe = can_transition(state, "PRODUCTION", routing)
 
     handoff = build_handoff(
@@ -75,7 +127,7 @@ def run_smoke() -> dict:
         from_stage="INTAKE",
         to_stage="PRODUCTION",
         producer_skill_id="router",
-        consumer_skill_ids=routing["activated_skill_ids"][:3],
+        consumer_skill_ids=state["active_skill_ids"][:3],
         artifact_refs=[f"artifact://{task_id}/plan"],
         evidence_refs=[],
         constraints_preserved=intake.get("constraints", []),
@@ -127,7 +179,7 @@ def run_smoke() -> dict:
     state["memory_candidates"].append(memory["memory_id"])
     append_event(state, "MEMORY_CANDIDATE_CREATED", memory["memory_id"])
 
-    packet = build_adapter_packet(intake, routing)
+    packet = build_adapter_packet(intake, routing, execution_state=state)
     correction = create_correction_request(
         task_id=task_id,
         source_gate_or_critic="ACOS-13",
@@ -143,13 +195,16 @@ def run_smoke() -> dict:
     path = persist_state(state)
     resumed = resume_execution(task_id)
 
+    dg_lifecycle = run_design_gate_lifecycle_probe()
+
     result = {
         "task_id": task_id,
         "routing_status": routing["status"],
         "gate_status": gate_result["status"],
-        "activated_skills": routing["executable_active_skill_ids"],
-        "planned_skills": routing.get("planned_skill_ids", []),
+        "active_skills": state["active_skill_ids"],
+        "planned_skills": state["planned_skill_ids"],
         "design_gate_probe": dg_probe,
+        "design_gate_lifecycle": dg_lifecycle,
         "adapter_packet_routing_source": packet["routing"]["source"],
         "correction_status": correction["status"],
         "state_path": str(path.relative_to(REPO)),

@@ -28,7 +28,13 @@ from runtime.memory.records import (
 from runtime.quality.gate import evaluate_gate, validate_producer_independence
 from runtime.routing.engine import route_task, validate_routing_decision
 from runtime.state.execution import create_execution_state, persist_state, resume_execution
-from runtime.state.transitions import can_transition, set_design_gate_state
+from runtime.state.transitions import (
+    bind_routing_to_execution,
+    can_transition,
+    set_design_gate_state,
+    unlock_planned_skills,
+    validate_active_skills_subset,
+)
 
 VISUAL_3D_MOTION = {"ACOS-01", "ACOS-04", "ACOS-06", "ACOS-07", "ACOS-12", "EXT-3DWEB-01", "EXT-MOTION-01", "EXT-IMG3D-01"}
 DOMAIN_FORBIDDEN = ("coffee", "crypto", "portfolio", "luxury brand", "cinematic website")
@@ -508,6 +514,109 @@ class CertificationCorrectionTests(unittest.TestCase):
         self.assertEqual(a["status"], "draft")
         self.assertEqual(b["status"], "draft")
         self.assertTrue(conflicts)
+
+
+def _visual_intake(**signals) -> dict:
+    return _base_intake(
+        deliverable_profile="visual_experience",
+        requires_visual_output=True,
+        requires_creative_direction=True,
+        requires_responsive=True,
+        **signals,
+    )
+
+
+class DesignGateUnlockTests(unittest.TestCase):
+    # T35 — Execution state overrides stale routing gate
+    def test_t35_execution_state_overrides_stale_routing_gate(self) -> None:
+        state = create_execution_state("task-t35")
+        set_design_gate_state(state, "APPROVED")
+        stale_routing = {"design_gate_state": "PENDING"}
+        result = can_transition(state, "PRODUCTION", stale_routing)
+        self.assertTrue(result["allowed"])
+
+    # T36 — Planned production skill unlocks after approval
+    def test_t36_production_skill_unlocks_after_approval(self) -> None:
+        intake = _visual_intake()
+        routing = route_task(intake)
+        state = create_execution_state("task-t36")
+        bind_routing_to_execution(state, routing)
+        self.assertIn("ACOS-08", state["planned_skill_ids"])
+        self.assertNotIn("ACOS-08", state["active_skill_ids"])
+        set_design_gate_state(state, "APPROVED")
+        unlock_planned_skills(state, routing)
+        self.assertIn("ACOS-08", state["active_skill_ids"])
+
+    # T37 — Adapter packet reflects unlock
+    def test_t37_adapter_packet_reflects_unlock(self) -> None:
+        intake = _visual_intake()
+        routing = route_task(intake)
+        state = create_execution_state("task-t37")
+        bind_routing_to_execution(state, routing)
+        packet_before = build_adapter_packet(intake, routing, execution_state=state)
+        self.assertNotIn("ACOS-08", packet_before["routing"]["activated_skill_ids"])
+        set_design_gate_state(state, "APPROVED")
+        unlock_planned_skills(state, routing)
+        packet_after = build_adapter_packet(intake, routing, execution_state=state)
+        self.assertIn("ACOS-08", packet_after["routing"]["activated_skill_ids"])
+
+    # T38 — Routing provenance preserved
+    def test_t38_routing_provenance_preserved(self) -> None:
+        intake = _visual_intake()
+        routing = route_task(intake)
+        original_id = routing["routing_id"]
+        state = create_execution_state("task-t38")
+        bind_routing_to_execution(state, routing)
+        set_design_gate_state(state, "APPROVED")
+        unlock_planned_skills(state, routing)
+        packet = build_adapter_packet(intake, routing, execution_state=state)
+        self.assertEqual(packet["routing"]["routing_id"], original_id)
+        self.assertEqual(state["routing_id"], original_id)
+
+    # T39 — Rejected gate does not unlock
+    def test_t39_rejected_gate_does_not_unlock(self) -> None:
+        intake = _visual_intake()
+        routing = route_task(intake)
+        state = create_execution_state("task-t39")
+        bind_routing_to_execution(state, routing)
+        set_design_gate_state(state, "REJECTED")
+        unlock_planned_skills(state, routing)
+        self.assertNotIn("ACOS-08", state["active_skill_ids"])
+        self.assertFalse(can_transition(state, "PRODUCTION", routing)["allowed"])
+
+    # T40 — Evidence-blocked gate does not unlock
+    def test_t40_blocked_gate_does_not_unlock(self) -> None:
+        intake = _visual_intake()
+        routing = route_task(intake)
+        state = create_execution_state("task-t40")
+        bind_routing_to_execution(state, routing)
+        set_design_gate_state(state, "BLOCKED_INSUFFICIENT_EVIDENCE")
+        unlock_planned_skills(state, routing)
+        self.assertNotIn("ACOS-08", state["active_skill_ids"])
+        result = can_transition(state, "PRODUCTION", routing)
+        self.assertFalse(result["allowed"])
+        self.assertTrue(result.get("collect_evidence"))
+
+    # T41 — NOT_APPLICABLE path remains executable
+    def test_t41_not_applicable_remains_executable(self) -> None:
+        intake = _base_intake(deliverable_profile="standard_application", requires_accessibility=True)
+        routing = route_task(intake)
+        state = create_execution_state("task-t41")
+        bind_routing_to_execution(state, routing)
+        self.assertEqual(state["gate_states"]["design_gate"], "NOT_APPLICABLE")
+        self.assertEqual(sorted(state["active_skill_ids"]), sorted(state["planned_skill_ids"]))
+
+    # T42 — Unlock cannot add unplanned skill
+    def test_t42_unlock_cannot_add_unplanned_skill(self) -> None:
+        intake = _visual_intake()
+        routing = route_task(intake)
+        state = create_execution_state("task-t42")
+        bind_routing_to_execution(state, routing)
+        with self.assertRaises(ValueError):
+            validate_active_skills_subset(state, ["ACOS-99-UNPLANNED"])
+        state["active_skill_ids"] = list(state["planned_skill_ids"])
+        unlock_planned_skills(state, routing)
+        self.assertNotIn("ACOS-99-UNPLANNED", state["active_skill_ids"])
 
 
 class DesignGateRoutingTests(unittest.TestCase):

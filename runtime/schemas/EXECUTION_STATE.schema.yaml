@@ -14,7 +14,18 @@ fields:
   task_id: {type: string}
   current_stage: {type: string}
   completed_stages: {type: array, items: string}
-  active_skill_ids: {type: array, items: string}
+  active_skill_ids:
+    type: array
+    items: string
+    note: Currently executable skill set — subset of planned_skill_ids.
+  planned_skill_ids:
+    type: array
+    items: string
+    note: Full routed plan from original routing decision — provenance preserved.
+  routing_id:
+    type: string
+    required: false
+    note: Original routing decision ID — unchanged across gate unlock.
   gate_states:
     type: object
     fields:
@@ -61,3 +72,5 @@ event_types:
   - GATE_APPROVED
   - MEMORY_CANDIDATE_CREATED
   - EXECUTION_RESUMED
+  - DESIGN_GATE_APPROVED
+  - EXECUTABLE_SKILLS_REFRESHED
