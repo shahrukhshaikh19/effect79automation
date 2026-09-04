@@ -420,6 +420,20 @@ def _phase_e_complete() -> bool:
     return foundation.get("E") == "COMPLETE"
 
 
+def validate_adapter_routing_contamination(errors: list[str]) -> None:
+    """Phase E adapters must not own routing classification/selection."""
+    local = REPO / "adapters" / "local" / "LOCAL_LLM_BOOTSTRAP.md"
+    if local.is_file():
+        text = load_text(local)
+        if re.search(r"^\s*\d+\.\s+Classify the current task", text, re.I | re.M):
+            fail(errors, "LOCAL_LLM_BOOTSTRAP still instructs adapter to classify tasks")
+        if re.search(r"^\s*\d+\.\s+Select only relevant", text, re.I | re.M):
+            fail(errors, "LOCAL_LLM_BOOTSTRAP still instructs adapter to select skills")
+    registry = REPO / "registry" / "ADAPTERS.yaml"
+    if registry.is_file() and "routing_ownership" not in load_text(registry):
+        fail(errors, "ADAPTERS.yaml missing routing_ownership contract")
+
+
 def validate_phase_boundaries(errors: list[str]) -> None:
     for name in ("benchmarks", "projects"):
         for item in (REPO / name).rglob("*"):
@@ -483,6 +497,7 @@ def main() -> int:
     validate_blender_capabilities_structure(errors)
     validate_openai_license_metadata(errors)
     validate_domain_neutrality(errors)
+    validate_adapter_routing_contamination(errors)
     validate_phase_boundaries(errors)
     run_regression(errors)
 

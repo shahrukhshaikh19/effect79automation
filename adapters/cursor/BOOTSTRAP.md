@@ -15,7 +15,10 @@
 ## Authority
 
 Cursor rules are **compatibility surfaces**, not constitutional authority.  
-If rule text conflicts with canonical master, canonical master wins.
+If thin rule text conflicts with canonical master, canonical master wins **within ACOS logical authority**.
+
+**Host technical hierarchy always applies** — the adapter cannot override Cursor system/developer/platform/safety instructions.  
+Preserve ACOS semantics only where the host permits.
 
 ## Workspace behavior
 

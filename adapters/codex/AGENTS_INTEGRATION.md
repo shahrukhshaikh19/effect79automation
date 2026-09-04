@@ -11,8 +11,11 @@ Root `AGENTS.md` is **canonical shared** implementation-agent instructions.
 
 ## Precedence
 
-Host Codex system instructions apply at platform level.  
-ACOS logical precedence: `registry/ADAPTERS.yaml` → `shared_contract.instruction_precedence`.
+**Host technical hierarchy always applies** — the Codex adapter cannot override higher-priority system, developer, platform, or safety instructions.
+
+Within host-permitted behavior, ACOS logical precedence: `registry/ADAPTERS.yaml` → `shared_contract.instruction_precedence`.
+
+If a host constraint blocks an ACOS requirement, report the limitation truthfully.
 
 ## When AGENTS.md and adapter differ
 

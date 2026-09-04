@@ -165,6 +165,20 @@ Updated: `validate_cross_phase_consistency.py`, `validate_tools.py` (phase-aware
 
 ---
 
+## Phase E certification correction — 2026-09-04
+
+| Finding | Correction |
+|---|---|
+| Local adapter owned task classification/skill selection | Removed; consumes `routing.activated_skill_ids` from caller/Phase F |
+| Claude precedence implied ACOS overrides host | Host technical hierarchy always applies; ACOS logical authority only within host-permitted behavior |
+| Validators too phrase-based | `validate_routing_ownership` + `validate_host_precedence` in validate_adapters.py |
+
+**Routing ownership:** Adapter consumes routing. Adapter does not own routing.
+
+**Host precedence:** Host system/developer/platform/safety instructions apply; adapter cannot override.
+
+---
+
 ## Evidence
 
 - `validation/validate_adapters.py` — PASSED

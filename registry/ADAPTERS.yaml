@@ -5,17 +5,26 @@ contract_schema_version: "1.0"
 domain_neutral: true
 
 shared_contract:
+  host_technical_hierarchy:
+    description: >
+      Host/platform system, developer, platform, safety, and runtime instructions
+      always apply. Adapters cannot override higher-priority host instructions.
+    applies_to: [system, developer, platform, safety, runtime, tool_restrictions]
+    adapter_rule: preserve ACOS semantics only where host permits; report limitations truthfully
   instruction_precedence:
     description: >
-      ACOS logical authority order. Host platform technical instruction hierarchy
-      may differ; adapter obeys host while preserving ACOS semantics where possible.
+      ACOS logical authority order within host-permitted behavior.
+      Not a claim to override host technical hierarchy.
     order:
-      - user_project_request_and_valid_runtime_constraints
       - acos_canonical_constitutional_policy_authority
       - activated_acos_skill_instructions
       - tool_specific_operational_contracts
       - adapter_platform_compatibility_behavior
       - model_specific_optimization_hints
+  routing_ownership:
+    owner: phase_f_routing_or_external_caller
+    adapter_rule: consume activated_skill_ids; do not classify tasks or select skills autonomously
+    missing_routing_status: [routing_required, insufficient_routing_input]
   skill_loading:
     levels:
       L1: skill name + description/metadata from registry
@@ -29,8 +38,8 @@ shared_contract:
     sequence:
       - minimum bootstrap
       - authority summary references
-      - task classification
-      - relevant skill metadata
+      - routing_supplied_scope_and_classification
+      - metadata_for_activated_skill_ids_only
       - activated SKILL.md
       - on_demand references scripts
   tool_status_semantics:

@@ -281,6 +281,118 @@ def validate_cursor_rule(errors: list[str]) -> None:
         fail(errors, "Cursor rule duplicates Constitution — must stay thin")
 
 
+def validate_routing_ownership(errors: list[str]) -> None:
+    """Adapters must consume routing — not classify tasks or select skills autonomously."""
+    routing_imperatives = [
+        re.compile(r"^\s*\d+\.\s+Classify the current task", re.I | re.M),
+        re.compile(r"^\s*[-*]\s+Classify the current task", re.I | re.M),
+        re.compile(r"\bClassify the current task\.?\b", re.I),
+        re.compile(r"\bSelect only relevant\b.*\bskills\b", re.I),
+        re.compile(r"\bSelect relevant\b.*\bskills\b", re.I),
+        re.compile(r"\bchoose relevant\b.*\bskills\b", re.I),
+        re.compile(r"\bactivate skills by\b", re.I),
+        re.compile(r"\binfer routing\b", re.I),
+        re.compile(r"\bdecide.*routing path\b", re.I),
+        re.compile(r"\brank candidate skills\b", re.I),
+    ]
+    allow_line_markers = (
+        "do not classify",
+        "must not classify",
+        "does not classify",
+        "phase f",
+        "future routing",
+        "future phase f",
+        "routing will",
+        "supplied by",
+        "activated_skill_ids",
+        "routing_required",
+        "insufficient_routing_input",
+        "not own routing",
+        "does not own routing",
+        "consume routing",
+        "consumes routing",
+        "input from",
+        "caller/router",
+        "not adapter-generated",
+        "not adapter-selected",
+        "not invent",
+    )
+    scan_paths = list((REPO / "adapters").rglob("*.md")) + [
+        REPO / "adapters" / "local" / "LOCAL_LLM_BOOTSTRAP.md",
+    ]
+    local_entry = REPO / "adapters" / "local" / "LOCAL_LLM_BOOTSTRAP.md"
+    if local_entry.is_file():
+        lt = load_text(local_entry)
+        if "routing.activated_skill_ids" not in lt and "activated_skill_ids" not in lt:
+            fail(errors, "LOCAL_LLM_BOOTSTRAP must require activated_skill_ids from caller/router")
+        if "routing_required" not in lt and "insufficient_routing_input" not in lt:
+            fail(errors, "LOCAL_LLM_BOOTSTRAP must define missing-routing behavior")
+
+    packet = REPO / "adapters" / "local" / "TASK_PACKET.schema.yaml"
+    if packet.is_file():
+        pt = load_text(packet)
+        if "routing:" not in pt or "activated_skill_ids" not in pt:
+            fail(errors, "TASK_PACKET.schema.yaml must define routing.activated_skill_ids input")
+        if "adapter must not derive" not in pt.lower() and "not adapter-generated" not in pt.lower():
+            fail(errors, "TASK_PACKET.schema.yaml must state classification/routing is input not adapter-derived")
+
+    for path in scan_paths:
+        if not path.is_file():
+            continue
+        for i, line in enumerate(load_text(path).splitlines(), 1):
+            lower = line.lower()
+            if any(m in lower for m in allow_line_markers):
+                continue
+            for pat in routing_imperatives:
+                if pat.search(line):
+                    fail(
+                        errors,
+                        f"Routing ownership violation {path.relative_to(REPO)}:{i}: {line.strip()[:90]}",
+                    )
+
+
+def validate_host_precedence(errors: list[str], adapters: list[dict]) -> None:
+    forbidden_host_claims = [
+        re.compile(r"ACOS policy wins for ACOS work", re.I),
+        re.compile(r"ACOS wins when host", re.I),
+        re.compile(r"ACOS wins over host", re.I),
+        re.compile(r"ACOS overrides? (system|developer|platform|host)", re.I),
+        re.compile(r"when host rules conflict.*ACOS.*wins", re.I),
+    ]
+    required_concepts = (
+        "host technical",
+        "does not override",
+        "cannot override",
+        "where the host permits",
+        "where host permits",
+        "permitted by the host",
+        "report the limitation",
+    )
+    registry = load_yaml(REPO / "registry" / "ADAPTERS.yaml", errors)
+    if isinstance(registry, dict):
+        shared = registry.get("shared_contract", {})
+        if "host_technical_hierarchy" not in shared:
+            fail(errors, "ADAPTERS.yaml must define shared_contract.host_technical_hierarchy")
+        if "routing_ownership" not in shared:
+            fail(errors, "ADAPTERS.yaml must define shared_contract.routing_ownership")
+
+    entrypoints = [REPO / str(a.get("entrypoint", "")) for a in adapters if a.get("entrypoint")]
+    claude_ep = REPO / "adapters/claude/BOOTSTRAP.md"
+    if claude_ep.is_file():
+        entrypoints.append(claude_ep)
+
+    for path in entrypoints:
+        if not path.is_file():
+            continue
+        text = load_text(path)
+        for pat in forbidden_host_claims:
+            if pat.search(text):
+                fail(errors, f"Forbidden host precedence claim: {path.relative_to(REPO)}")
+        if path.name == "BOOTSTRAP.md" and "claude" in str(path):
+            if not any(c.lower() in text.lower() for c in required_concepts):
+                fail(errors, "Claude bootstrap must document host technical hierarchy respect")
+
+
 def validate_models_registry_unchanged(errors: list[str]) -> None:
     models = load_yaml(REPO / "registry" / "MODELS.yaml", errors)
     if isinstance(models, dict):
@@ -305,6 +417,8 @@ def main() -> int:
     validate_canonical_references(errors, adapters)
     validate_thinness(errors)
     validate_skill_integrity(errors)
+    validate_routing_ownership(errors)
+    validate_host_precedence(errors, adapters)
     validate_phase_f_boundary(errors)
     validate_licensing(errors)
     validate_tool_semantics(errors)

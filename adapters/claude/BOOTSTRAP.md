@@ -13,11 +13,23 @@
 5. Apply progressive loading per `SKILL_LOADING.md`.
 6. Map tools per `TOOL_MAPPING.yaml` with truthful runtime status.
 
-## ACOS logical authority vs host precedence
+## ACOS logical authority vs host technical hierarchy
 
-Claude's system/developer/user message hierarchy is a **host platform** concern.  
-ACOS **logical** precedence is defined in `registry/ADAPTERS.yaml` → `shared_contract.instruction_precedence`.  
-When host rules conflict with ACOS constitutional policy, ACOS policy wins for ACOS work; host safety/platform rules still apply.
+**Host technical hierarchy always applies.** The Claude adapter does **not** override higher-priority system, developer, platform, safety, or runtime instructions.
+
+Within the freedom permitted by the host environment, ACOS **logical** authority governs ACOS behavior:
+
+```text
+canonical ACOS authority
+→ activated ACOS skills
+→ tool operational contracts
+→ adapter compatibility guidance
+→ model optimization hints
+```
+
+Shared contract: `registry/ADAPTERS.yaml` → `shared_contract.instruction_precedence` and `host_technical_hierarchy`.
+
+If a host-level constraint prevents an ACOS requirement, report the limitation truthfully — do not pretend ACOS overrode the host.
 
 ## Agent Skills on Claude
 

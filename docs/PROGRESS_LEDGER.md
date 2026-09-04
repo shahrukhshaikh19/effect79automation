@@ -41,6 +41,16 @@ See `docs/FOUNDATION_CERTIFICATION_HARDENING.md` for full audit trail.
 
 ---
 
+## Phase E certification correction — 2026-09-04
+
+| Task | Status | Evidence |
+|---|---|---|
+| E-C1 — Local routing boundary | COMPLETE | LOCAL_LLM_BOOTSTRAP + TASK_PACKET routing input |
+| E-C2 — Host precedence truthfulness | COMPLETE | Claude/Cursor/Codex + ADAPTERS.yaml host_technical_hierarchy |
+| E-C3 — Validator hardening | COMPLETE | routing_ownership + host_precedence invariants |
+
+---
+
 ## Final certification corrections — 2026-09-04
 
 | Task | Status | Evidence |

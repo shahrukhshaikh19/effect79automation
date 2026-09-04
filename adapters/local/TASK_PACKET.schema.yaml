@@ -1,8 +1,8 @@
-version: "1.0"
+version: "1.1"
 schema: acos_local_task_packet
 description: >
   Bounded task packet for local/open-source models without native Agent Skills.
-  External orchestrator compiles this; model does not receive entire ACOS brain.
+  Routing fields are INPUT from external caller or future Phase F — not adapter-generated.
 
 task_packet:
   acos_version: "1.2"
@@ -17,18 +17,22 @@ task_packet:
       - registry/TOOLS.yaml
 
   task:
-    classification: ""  # domain-neutral task type
-    scope_boundary: ""
-    forbidden_assumptions: []
+    normalized_scope: ""
+    classification: ""  # INPUT from caller/router — adapter must not derive
+
+  routing:
+    source: external_caller  # external_caller | phase_f_router
+    activated_skill_ids: []  # REQUIRED input — adapter loads only these IDs
+    routing_evidence_ref: null
+    status: ok  # ok | routing_required | insufficient_routing_input
 
   activated_skills:
-    # L2 load list — ids from registry only
+    # Resolved L2 paths — populated from routing.activated_skill_ids after registry validation
     - skill_id: ""
       skill_path: ""
       load_level: L2
 
   allowed_tools:
-    # canonical family + runtime status
     - family: browser
       status: UNKNOWN
     - family: blender
@@ -51,6 +55,7 @@ task_packet:
     prior_stage_evidence_ref: null
 
 notes:
+  - activated_skill_ids are caller/router INPUT — adapter must not invent them
+  - If activated_skill_ids empty when routing required → routing_required
   - Packet must stay bounded — no full skill library embed
-  - Phase F routing may supply activated_skill_ids later
   - Validate outputs externally between stages
