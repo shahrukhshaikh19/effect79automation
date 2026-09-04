@@ -1,0 +1,3471 @@
+version: '1.2'
+phase: B-hardening
+authority: registry/EXTERNAL_SKILLS_LOCK.yaml
+source_skill: EXT-IMG3D-01
+source_local_path: skills/external/img2threejs
+generated_date: '2026-09-04'
+review_method: static_pattern_inspection_only
+policy:
+  scripts_not_executed: true
+  unknown_when_unproven: true
+required_fields:
+- path
+- language
+- runtime_role
+- filesystem_access
+- network_access
+- subprocess_execution
+- shell_execution
+- package_install_behavior
+- environment_variable_access
+- destructive_write_delete_behavior
+- external_binary_requirements
+- review_status
+- risk_classification
+- notes
+script_count: 213
+scripts:
+- path: forge/_shared/artifact_cache.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/_shared/chirality.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/_shared/color_metrics.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/_shared/feature_acceptance_policy.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/_shared/image_hash.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/_shared/jpeg.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/_shared/material_physics.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/_shared/pipeline_routing.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/_shared/scalp_field.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/_shared/sdf_primitives.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/_shared/spec_search.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: 'yes'
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/_shared/status_banner.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/_shared/subdivision.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/_shared/vertex_paint.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/_shared/workflow_state.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: 'yes'
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/materials/__init__.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/materials/compatibility.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/materials/reference.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-network
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/next.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/report.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/analyze_texture.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/bind_detail_properties.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/build_detail_inventory.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-subprocess
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/camera_fitting_math.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/camera_fitting_solver.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/camera_fitting_types.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/camera_image_helpers.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/check_intake_correctness.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/check_reference_admission.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/cs2_foundation.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/cs2_manifest.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: 'yes'
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/cs2_review_contract.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/delight_albedo.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-subprocess
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/detect_cs2.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/detect_reference_effects.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/extract_cs2_textures.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-subprocess
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/extract_gradient_stops.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/extract_hair_evidence.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/extract_landmarks.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-subprocess
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/extract_part_color_recipe.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/extract_pbr_evidence.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-subprocess
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/fetch_cs2_metadata.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-network
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/label_glb_nodes.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/locate_cs2_vpk.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/material_region_analysis.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/probe_glb.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  - blender
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/probe_image.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/run_vision_adapter.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: 'yes'
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-subprocess
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/search_specs.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/semantic_decomposition.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage1_intake/solve_camera_pose.py
+  language: python
+  runtime_role: 'forge workflow stage: stage1_intake'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage2_spec/apply_material_analysis.py
+  language: python
+  runtime_role: 'forge workflow stage: stage2_spec'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage2_spec/cs2_adapters.py
+  language: python
+  runtime_role: 'forge workflow stage: stage2_spec'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage2_spec/derive_geometry.py
+  language: python
+  runtime_role: 'forge workflow stage: stage2_spec'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage2_spec/hair_profile.py
+  language: python
+  runtime_role: 'forge workflow stage: stage2_spec'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  - blender
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage2_spec/humanoid_proportions.py
+  language: python
+  runtime_role: 'forge workflow stage: stage2_spec'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage2_spec/new_pre_spec_assessment.py
+  language: python
+  runtime_role: 'forge workflow stage: stage2_spec'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage2_spec/new_sculpt_spec.py
+  language: python
+  runtime_role: 'forge workflow stage: stage2_spec'
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-network
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage2_spec/validate_sculpt_spec.py
+  language: python
+  runtime_role: 'forge workflow stage: stage2_spec'
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-network
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage3_build/bake_projected_texture.py
+  language: python
+  runtime_role: 'forge workflow stage: stage3_build'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage3_build/decimate.py
+  language: python
+  runtime_role: 'forge workflow stage: stage3_build'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage3_build/generate_threejs_factory.py
+  language: python
+  runtime_role: 'forge workflow stage: stage3_build'
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-network
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage3_build/module_cache.py
+  language: python
+  runtime_role: 'forge workflow stage: stage3_build'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage3_build/morph_targets.py
+  language: python
+  runtime_role: 'forge workflow stage: stage3_build'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage3_build/orchestrate_passes.py
+  language: python
+  runtime_role: 'forge workflow stage: stage3_build'
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-network
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage3_build/uv_unwrap.py
+  language: python
+  runtime_role: 'forge workflow stage: stage3_build'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage3_build/visual_hull.py
+  language: python
+  runtime_role: 'forge workflow stage: stage3_build'
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-network
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/_fit_divine_eye.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/append_review.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/attachment_anchor.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/calibrate_eye.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/check_part_coverage.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/compare_region_passes.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/correction_loop.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/cs2_review.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: 'yes'
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/diagnose_render.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/diagnose_render_multi_angle.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/divine_eye.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/fit_params.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/geometry_integrity.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/hair_gate.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/interior_difference.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/joint_loops.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/make_comparison_sheet.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-subprocess
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/material_comparator.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/material_feedback.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/material_gate.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/material_views.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/mesh_reference_compare.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/multi_pass.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/objectness.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/pairwise_penetration.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/per_feature.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/render_bridge.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - playwright/node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/scalp_exposure.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/self_intersection.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-network
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/swept_arc_gate.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/turntable_gate.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-network
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/validate_render_profile.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/vertex_region_gate.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage4_review/vlm_gate.py
+  language: python
+  runtime_role: 'forge workflow stage: stage4_review'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage5_rig/__init__.py
+  language: python
+  runtime_role: 'forge workflow stage: stage5_rig'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage5_rig/action_design.py
+  language: python
+  runtime_role: 'forge workflow stage: stage5_rig'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage5_rig/clip_features.py
+  language: python
+  runtime_role: 'forge workflow stage: stage5_rig'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  - blender
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage5_rig/emit_animation_runtime.py
+  language: python
+  runtime_role: 'forge workflow stage: stage5_rig'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage5_rig/emit_rig.py
+  language: python
+  runtime_role: 'forge workflow stage: stage5_rig'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage5_rig/geodesic_skinning.py
+  language: python
+  runtime_role: 'forge workflow stage: stage5_rig'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage5_rig/glb_rig_reference.py
+  language: python
+  runtime_role: 'forge workflow stage: stage5_rig'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage5_rig/mesh_parity.py
+  language: python
+  runtime_role: 'forge workflow stage: stage5_rig'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage5_rig/rig_gates.py
+  language: python
+  runtime_role: 'forge workflow stage: stage5_rig'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage5_rig/rig_spec.py
+  language: python
+  runtime_role: 'forge workflow stage: stage5_rig'
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage5_rig/skin_conditioning.py
+  language: python
+  runtime_role: 'forge workflow stage: stage5_rig'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/stage5_rig/validate_rig_payload.py
+  language: python
+  runtime_role: 'forge workflow stage: stage5_rig'
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/state.py
+  language: python
+  runtime_role: forge shared/workflow module
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/showcase_test_support.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: 'yes'
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_action_design.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_albedo_color_space.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: 'yes'
+  external_binary_requirements:
+  - node
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_analyze_texture.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_attachment_anchor.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_attachment_does_not_override_primitive.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_calibrate_eye.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_camera_fitting.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_camera_fitting_cli.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_camera_fitting_safety.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_character_rig_derivation.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_chirality.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_clip_features.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_color_metrics.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_color_recipe.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_correction_loop.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_cs2_foundation.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_cs2_manifest.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_cs2_review.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_decimation_wiring.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_divine_eye.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_emit_animation_runtime.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_emit_animation_runtime_tsc_smoke.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: 'yes'
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: 'yes'
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_fit_params.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_geodesic_skinning.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_geometry_derivation.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_glb_reference.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_glb_rig_reference.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_gradient_stops.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_hair_evidence.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_hair_gate.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_hair_material.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: 'yes'
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: 'yes'
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_hair_profile.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_hierarchy_scale.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: 'yes'
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_hue_zone_parity.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_humanoid_proportions.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_humanoid_silhouette_profile.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_intake_binding.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_interior_difference.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_issue_triage.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: unknown
+  network_access: 'yes'
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_joint_admission_gate.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_joint_loops.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_jpeg.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_label_glb_nodes.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_material_physics.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_material_pipeline.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_material_reference.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_mesh_parity.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_module_cache.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: 'yes'
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_multi_angle.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_objectness.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_optional_vision_tooling.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_part_collision_morphs_lod.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_per_feature.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: unknown
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_pipeline.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_pipeline_routing.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_primitive_watertightness.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: 'yes'
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_recessed_and_open_shell_topology.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_reference_admission.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_reference_effects.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_region_and_arc_gates.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_release_metadata.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_render_bridge.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_render_profile.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_repetition_system_scale.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: 'yes'
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_rig_gates.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_rig_hierarchy_emission.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_rig_milestone0.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: 'yes'
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_rig_workflow_steps.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_rigid_hair_binding.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_scalp_exposure.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_scalp_field.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_sdf_primitives.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_search_specs.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: 'yes'
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_self_intersection.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_showcase_tsc_smoke.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: 'yes'
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: 'yes'
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_skin_conditioning.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_specular_wash.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_stand_proud.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_stand_proud_emission.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: 'yes'
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: 'yes'
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_structure_gates.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_subdivision.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: 'yes'
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_tapered_sweep.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_tessellation_tiers.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_textureless_material.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_tier1_diagnostics.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_turntable_gate.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_uv_unwrap.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_validate_rig_payload.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_vertex_paint.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_visual_hull.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: 'yes'
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_visual_hull_carve.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_vlm_gate.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_workflow_state.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: 'yes'
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - none-detected
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: forge/tests/test_ws6_docs.py
+  language: python
+  runtime_role: upstream test module (not executed by ACOS import review)
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-test-module
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: scripts/capture_threejs_playwright.py
+  language: python
+  runtime_role: top-level utility script
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: 'yes'
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - playwright/node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: moderate-install
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: scripts/character_audit.sh
+  language: shell
+  runtime_role: top-level utility script
+  filesystem_access: 'yes'
+  network_access: 'yes'
+  subprocess_execution: unknown
+  shell_execution: 'yes'
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - node
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-network
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: scripts/issue_triage.py
+  language: python
+  runtime_role: top-level utility script
+  filesystem_access: unknown
+  network_access: 'yes'
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: 'yes'
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: elevated-network
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.
+- path: scripts/release_metadata.py
+  language: python
+  runtime_role: top-level utility script
+  filesystem_access: 'yes'
+  network_access: unknown
+  subprocess_execution: unknown
+  shell_execution: unknown
+  package_install_behavior: unknown
+  environment_variable_access: unknown
+  destructive_write_delete_behavior: unknown
+  external_binary_requirements:
+  - python
+  review_status: static_inspection_not_executed
+  risk_classification: low-static-unknown
+  notes: Static pattern scan only; behavior marked unknown when patterns absent. Script
+    was not executed during ACOS Phase B hardening.

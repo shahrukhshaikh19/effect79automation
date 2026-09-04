@@ -35,11 +35,13 @@
 | B6 — Import Blender curated (15) + shared refs | COMPLETE | `skills/external/blender/*` + `blender/references/` |
 | B7 — Import img2threejs operational subset | COMPLETE | `skills/external/img2threejs/` — status `restricted` |
 | B8 — License review | COMPLETE | `docs/EXTERNAL_SKILLS_AUDIT.md` |
-| B9 — Script security review | COMPLETE | Static review; img2threejs scripts not executed |
+| B9 — Script security review | COMPLETE | `registry/EXTERNAL_SCRIPT_SECURITY.yaml` — 213 static records, not executed |
 | B10 — External lockfile | COMPLETE | `registry/EXTERNAL_SKILLS_LOCK.yaml` (36 entries) |
 | B11 — Human-readable audit | COMPLETE | `docs/EXTERNAL_SKILLS_AUDIT.md` |
 | B12 — Phase B validator | COMPLETE | `validation/validate_external_skills.py` PASSED |
 | B13 — Phase A re-validation | COMPLETE | Foundation validator PASSED after imports |
+| B14 — Harden external validation | COMPLETE | Lockfile-derived directory allowlists; duplicate ID/path checks |
+| B15 — Script security inventory | COMPLETE | `registry/EXTERNAL_SCRIPT_SECURITY.yaml` (213 records) |
 
 ---
 
@@ -77,6 +79,7 @@
 - Added `skills/external/CONNECTORS.md` for Anthropic design-critique dependency
 - Added `skills/external/blender/references/` shared dependency for 15 Blender skills
 - Added img2threejs `.gitignore` to minimum operational subset
+- **Phase B hardening:** replaced hardcoded Three.js/GSAP blacklists with lockfile-derived allowlists; added per-script security inventory for img2threejs
 
 ---
 

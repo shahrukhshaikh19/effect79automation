@@ -86,7 +86,19 @@ Floating `main` / `latest` references were **not** used.
 | Domain | Scripts | Review status |
 |---|---|---|
 | Frontend / Three.js / GSAP / Blender | **0** executable scripts in imported subset | n/a |
-| img2threejs | **213** Python/shell files | **Static review complete — not executed** |
+| img2threejs | **213** Python/shell files | **Machine-readable static inventory — not executed** |
+
+**Evidence file:** `registry/EXTERNAL_SCRIPT_SECURITY.yaml`  
+**Generator:** `validation/generate_script_security_inventory.py` (static pattern scan; regenerates inventory)
+
+Each imported img2threejs script has an individual record with:
+- path, language, runtime role
+- filesystem / network / subprocess / shell / install / env / destructive behavior (`yes` | `no` | `unknown`)
+- external binary requirements
+- `review_status: static_inspection_not_executed`
+- risk classification + notes
+
+Tri-state fields use `unknown` when static inspection cannot safely prove behavior. This is auditable evidence, not a safety certification.
 
 ### img2threejs notable scripts (not executed)
 
@@ -158,8 +170,10 @@ No broken required static files detected by Phase B validator after import.
 
 ```text
 python validation/validate_foundation.py     → PASSED
-python validation/validate_external_skills.py → PASSED (36 entries)
+python validation/validate_external_skills.py → PASSED (36 entries, lockfile allowlists, script inventory)
 ```
+
+Phase B validator now derives approved directory allowlists from `registry/EXTERNAL_SKILLS_LOCK.yaml` (no hardcoded Three.js/GSAP blacklists) and validates `registry/EXTERNAL_SCRIPT_SECURITY.yaml` completeness for img2threejs.
 
 Phase A re-validation after Phase B imports: **PASSED**
 
