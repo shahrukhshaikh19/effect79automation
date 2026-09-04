@@ -44,7 +44,9 @@ gate_report:
     # Gate verdict rationale — one primary reason minimum
     primary_reason: "<concise gate decision basis>"
     hard_reject_triggered: false
-    hard_reject_ids: []  # from hard_rejects list when triggered
+    hard_reject_ids: []  # HR-01..HR-10 only — artifact demonstrated failures
+    evidence_blocker_triggered: false
+    evidence_blocker_ids: []  # EB-* — evaluation-state deficiencies
 
   # 0–10 only for applicable dimensions with evidence
   scores:
@@ -64,7 +66,7 @@ gate_report:
     accessibility: null
     engineering_quality: null
 
-  # Canonical hard rejects from core/QUALITY_GATES.md — list triggered only
+  # Canonical artifact hard rejects (HR-01..HR-10) — demonstrated defects when evidence sufficient
   hard_rejects:
     - id: HR-01
       condition: broken_primary_flow
@@ -106,10 +108,14 @@ gate_report:
       condition: materially_generic_despite_differentiated_brief
       triggered: false
       evidence_ref: null
-    - id: HR-11
-      condition: required_evidence_not_collected
+
+  # Evidence blockers — evaluation-state deficiencies (NOT artifact hard rejects)
+  evidence_blockers:
+    - id: EB-01
+      condition: required_evidence_insufficient
       triggered: false
       evidence_ref: null
+      terminal_status: BLOCKED_INSUFFICIENT_EVIDENCE
 
   evidence:
     - id: GE-001

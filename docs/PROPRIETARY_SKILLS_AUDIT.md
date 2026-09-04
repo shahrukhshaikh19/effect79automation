@@ -236,7 +236,7 @@ All 14 proprietary skills under `skills/acos/` contain mandatory operational sec
 
 | Field | Value |
 |---|---|
-| **Responsibility** | Final ship/no-ship: APPROVED, REJECTED, or BLOCKED_INSUFFICIENT_EVIDENCE; hard reject enforcement |
+| **Responsibility** | Final ship/no-ship: APPROVED, REJECTED, or BLOCKED_INSUFFICIENT_EVIDENCE; HR-01..HR-10 artifact rejects; EB-01 evidence blocker |
 | **Activates when** | Completion claimed; ship decision requested; evidence audit possible |
 | **Must not activate when** | Mid-implementation; fix tasks; self-check only; design gate (pre-build) |
 | **Upstream inputs** | Critic reports, domain evidence, `core/QUALITY_GATES.md` |

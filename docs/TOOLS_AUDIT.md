@@ -12,7 +12,7 @@
 | Family | Tool ID | Structural | Runtime (this environment) |
 |---|---|---|---|
 | browser | TOOL-BROWSER-01 | CONFIGURED | **AVAILABLE** — Playwright 1.49.1, Chromium, multi-viewport capture |
-| blender | TOOL-BLENDER-01 | CONFIGURED | **AVAILABLE** when MCP Server running (see BLENDER_RUNTIME_CORRECTION.md) |
+| blender | TOOL-BLENDER-01 | CONFIGURED | **RESTRICTED** (health script) — see Blender evidence dimensions below |
 | git | TOOL-GIT-01 | CONFIGURED | **AVAILABLE** — git 2.32.0 |
 | shell | TOOL-SHELL-01 | CONFIGURED | **AVAILABLE** — PowerShell |
 | filesystem | TOOL-FS-01 | CONFIGURED | **AVAILABLE** — dedicated `check_filesystem_tool.py` |
@@ -85,6 +85,18 @@ Browser must NOT output: "approved", "premium", quality scores.
 | **Health status** | structural CONFIGURED; TCP socket probe only (not MCP protocol handshake) — see check_blender_tool.py fields |
 | **Risks** | High privilege; safe mode recommended; RESTRICTED until live MCP handshake verified |
 | **Review status** | RESTRICTED |
+
+### Blender runtime evidence dimensions
+
+| Dimension | Status (this environment) |
+|---|---|
+| Structural configuration | CONFIGURED |
+| Health-script runtime | RESTRICTED |
+| TCP socket (localhost:9876) | REACHABLE when MCP server running |
+| Protocol handshake (health script) | NOT VERIFIED |
+| Live MCP client evidence | VERIFIED separately when Cursor MCP + Blender active — see BLENDER_RUNTIME_CORRECTION.md |
+
+Do not collapse these into a single "AVAILABLE" claim from the health script alone.
 
 ### Blender → critic handoff
 
@@ -188,4 +200,4 @@ Unresolved high-risk unknowns → RESTRICTED (Blender MCP runtime).
 
 ## Environment limitations (§47)
 
-Runtime availability depends on local installation of Node deps, Playwright browsers, Blender, and MCP server. Structural completion does not imply runtime tested unless health checks report AVAILABLE.
+Runtime availability depends on local installation of Node deps, Playwright browsers, and Blender. Structural completion does not imply runtime tested. Blender health script reports RESTRICTED unless protocol handshake is verified by the defined health contract.

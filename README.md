@@ -1,6 +1,7 @@
 # ACOS v1.2 — AI Creative Operating System
 
-**Status:** Phase A foundation complete  
+**Status:** Phase D complete; A–D certification hardening complete. Foundation phases E–G not started.  
+**Phase map:** `registry/PHASES.yaml`  
 **Authority:** `ACOS_FINAL_CANONICAL_v1.2.md`
 
 ACOS is a model-agnostic Creative Engineering Operating System. This repository is the canonical ACOS v1.2 foundation for Claude, Cursor, Codex, or compatible local/open-source coding agents.
@@ -60,7 +61,8 @@ Skill availability never implies activation.
 10. `adapters/local/LOCAL_LLM_BOOTSTRAP.md` when relevant
 11. `templates/MODEL_PROFILE_TEMPLATE.md`
 12. `IMPLEMENTATION_CHECKLIST.md`
-13. `PACK_INVENTORY.md`
+13. `registry/PHASES.yaml` — canonical foundation phase map (A–G + PF-*)
+14. `PACK_INVENTORY.md`
 
 ## Completion rule
 

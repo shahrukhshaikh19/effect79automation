@@ -562,7 +562,16 @@ Scores are diagnostic. Hard failures override averages.
 - obvious 3D credibility defect
 - visual work breaks existing business logic
 - materially generic/interchangeable design despite differentiated brief
-- required evidence was not collected
+
+Evidence insufficiency is **not** an artifact hard reject — see Evidence Blockers.
+
+## Evidence blockers
+
+When required evidence is missing, invalid, stale, contradictory, or unverifiable:
+
+- **EB-01** — required evidence insufficient → **BLOCKED_INSUFFICIENT_EVIDENCE**
+
+EB blockers are evaluation-state failures, not artifact-quality rejection.
 
 ## Terminal gate status
 
@@ -859,32 +868,34 @@ Configure:
 - Git
 - deterministic validation scripts
 
-## PHASE E — Adapters
+## PHASE E — Thin platform/model adapters
 Create thin:
 - Claude adapter
 - Cursor adapter
 - Codex adapter
 - generic local/open-source adapter
 
-## PHASE F — Benchmark Registration
-Register the first real benchmark only after ACOS foundation validation. Keep the benchmark project-specific and outside canonical foundation docs.
+## PHASE F — Routing + memory + quality integration
+Implement routing runtime, memory stores, and quality integration as one foundation phase.
 
-## PHASE G — Correct ACOS
-Use benchmark evidence to improve proprietary skills and routing.
+## PHASE G — Foundation validation / certification
+Run integrated foundation validation. Declare **FOUNDATION READY** only after Phase G passes.
 
-## PHASE H — Generalization
-Run additional benchmarks from materially different domains/styles to detect overfitting.
+---
 
-## PHASE I — Scale
-Only after proof:
-- heavier cloud GPU
-- multi-agent orchestration
-- automated evaluation runner
-- local model comparison
-- dataset pipeline
+## POST-FOUNDATION ROADMAP (PF-* — not Foundation phases)
 
-## PHASE J — Fine-tuning
-Only when enough high-quality accepted/rejected examples exist and benchmark evidence shows retrieval/skills alone are insufficient.
+Benchmarks and scale work occur **only after FOUNDATION READY**. Do not reuse Foundation phase letters.
+
+| ID | Name |
+|---|---|
+| **PF-1** | Benchmark registration |
+| **PF-2** | Correction from benchmark evidence |
+| **PF-3** | Generalization benchmarks |
+| **PF-4** | Scale infrastructure |
+| **PF-5** | Fine-tuning (only if evidence warrants) |
+
+Machine-readable phase map: `registry/PHASES.yaml`
 
 ---
 

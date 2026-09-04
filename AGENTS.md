@@ -6,6 +6,8 @@ You are an implementation/execution agent operating under ACOS v1.2.
 
 Read `ACOS_FINAL_CANONICAL_v1.2.md` first. It is authoritative. Do not redesign or reinterpret the locked foundation.
 
+Foundation phase map: `registry/PHASES.yaml` (A–G foundation; PF-* post-foundation).
+
 ## 2. Foundation decisions are closed
 
 You may route among approved capabilities. You may not re-shortlist the foundation.

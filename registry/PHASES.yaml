@@ -1,0 +1,81 @@
+version: "1.0"
+authority: ACOS_FINAL_CANONICAL_v1.2.md
+purpose: >
+  Canonical ACOS foundation phase map. Foundation phases A–G are fixed.
+  Post-foundation work uses PF-* IDs — never reuse Foundation phase letters.
+
+foundation_ready_marker: FOUNDATION_READY
+
+foundation:
+  A:
+    id: A
+    name: canonical_foundation
+    description: Repository, canonical master, core policies, registry structures
+  B:
+    id: B
+    name: external_skills
+    description: Import and pin approved external skills (36 entries)
+  C:
+    id: C
+    name: proprietary_skills
+    description: Implement 14 proprietary ACOS skills
+  D:
+    id: D
+    name: production_tools
+    description: Production tool layer (browser, Blender MCP, git, shell, filesystem)
+  E:
+    id: E
+    name: adapters
+    description: Thin platform/model adapters (Claude, Cursor, Codex, local)
+  F:
+    id: F
+    name: routing_memory_quality_integration
+    description: Routing + memory + quality integration runtime
+  G:
+    id: G
+    name: foundation_validation
+    description: Foundation validation and certification (structural + operational)
+
+post_foundation:
+  PF-1:
+    id: PF-1
+    name: benchmark_registration
+    description: Register first real benchmark after FOUNDATION_READY
+  PF-2:
+    id: PF-2
+    name: benchmark_evidence_correction
+    description: Correct ACOS from benchmark evidence
+  PF-3:
+    id: PF-3
+    name: generalization_benchmarks
+    description: Generalization benchmarks across domains/styles
+  PF-4:
+    id: PF-4
+    name: scale_infrastructure
+    description: Scale infrastructure (orchestration, evaluation runners, etc.)
+  PF-5:
+    id: PF-5
+    name: evidence_warranted_fine_tuning
+    description: Fine-tuning only if evidence warrants it
+
+execution_state:
+  foundation:
+    A: COMPLETE
+    B: COMPLETE
+    C: COMPLETE
+    D: COMPLETE
+    E: NOT_STARTED
+    F: NOT_STARTED
+    G: NOT_STARTED
+  post_foundation: NOT_STARTED
+
+planning_authority_files:
+  - registry/PHASES.yaml
+  - ACOS_FINAL_CANONICAL_v1.2.md
+  - IMPLEMENTATION_CHECKLIST.md
+  - docs/PROGRESS_LEDGER.md
+
+forbidden_collisions:
+  - Do not assign benchmark registration to Foundation Phase F
+  - Do not assign fine-tuning to Foundation Phase J
+  - Do not reuse Foundation A–G letters for post-foundation roadmap items

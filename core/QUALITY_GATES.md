@@ -33,8 +33,17 @@ Quality is multi-dimensional. Only score dimensions relevant to the actual proje
 - major required reference/asset mismatch;
 - visible 3D credibility defect;
 - visual work breaks existing business logic;
-- materially generic/interchangeable result despite a differentiated brief;
-- required evidence was not collected.
+- materially generic/interchangeable result despite a differentiated brief.
+
+Evidence insufficiency is **not** an artifact hard reject — see Evidence Blockers below.
+
+## Evidence blockers (evaluation-state)
+
+When required evidence is missing, invalid, stale, contradictory, or unverifiable, the gate cannot make a reliable ship/no-ship judgment:
+
+- **EB-01** — required evidence insufficient → terminal status **BLOCKED_INSUFFICIENT_EVIDENCE**
+
+EB blockers are not artifact-quality rejection. Nothing may ship while BLOCKED.
 
 ## Terminal gate status
 

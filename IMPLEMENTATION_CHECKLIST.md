@@ -2,6 +2,8 @@
 
 A checked box requires evidence.
 
+**Phase map authority:** `registry/PHASES.yaml` — Foundation A–G; post-foundation PF-1..PF-5.
+
 ## A — Canonical foundation
 - [x] repository created
 - [x] canonical master committed
@@ -56,7 +58,7 @@ Skills:
 - [x] acos-quality-gate
 - [x] acos-failure-learning
 
-## D — Tools
+## D — Production tool layer
 - [x] Blender MCP classified/configured as tool
 - [x] browser/Playwright classified/configured as tool
 - [x] Git workflow
@@ -64,7 +66,7 @@ Skills:
 - [x] tools do not masquerade as skills
 - [x] A–D certification hardening (DPR integrity, gate semantics, cross-phase validator)
 
-## E — Adapters/model independence
+## E — Thin platform/model adapters (NOT STARTED)
 - [ ] Claude adapter
 - [ ] Cursor adapter
 - [ ] Codex adapter
@@ -74,18 +76,15 @@ Skills:
 - [ ] migration workflow
 - [ ] canonical intelligence not trapped in adapter/model
 
-## F — Memory
-- [ ] knowledge
-- [ ] taste
-- [ ] projects
-- [ ] failures
-- [ ] successes
-- [ ] model-compatibility
-- [ ] promotion lifecycle documented/implemented
+## F — Routing + memory + quality integration (NOT STARTED)
+- [ ] knowledge memory runtime
+- [ ] taste memory runtime
+- [ ] projects memory runtime
+- [ ] failures memory runtime
+- [ ] successes memory runtime
+- [ ] model-compatibility memory runtime
+- [ ] promotion lifecycle implemented
 - [ ] scoped retrieval strategy
-
-## G — Routing validation
-Test representative classifications without introducing a benchmark project:
 - [ ] standard application task does not activate 3D unnecessarily
 - [ ] interactive 3D task activates relevant route
 - [ ] reference-image procedural object route can select img2threejs
@@ -93,24 +92,30 @@ Test representative classifications without introducing a benchmark project:
 - [ ] active skill set remains scoped
 - [ ] defects can route back to responsible skill
 
-## H — Quality validation
-- [x] hard reject rules implemented/documented
-- [x] evidence requirement enforced
-- [x] creator/critic separation
-- [x] visual signoff requires render/browser evidence
-- [x] business-logic protection
-- [x] performance/accessibility gates available
+## G — Foundation validation / certification (NOT STARTED)
+- [ ] integrated foundation validation pass
+- [ ] hard reject + evidence blocker rules validated end-to-end
+- [ ] creator/critic separation validated operationally
+- [ ] visual signoff requires render/browser evidence (runtime)
+- [ ] domain-neutrality audit pass
+- [ ] no benchmark/project contamination in foundation
+- [ ] foundation ready marker (FOUNDATION_READY) declared with evidence
 
-## I — Domain-neutrality audit
-- [x] no predefined brand/product/project embedded
-- [x] no benchmark-specific aesthetic embedded
-- [x] no 3D-first assumption
-- [x] no default "premium" visual trope
-- [x] benchmarks remain external project packages
+## POST-FOUNDATION — PF roadmap (NOT STARTED)
 
-## J — Foundation handoff
-- [x] structural validation passed
-- [x] content validation passed
-- [x] no placeholders counted as implementation
-- [x] progress/evidence ledger produced
-- [ ] foundation ready to accept first real project package (await Phase E+ authorization)
+Do not reuse Foundation phase letters for these items.
+
+### PF-1 — Benchmark registration
+- [ ] first real benchmark registered outside canonical foundation
+
+### PF-2 — Correction from benchmark evidence
+- [ ] ACOS corrections from benchmark evidence
+
+### PF-3 — Generalization benchmarks
+- [ ] additional benchmarks across domains/styles
+
+### PF-4 — Scale infrastructure
+- [ ] scale/orchestration infrastructure (if warranted)
+
+### PF-5 — Fine-tuning (if evidence warrants)
+- [ ] fine-tuning only with sufficient accepted/rejected examples

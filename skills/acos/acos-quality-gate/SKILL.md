@@ -107,6 +107,19 @@ If a **required** input for an applicable dimension is absent, prefer **BLOCKED_
 
 Execute sequentially. Do not approve early.
 
+**Decision precedence (deterministic):**
+
+```text
+1. Determine applicable dimensions.
+2. Validate required evidence (Step 2).
+3. If reliable evaluation is impossible → BLOCKED_INSUFFICIENT_EVIDENCE (EB-01).
+4. Otherwise evaluate demonstrated artifact defects (Step 4 — HR-01..HR-10).
+5. If HR-01..HR-10 triggered OR unresolved critical/major failure → REJECTED.
+6. Otherwise → APPROVED.
+```
+
+Score averages never override BLOCKED or REJECTED.
+
 ### Step 1 — Scope and dimension map
 
 1. Read brief and completion claim.
@@ -129,7 +142,7 @@ For each applicable dimension, verify evidence exists per `core/QUALITY_GATES.md
 | responsive | multi-viewport captures when required |
 | motion | recordings or state captures when motion claims exist |
 
-If **required evidence not collected** → set hard reject `HR-11` and terminal status **BLOCKED_INSUFFICIENT_EVIDENCE** unless partial gate explicitly forbidden by policy (default: BLOCKED).
+If **required evidence not collected** or evidence is invalid/stale/contradictory/unverifiable → set evidence blocker **EB-01** and terminal status **BLOCKED_INSUFFICIENT_EVIDENCE**. Do **not** classify as HR artifact hard reject. Do **not** emit REJECTED for evidence insufficiency alone.
 
 ### Step 3 — Consume critic reports
 
@@ -138,23 +151,24 @@ If **required evidence not collected** → set hard reject `HR-11` and terminal 
 3. If critic marked `blocked_insufficient_evidence` or `not_run` when required → propagate to gate BLOCKED.
 4. If critic independence risk documented → record in `open_risks`; do not approve on creator self-check alone.
 
-### Step 4 — Hard reject scan
+### Step 4 — Hard reject scan (artifact defects only)
 
-Evaluate each canonical hard reject (see Section 8). Any triggered relevant hard reject → **REJECTED** regardless of average scores.
+Evaluate HR-01..HR-10 only when Step 2 evidence is sufficient. Any triggered relevant hard reject → **REJECTED** regardless of average scores.
 
-Hard reject catalog (from `core/QUALITY_GATES.md`):
+Hard reject catalog (from `core/QUALITY_GATES.md` — HR-01..HR-10):
 
-1. broken primary flow
-2. serious console/runtime errors
-3. unusable required viewport
-4. critical accessibility blocker
-5. unacceptable target-device performance
-6. missing critical fallback
-7. major required reference/asset mismatch
-8. visible 3D credibility defect
-9. visual work breaks existing business logic
-10. materially generic/interchangeable result despite differentiated brief
-11. required evidence was not collected
+1. broken primary flow (HR-01)
+2. serious console/runtime errors (HR-02)
+3. unusable required viewport (HR-03)
+4. critical accessibility blocker (HR-04)
+5. unacceptable target-device performance (HR-05)
+6. missing critical fallback (HR-06)
+7. major required reference/asset mismatch (HR-07)
+8. visible 3D credibility defect (HR-08)
+9. visual work breaks existing business logic (HR-09)
+10. materially generic/interchangeable result despite differentiated brief (HR-10)
+
+Evidence insufficiency is **EB-01**, not HR-01..HR-10.
 
 ### Step 5 — Dimensional scoring (evidence-only)
 
@@ -175,8 +189,8 @@ Apply exactly one:
 | Status | Conditions |
 |---|---|
 | **APPROVED** | All applicable dimensions evidenced; no hard rejects; no unresolved critical/major defects; critics pass or pass_with_observations within policy |
-| **REJECTED** | Hard reject triggered OR unresolved critical/major defect OR critic fail in applicable dimension |
-| **BLOCKED_INSUFFICIENT_EVIDENCE** | Required evidence missing, critics blocked, or independence insufficient to gate |
+| **REJECTED** | HR-01..HR-10 triggered OR unresolved critical/major defect OR critic fail in applicable dimension (evidence sufficient) |
+| **BLOCKED_INSUFFICIENT_EVIDENCE** | EB-01 triggered; required evidence missing/invalid; critics blocked; cannot verify claims |
 
 Never emit APPROVED because code compiles, creator claims premium quality, or averages look acceptable without evidence.
 
@@ -222,9 +236,9 @@ Responsible route:
 
 ## 8. Rejection / failure conditions
 
-### Gate emits REJECTED when
+### Gate emits REJECTED when (evidence sufficient)
 
-Any applicable hard reject is triggered, OR unresolved critical/major findings exist in applicable dimensions.
+Any applicable HR-01..HR-10 hard reject is triggered, OR unresolved critical/major findings exist in applicable dimensions.
 
 Every REJECTED entry must include:
 
@@ -237,7 +251,7 @@ Every REJECTED entry must include:
 
 ### Gate emits BLOCKED_INSUFFICIENT_EVIDENCE when
 
-- Required dimension evidence missing (including HR-11)
+- EB-01 triggered — required dimension evidence missing, invalid, stale, contradictory, or unverifiable
 - Required critic not run or critic blocked
 - Cannot verify primary flow, viewports, or runtime claims
 
@@ -247,6 +261,7 @@ Every REJECTED entry must include:
 - APPROVED with missing required evidence
 - APPROVED with triggered hard reject
 - REJECTED without owner/correction/retest
+- REJECTED for evidence insufficiency alone (must be BLOCKED via EB-01)
 - Gate implements fixes instead of routing
 - Invented or waived evidence
 

@@ -165,9 +165,11 @@ node tools/browser/scripts/capture-evidence.mjs --config tools/browser/viewport-
 
 ---
 
-## 8. Phase E+ confirmation
+## 8. Phase map confirmation
 
-Phase E (adapters), F–J remain **NOT STARTED**. No benchmarks, sample projects, orchestration, or memory runtime added.
+Foundation phases A–G per `registry/PHASES.yaml`. Post-foundation PF-1..PF-5 **NOT STARTED**.
+
+Phase E (adapters), F (routing/memory/quality integration), G (foundation validation) remain **NOT STARTED**. No benchmarks, sample projects, orchestration, or memory runtime added.
 
 ---
 

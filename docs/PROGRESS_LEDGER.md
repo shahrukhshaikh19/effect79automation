@@ -23,7 +23,20 @@ See `docs/FOUNDATION_CERTIFICATION_HARDENING.md` for full audit trail.
 
 ---
 
+## Final certification corrections — 2026-09-04
+
+| Task | Status | Evidence |
+|---|---|---|
+| C1 — HR/EB gate semantics | COMPLETE | HR-01..HR-10 artifact rejects; EB-01 evidence blocker; deterministic precedence |
+| C2 — Canonical phase map | COMPLETE | `registry/PHASES.yaml`; Foundation A–G + PF-* post-foundation |
+| C3 — Blender runtime doc sync | COMPLETE | RESTRICTED health-script vs separate live MCP evidence |
+| C4 — Cross-phase validator hardening | COMPLETE | HR/EB, phase map, blender doc, domain neutrality checks |
+
+---
+
 ## Phase status
+
+**Phase map authority:** `registry/PHASES.yaml`
 
 | Phase | Description | Status |
 |---|---|---|
@@ -31,12 +44,13 @@ See `docs/FOUNDATION_CERTIFICATION_HARDENING.md` for full audit trail.
 | B | Import approved external skills | COMPLETE |
 | C | Implement 14 proprietary ACOS skills | COMPLETE |
 | D | Production tool layer | COMPLETE |
-| E | Platform adapters | NOT STARTED |
-| F | Benchmark registration | NOT STARTED |
-| G | ACOS correction from benchmark evidence | NOT STARTED |
-| H | Generalization benchmarks | NOT STARTED |
-| I | Scale infrastructure | NOT STARTED |
-| J | Fine-tuning (if warranted) | NOT STARTED |
+| E | Thin platform/model adapters | NOT STARTED |
+| F | Routing + memory + quality integration | NOT STARTED |
+| G | Foundation validation / certification | NOT STARTED |
+
+**Post-foundation (PF-*):** NOT STARTED — see `registry/PHASES.yaml`
+
+After Phase G: **FOUNDATION READY** (not yet declared)
 
 ---
 
@@ -60,7 +74,7 @@ See `docs/FOUNDATION_CERTIFICATION_HARDENING.md` for full audit trail.
 | Tool | Structural | Runtime |
 |---|---|---|
 | Browser (Playwright) | CONFIGURED | AVAILABLE — neutral fixture load + multi-viewport capture succeeded |
-| Blender MCP | CONFIGURED | AVAILABLE when MCP Server running — see `docs/BLENDER_RUNTIME_CORRECTION.md` |
+| Blender MCP | CONFIGURED | **RESTRICTED** (health script) — TCP probe only; protocol handshake not verified by script. Live MCP evidence separate — see `docs/BLENDER_RUNTIME_CORRECTION.md` |
 | Git | CONFIGURED | AVAILABLE — git 2.32.0, inside work tree |
 | Shell | CONFIGURED | AVAILABLE — PowerShell on Windows |
 | Filesystem | CONFIGURED | AVAILABLE — dedicated fs-health probe under validation/evidence/ |
@@ -126,7 +140,7 @@ See `docs/FOUNDATION_CERTIFICATION_HARDENING.md` for full audit trail.
 
 ## Blockers
 
-- **Blender MCP runtime:** Was BLOCKED (PATH-only detection + addon protocol mismatch). Corrected 2026-09-04 — see `docs/BLENDER_RUNTIME_CORRECTION.md`. Run MCP Server in Blender for AVAILABLE status.
+- **Blender MCP runtime:** Health script reports RESTRICTED (not AVAILABLE) until protocol handshake verified by defined health contract. TCP reachability ≠ MCP verification. Live MCP client evidence documented separately in `docs/BLENDER_RUNTIME_CORRECTION.md`.
 
 ---
 
