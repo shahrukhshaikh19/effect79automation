@@ -66,13 +66,8 @@ execution_state:
     D: COMPLETE
     E: COMPLETE
     F: COMPLETE
-    G: COMPLETE
+    G: NOT_STARTED
   post_foundation: NOT_STARTED
-
-foundation_ready:
-  declared: true
-  certification_result: validation/FOUNDATION_CERTIFICATION_RESULT.json
-  tested_implementation_sha: f5420e657a866f3d58650f8f406bb1d435efaeee
 
 planning_authority_files:
   - registry/PHASES.yaml
