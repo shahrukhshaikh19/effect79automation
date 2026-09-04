@@ -1,0 +1,12 @@
+version: "1.2"
+authority: ACOS_FINAL_CANONICAL_v1.2.md
+status: empty-registry
+description: >
+  Canonical model compatibility registry. Populated only after benchmark
+  testing and compatibility profiling. Do not claim approval without evidence.
+
+policy:
+  require_benchmark_evidence_for_approval: true
+  no_invented_benchmark_results: true
+
+models: []

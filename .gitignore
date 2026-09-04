@@ -1,0 +1,64 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.code-workspace
+
+# Secrets and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+secrets.json
+**/secrets/
+
+# Dependencies and caches
+node_modules/
+__pycache__/
+*.py[cod]
+.Python
+.venv/
+venv/
+env/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+
+# Generated / temporary artifacts
+*.log
+*.tmp
+*.temp
+.cache/
+tmp/
+temp/
+coverage/
+htmlcov/
+.nyc_output/
+
+# Tool outputs (Phase D+)
+tools/browser/screenshots/
+tools/browser/traces/
+tools/blender-mcp/.cache/
+
+# Local model/runtime artifacts
+*.gguf
+*.bin
+*.safetensors
+model-profiles/local-overrides/
+
+# Benchmark/project runtime outputs (when populated later)
+projects/**/node_modules/
+projects/**/dist/
+projects/**/.next/
+benchmarks/**/node_modules/
+benchmarks/**/dist/

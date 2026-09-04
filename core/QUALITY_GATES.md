@@ -1,0 +1,80 @@
+# ACOS Quality Gates v1.2
+
+Quality is multi-dimensional. Only score dimensions relevant to the actual project, but hard failures always override averages.
+
+## Evaluation dimensions
+
+0–10 when applicable:
+- creative originality
+- brand/project distinctiveness
+- concept strength
+- composition
+- typography
+- visual hierarchy
+- 3D quality
+- 3D/UI integration
+- lighting/material quality
+- motion choreography
+- storytelling/experience flow
+- responsive art direction
+- performance
+- accessibility
+- engineering quality
+
+## Hard reject conditions
+
+`SHIP: REJECTED` when a relevant critical defect exists:
+- broken primary flow;
+- serious console/runtime errors;
+- unusable required viewport;
+- critical accessibility blocker;
+- unacceptable target-device performance;
+- missing critical fallback;
+- major required reference/asset mismatch;
+- visible 3D credibility defect;
+- visual work breaks existing business logic;
+- materially generic/interchangeable result despite a differentiated brief;
+- required evidence was not collected.
+
+## Evidence requirements
+
+Functional:
+- tests/runtime/interaction evidence.
+
+Visual:
+- browser/render evidence at required viewports/states.
+
+3D:
+- relevant views, geometry/material/lighting/camera checks, runtime inspection.
+
+Performance:
+- measurements appropriate to target runtime; for WebGL consider draw calls, triangles, textures, DPR, shader/postprocessing cost, asset size, loading and target-device behavior.
+
+Accessibility:
+- keyboard/focus/semantics/contrast/reduced-motion and other relevant checks.
+
+## Critic independence
+
+The implementation skill may self-check, but final creative/visual/domain approval must involve the appropriate critic/gate responsibility.
+
+## Final format
+
+```text
+QUALITY GATE
+Status: APPROVED | REJECTED
+
+Evidence:
+- ...
+
+Scores:
+- relevant dimension: x/10
+
+Hard failures:
+- none | ...
+
+Required corrections:
+- ...
+
+Responsible route:
+- ...
+```
