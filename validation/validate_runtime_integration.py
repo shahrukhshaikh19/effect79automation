@@ -381,15 +381,25 @@ def validate_phase_boundaries(errors: list[str]) -> None:
     foundation = phases.get("execution_state", {}).get("foundation", {})
     if foundation.get("F") != "COMPLETE":
         fail(errors, "registry/PHASES.yaml must mark F COMPLETE after Phase F")
-    if foundation.get("G") != "NOT_STARTED":
-        fail(errors, "Phase G must remain NOT_STARTED")
+    g_state = foundation.get("G")
+    ready = phases.get("foundation_ready") or {}
+    if g_state not in ("NOT_STARTED", "COMPLETE"):
+        fail(errors, f"Phase G execution state invalid: {g_state}")
+    if g_state == "NOT_STARTED":
+        if ready.get("declared"):
+            fail(errors, "foundation_ready must not be declared before Phase G COMPLETE")
+    if g_state == "COMPLETE":
+        if not ready.get("declared"):
+            fail(errors, "Phase G COMPLETE requires foundation_ready.declared")
+        result_ref = ready.get("certification_result", "")
+        if result_ref and not (REPO / result_ref).is_file():
+            fail(errors, f"foundation_ready certification_result missing: {result_ref}")
     if phases.get("execution_state", {}).get("post_foundation") != "NOT_STARTED":
         fail(errors, "post_foundation must remain NOT_STARTED")
-    if phases.get("foundation_ready_marker") and "FOUNDATION_READY" in str(phases):
-        pass  # marker name allowed; must not be declared true
     ledger = REPO / "docs" / "PROGRESS_LEDGER.md"
-    if ledger.is_file() and re.search(r"FOUNDATION_READY:\s*true", load_text(ledger), re.I):
-        fail(errors, "FOUNDATION_READY must not be declared true")
+    if ledger.is_file() and g_state == "NOT_STARTED":
+        if re.search(r"FOUNDATION_READY:\s*declared", load_text(ledger), re.I):
+            fail(errors, "FOUNDATION_READY must not be declared before Phase G completes")
     for name in ("benchmarks", "projects"):
         for item in (REPO / name).rglob("*"):
             if item.name == ".gitkeep":

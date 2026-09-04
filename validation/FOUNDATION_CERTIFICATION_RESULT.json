@@ -20,6 +20,6 @@
   "baseline_sha": "0fb45835c4d6b694fde28591ca12899630c7a1d4",
   "tested_implementation_sha": "f5420e657a866f3d58650f8f406bb1d435efaeee",
   "certified_sha": "f5420e657a866f3d58650f8f406bb1d435efaeee",
-  "attestation_sha": "f5420e657a866f3d58650f8f406bb1d435efaeee",
-  "generated_at": "2026-09-04T18:48:24.271323+00:00"
+  "attestation_sha": "01a62e76ddb0504edc1718e58d7120086a4f3972",
+  "generated_at": "2026-09-04T18:52:00.000000+00:00"
 }

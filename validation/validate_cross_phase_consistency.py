@@ -214,8 +214,15 @@ def validate_phase_map(errors: list[str]) -> None:
         fail(errors, f"PHASES.yaml execution_state.E invalid: {e_state}")
     if f_state not in ("COMPLETE", "NOT_STARTED"):
         fail(errors, f"PHASES.yaml execution_state.F invalid: {f_state}")
-    if g_state != "NOT_STARTED":
-        fail(errors, "PHASES.yaml execution_state.G must be NOT_STARTED")
+    if g_state not in ("NOT_STARTED", "COMPLETE"):
+        fail(errors, f"PHASES.yaml execution_state.G invalid: {g_state}")
+    if g_state == "COMPLETE":
+        ready = phases.get("foundation_ready") or {}
+        if not ready.get("declared"):
+            fail(errors, "Phase G COMPLETE requires foundation_ready.declared")
+        result_ref = ready.get("certification_result", "")
+        if result_ref and not (REPO / result_ref).is_file():
+            fail(errors, f"Missing certification result: {result_ref}")
     if f_state == "NOT_STARTED":
         if foundation_state.get("F") != "NOT_STARTED":
             fail(errors, "PHASES.yaml execution_state.F must be NOT_STARTED before Phase F")
@@ -296,8 +303,13 @@ def validate_phase_map(errors: list[str]) -> None:
         if "[x]" in f_section[:800]:
             fail(errors, "IMPLEMENTATION_CHECKLIST must not mark Phase F complete before execution_state.F is COMPLETE")
     g_section = checklist.split("## G")[1].split("## POST")[0] if "## G" in checklist else ""
-    if "[x]" in g_section[:800]:
-        fail(errors, "IMPLEMENTATION_CHECKLIST must not mark Phase G complete")
+    if g_state == "COMPLETE":
+        if g_section.count("- [x]") < 5:
+            fail(errors, "IMPLEMENTATION_CHECKLIST Phase G must reflect completion when G is COMPLETE")
+        if "NOT STARTED" in g_section[:400].upper():
+            fail(errors, "IMPLEMENTATION_CHECKLIST Phase G must not say NOT STARTED when G is COMPLETE")
+    elif "[x]" in g_section[:800]:
+        fail(errors, "IMPLEMENTATION_CHECKLIST must not mark Phase G complete before execution_state.G is COMPLETE")
 
 
 def validate_blender_documentation(errors: list[str]) -> None:
