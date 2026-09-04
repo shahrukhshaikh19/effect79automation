@@ -23,6 +23,22 @@
 
 ---
 
+## PF-1 — Task log
+
+| Task | Status | Evidence |
+|---|---|---|
+| PF1-0 — Foundation precondition | COMPLETE | FOUNDATION_READY valid; A–G validators PASS |
+| PF1-1 — Registration registry | COMPLETE | `registry/BENCHMARKS.yaml` |
+| PF1-2 — Templates + README | COMPLETE | `benchmarks/templates/`, `benchmarks/README.md` |
+| PF1-3 — Registration validator | COMPLETE | `validation/validate_benchmark_registration.py` |
+| PF1-4 — Adversarial tests | COMPLETE | PF1-A01..A12 |
+| PF1-5 — First benchmark frozen | PENDING | **BENCHMARK_INPUT_REQUIRED** |
+
+**PF-1:** IN_PROGRESS / INPUT_REQUIRED  
+**PF-2..PF-5:** NOT_STARTED
+
+---
+
 ## Phase F — Task log
 
 | Task | Status | Evidence |

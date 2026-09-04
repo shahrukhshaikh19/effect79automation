@@ -412,13 +412,9 @@ def main() -> int:
     validate_script_security(entries, errors)
     check_proprietary_skills_phase(errors)
 
-    for name in ("benchmarks", "projects"):
-        base = REPO / name
-        for item in base.rglob("*"):
-            if item.name == ".gitkeep":
-                continue
-            if item.is_file():
-                fail(errors, f"{name}/ must remain empty: {item.relative_to(REPO)}")
+    from benchmark_scope import scan_benchmarks_and_projects
+
+    scan_benchmarks_and_projects(errors, fail)
 
     phase_a = REPO / "validation" / "validate_foundation.py"
     if phase_a.exists():

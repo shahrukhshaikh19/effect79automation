@@ -229,8 +229,21 @@ def validate_phase_map(errors: list[str]) -> None:
     elif f_state == "COMPLETE":
         if e_state != "COMPLETE":
             fail(errors, "Phase F complete requires Phase E COMPLETE")
-    if exec_state.get("post_foundation") != "NOT_STARTED":
-        fail(errors, "PHASES.yaml post_foundation must be NOT_STARTED")
+    pf_state = exec_state.get("post_foundation")
+    if isinstance(pf_state, dict):
+        pf1 = pf_state.get("PF-1")
+        if pf1 not in ("NOT_STARTED", "IN_PROGRESS", "COMPLETE"):
+            fail(errors, f"PF-1 execution state invalid: {pf1}")
+        for pf_id in ("PF-2", "PF-3", "PF-4", "PF-5"):
+            if pf_state.get(pf_id) != "NOT_STARTED":
+                fail(errors, f"{pf_id} must remain NOT_STARTED during PF-1")
+        if pf1 in ("IN_PROGRESS", "COMPLETE"):
+            if not (REPO / "registry" / "BENCHMARKS.yaml").is_file():
+                fail(errors, "PF-1 requires registry/BENCHMARKS.yaml")
+            if not (REPO / "validation" / "validate_benchmark_registration.py").is_file():
+                fail(errors, "PF-1 requires validate_benchmark_registration.py")
+    elif pf_state != "NOT_STARTED":
+        fail(errors, "PHASES.yaml post_foundation must be NOT_STARTED or per-phase mapping")
 
     if e_state == "COMPLETE":
         if not (REPO / "registry" / "ADAPTERS.yaml").is_file():
@@ -418,12 +431,9 @@ def validate_openai_license_metadata(errors: list[str]) -> None:
 
 
 def validate_domain_neutrality(errors: list[str]) -> None:
-    for name in ("benchmarks", "projects"):
-        for item in (REPO / name).rglob("*"):
-            if item.name == ".gitkeep":
-                continue
-            if item.is_file() and item.stat().st_size > 0:
-                fail(errors, f"{name}/ must remain empty during foundation: {item.relative_to(REPO)}")
+    from benchmark_scope import scan_benchmarks_and_projects
+
+    scan_benchmarks_and_projects(errors, fail)
 
     routing = REPO / "core" / "ROUTING.md"
     if routing.is_file():
@@ -496,12 +506,9 @@ def validate_adapter_routing_contamination(errors: list[str]) -> None:
 
 
 def validate_phase_boundaries(errors: list[str]) -> None:
-    for name in ("benchmarks", "projects"):
-        for item in (REPO / name).rglob("*"):
-            if item.name == ".gitkeep":
-                continue
-            if item.is_file() and item.stat().st_size > 0:
-                fail(errors, f"{name}/ must remain empty: {item.relative_to(REPO)}")
+    from benchmark_scope import scan_benchmarks_and_projects
+
+    scan_benchmarks_and_projects(errors, fail)
 
     if _phase_e_complete():
         for family in ("claude", "cursor", "codex", "local"):

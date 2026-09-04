@@ -295,13 +295,9 @@ def _phase_e_complete() -> bool:
 
 
 def check_phase_boundaries(errors: list[str]) -> None:
-    for name in ("benchmarks", "projects"):
-        base = REPO / name
-        for item in base.rglob("*"):
-            if item.name == ".gitkeep":
-                continue
-            if item.is_file() and item.stat().st_size > 0:
-                fail(errors, f"{name}/ must remain empty: {item.relative_to(REPO)}")
+    from benchmark_scope import scan_benchmarks_and_projects
+
+    scan_benchmarks_and_projects(errors, fail)
 
     if _phase_e_complete():
         return

@@ -106,14 +106,13 @@ Skills:
 - [x] no benchmark/project contamination in foundation
 - [x] foundation ready marker (FOUNDATION_READY) declared with evidence
 
-## POST-FOUNDATION — PF roadmap (NOT STARTED)
+## POST-FOUNDATION — PF roadmap
 
-Do not reuse Foundation phase letters for these items.
+### PF-1 — Benchmark registration (IN PROGRESS / INPUT_REQUIRED)
+- [x] registration framework (registry, templates, validator)
+- [ ] first real benchmark registered and frozen (BM-001)
 
-### PF-1 — Benchmark registration
-- [ ] first real benchmark registered outside canonical foundation
-
-### PF-2 — Correction from benchmark evidence
+### PF-2 — Correction from benchmark evidence (NOT STARTED)
 - [ ] ACOS corrections from benchmark evidence
 
 ### PF-3 — Generalization benchmarks

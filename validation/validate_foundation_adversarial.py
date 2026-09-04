@@ -313,17 +313,25 @@ def ga14_mandatory_motion_contamination() -> ScenarioResult:
 
 
 def ga15_benchmark_contamination() -> ScenarioResult:
+    from benchmark_scope import is_allowed_benchmarks_path, is_forbidden_execution_artifact
+
     contaminated: list[str] = []
     for name in ("benchmarks", "projects"):
         path = REPO / name
         if not path.is_dir():
             continue
-        for item in path.iterdir():
-            if item.name == ".gitkeep":
+        for item in path.rglob("*"):
+            if not item.is_file():
                 continue
-            contaminated.append(str(item.relative_to(REPO)))
+            if name == "projects" and item.name != ".gitkeep" and item.stat().st_size > 0:
+                contaminated.append(str(item.relative_to(REPO)))
+            if name == "benchmarks":
+                if is_forbidden_execution_artifact(item):
+                    contaminated.append(str(item.relative_to(REPO)))
+                elif item.stat().st_size > 0 and not is_allowed_benchmarks_path(item):
+                    contaminated.append(str(item.relative_to(REPO)))
     passed = not contaminated
-    detail = "empty" if passed else f"contamination: {contaminated[:5]}"
+    detail = "allowed PF-1 infra only" if passed else f"contamination: {contaminated[:5]}"
     return ScenarioResult("G-A15", passed, detail)
 
 

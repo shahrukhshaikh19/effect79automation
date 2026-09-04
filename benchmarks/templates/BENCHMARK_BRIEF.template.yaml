@@ -1,0 +1,57 @@
+# BENCHMARK BRIEF TEMPLATE — operator input required; do not invent values
+
+benchmark:
+  id: BM-001
+  title: not_supplied
+  objective: not_supplied
+  deliverable_type: unknown
+  intended_audience: not_supplied
+  primary_goal: not_supplied
+  supplied_constraints: []
+  supplied_assets: []
+  supplied_references: []
+  required_platforms: []
+  required_viewports: []
+  functional_requirements: []
+  prohibited_assumptions: []
+
+operator_input:
+  original_text: |
+    # Paste operator benchmark request verbatim here — do not normalize away intent
+
+normalized_brief:
+  note: Normalize only explicit facts; use unknown / not_supplied / not_applicable for missing fields
+
+references: []
+assets: []
+
+functional_requirements: []
+creative_requirements: []
+
+capability_expectations:
+  visual_work: unknown
+  three_d_possible: unknown
+  motion_possible: unknown
+
+tool_requirements:
+  browser_rendering:
+    required: unknown
+  blender:
+    required: unknown
+
+classification:
+  deliverable_family: unknown
+  interaction_level: unknown
+  visual_complexity: unknown
+  three_d_expected: unknown
+  motion_expected: unknown
+  reference_dependency: unknown
+
+operator_confirmation:
+  brief_correct: pending
+  references_correct: pending
+  acceptance_contract_correct: pending
+
+execution_state:
+  benchmark_score: null
+  benchmark_result: NOT_EXECUTED

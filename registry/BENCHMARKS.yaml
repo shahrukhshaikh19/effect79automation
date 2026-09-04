@@ -1,0 +1,26 @@
+version: "1.0"
+phase: PF-1
+authority: benchmarks/README.md
+purpose: >
+  Canonical benchmark registration index. Benchmark-specific intent lives here
+  and under benchmarks/BM-*/ — never in foundation core policies or global memory.
+
+policy:
+  no_invented_benchmarks: true
+  registration_before_execution: true
+  contract_immutability_when_frozen: true
+  benchmark_score_before_execution_forbidden: true
+  manual_skill_routing_forbidden: true
+  global_memory_promotion_forbidden: true
+  license_bypass_forbidden: true
+
+lifecycle_statuses:
+  - DRAFT
+  - INPUT_REQUIRED
+  - REGISTERED
+  - FROZEN
+  - EXECUTION_STARTED
+  - COMPLETED
+  - INVALIDATED
+
+benchmarks: []

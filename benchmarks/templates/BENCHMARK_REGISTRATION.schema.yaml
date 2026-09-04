@@ -1,0 +1,49 @@
+version: "1.0"
+phase: PF-1
+description: Schema for benchmark registration contract (registration-only, not execution output)
+
+required_top_level:
+  - benchmark_id
+  - title
+  - status
+  - created_at
+  - contract_version
+  - operator_input
+  - normalized_brief
+  - references
+  - assets
+  - functional_requirements
+  - creative_requirements
+  - acceptance_contract
+  - evidence_plan
+  - hard_failures
+  - capability_expectations
+  - tool_requirements
+  - classification
+  - operator_confirmation
+  - execution_state
+
+forbidden_before_execution:
+  - benchmark_score
+  - benchmark_result
+  - execution_artifacts
+  - activated_skill_ids
+
+status_values:
+  - DRAFT
+  - INPUT_REQUIRED
+  - REGISTERED
+  - FROZEN
+  - EXECUTION_STARTED
+  - COMPLETED
+  - INVALIDATED
+
+hash_excludes:
+  - contract_hash
+  - benchmark_contract_sha256
+  - execution_state
+  - benchmark_score
+  - benchmark_result
+  - frozen_at
+  - scores
+  - evidence_outputs

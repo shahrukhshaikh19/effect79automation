@@ -394,18 +394,19 @@ def validate_phase_boundaries(errors: list[str]) -> None:
         result_ref = ready.get("certification_result", "")
         if result_ref and not (REPO / result_ref).is_file():
             fail(errors, f"foundation_ready certification_result missing: {result_ref}")
-    if phases.get("execution_state", {}).get("post_foundation") != "NOT_STARTED":
+    pf_state = phases.get("execution_state", {}).get("post_foundation")
+    if isinstance(pf_state, dict):
+        if pf_state.get("PF-2") != "NOT_STARTED":
+            fail(errors, "PF-2 must remain NOT_STARTED")
+    elif pf_state != "NOT_STARTED":
         fail(errors, "post_foundation must remain NOT_STARTED")
     ledger = REPO / "docs" / "PROGRESS_LEDGER.md"
     if ledger.is_file() and g_state == "NOT_STARTED":
         if re.search(r"FOUNDATION_READY:\s*declared", load_text(ledger), re.I):
             fail(errors, "FOUNDATION_READY must not be declared before Phase G completes")
-    for name in ("benchmarks", "projects"):
-        for item in (REPO / name).rglob("*"):
-            if item.name == ".gitkeep":
-                continue
-            if item.is_file() and item.stat().st_size > 0:
-                fail(errors, f"{name}/ must remain empty: {item.relative_to(REPO)}")
+    from benchmark_scope import scan_benchmarks_and_projects
+
+    scan_benchmarks_and_projects(errors, fail)
 
 
 def validate_domain_neutrality(errors: list[str]) -> None:

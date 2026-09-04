@@ -1,0 +1,30 @@
+# EVIDENCE PLAN TEMPLATE — frozen before PF-2 execution
+
+benchmark_id: BM-001
+contract_version: "1.0"
+status: DRAFT
+
+evidence_plan:
+  - evidence_id: E-001
+    dimension: functional
+    type: not_supplied
+    required: unknown
+    capture_stage: pre_execution_registration_only
+    acceptance_use: not_supplied
+
+hash_note: >
+  benchmark_contract_sha256 covers frozen registration fields only.
+  Excludes execution timestamps, runtime results, scores, and evidence outputs.
+
+contract_hash:
+  algorithm: sha256
+  includes: registration_fields_excluding_hash_and_execution
+  excludes:
+    - contract_hash
+    - benchmark_contract_sha256
+    - execution_state
+    - benchmark_score
+    - benchmark_result
+    - frozen_at
+    - scores
+    - evidence_outputs

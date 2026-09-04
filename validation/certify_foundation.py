@@ -219,13 +219,13 @@ def g1_structural(entries: list[dict], blockers: list[str]) -> bool:
             blockers.append(f"G1: missing runtime/{mod}")
             ok = False
 
-    for name in ("benchmarks", "projects"):
-        path = REPO / name
-        if path.is_dir():
-            non_keep = [p.name for p in path.iterdir() if p.name != ".gitkeep"]
-            if non_keep:
-                blockers.append(f"G1: {name}/ not empty: {non_keep[:3]}")
-                ok = False
+    from benchmark_scope import scan_benchmarks_and_projects
+
+    bench_errors: list[str] = []
+    scan_benchmarks_and_projects(bench_errors, lambda errs, msg: errs.append(msg))
+    if bench_errors:
+        blockers.extend(f"G1: {e}" for e in bench_errors)
+        ok = False
 
     entries.append(_entry(
         "G1-runtime-modular", "structural", "Phase F runtime modular; no monolith",

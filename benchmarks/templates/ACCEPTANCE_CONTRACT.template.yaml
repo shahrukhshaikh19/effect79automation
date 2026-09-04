@@ -1,0 +1,93 @@
+# ACCEPTANCE CONTRACT TEMPLATE — frozen before PF-2 execution
+
+benchmark_id: BM-001
+contract_version: "1.0"
+status: DRAFT
+
+scoring_note: >
+  Benchmark score != ACOS Quality Gate status. Hard rejects cannot be averaged away.
+
+dimensions:
+  functional:
+    applicable: unknown
+    weight: 0
+    minimum_score: null
+    hard_fail_conditions: []
+    evidence_required: []
+    evaluator_type: human_and_machine
+  visual:
+    applicable: unknown
+    weight: 0
+    minimum_score: null
+    hard_fail_conditions: []
+    evidence_required: []
+    evaluator_type: human_and_machine
+  creative:
+    applicable: unknown
+    weight: 0
+    minimum_score: null
+    hard_fail_conditions: []
+    evidence_required: []
+    evaluator_type: human
+  responsive:
+    applicable: unknown
+    weight: 0
+    minimum_score: null
+    hard_fail_conditions: []
+    evidence_required: []
+    evaluator_type: machine
+  performance:
+    applicable: unknown
+    weight: 0
+    minimum_score: null
+    hard_fail_conditions: []
+    evidence_required: []
+    evaluator_type: machine
+  accessibility:
+    applicable: unknown
+    weight: 0
+    minimum_score: null
+    hard_fail_conditions: []
+    evidence_required: []
+    evaluator_type: machine
+  engineering:
+    applicable: unknown
+    weight: 0
+    minimum_score: null
+    hard_fail_conditions: []
+    evidence_required: []
+    evaluator_type: machine
+  reference_fidelity:
+    applicable: unknown
+    weight: 0
+    minimum_score: null
+    hard_fail_conditions: []
+    evidence_required: []
+    evaluator_type: human
+  three_d_quality:
+    applicable: false
+    weight: 0
+    minimum_score: null
+    hard_fail_conditions: []
+    evidence_required: []
+    evaluator_type: human
+  motion_quality:
+    applicable: false
+    weight: 0
+    minimum_score: null
+    hard_fail_conditions: []
+    evidence_required: []
+    evaluator_type: human
+
+hard_failures: []
+
+weight_normalization:
+  rule: applicable_dimension_weights_sum_to_100
+  enforced: true
+
+revision:
+  version: "1.0"
+  parent_version: null
+  reason: not_supplied
+  changed_by: operator
+  changed_at: not_supplied

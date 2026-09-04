@@ -127,15 +127,9 @@ def check_proprietary_skills_phase(errors: list[str]) -> None:
 
 
 def check_benchmarks_projects_empty(errors: list[str]) -> None:
-    for name in ("benchmarks", "projects"):
-        base = REPO_ROOT / name
-        for item in base.rglob("*"):
-            if item.name == ".gitkeep":
-                continue
-            if item.is_file():
-                rel = item.relative_to(REPO_ROOT)
-                if item.stat().st_size > 0 and item.name not in (".gitkeep",):
-                    fail(errors, f"Phase A: {rel} should remain empty of project content")
+    from benchmark_scope import scan_benchmarks_and_projects
+
+    scan_benchmarks_and_projects(errors, fail)
 
 
 def check_no_duplicate_masters(errors: list[str]) -> None:

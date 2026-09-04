@@ -171,13 +171,9 @@ def main() -> int:
         if name in actual_dirs:
             validate_skill(name, errors)
 
-    for name in ("benchmarks", "projects"):
-        base = REPO / name
-        for item in base.rglob("*"):
-            if item.name == ".gitkeep":
-                continue
-            if item.is_file():
-                fail(errors, f"{name}/ must remain empty: {item.relative_to(REPO)}")
+    from benchmark_scope import scan_benchmarks_and_projects
+
+    scan_benchmarks_and_projects(errors, fail)
 
     run_validator("validate_foundation.py", errors, "Phase A foundation validator")
     run_validator("validate_external_skills.py", errors, "Phase B external skills validator")
