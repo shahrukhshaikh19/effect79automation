@@ -1,119 +1,106 @@
 benchmark_id: BM-001
-contract_version: "1.1"
-status: REGISTERED
-
+contract_version: '1.1'
+status: FROZEN
 evidence_plan:
-  - evidence_id: E-001
-    dimension: responsive
-    type: browser_screenshot
-    required: true
-    capture_stage: post_execution
-    acceptance_use: required_viewport_renders
-    viewports:
-      - name: desktop
-        width: 1440
-        height: 900
-      - name: laptop
-        width: 1280
-        height: 800
-      - name: tablet
-        width: 768
-        height: 1024
-      - name: mobile
-        width: 390
-        height: 844
+- evidence_id: E-001
+  dimension: responsive
+  type: browser_screenshot
+  required: true
+  capture_stage: post_execution
+  acceptance_use: required_viewport_renders
+  viewports:
+  - name: desktop
+    width: 1440
+    height: 900
+  - name: laptop
+    width: 1280
+    height: 800
+  - name: tablet
+    width: 768
+    height: 1024
+  - name: mobile
+    width: 390
+    height: 844
+- evidence_id: E-002
+  dimension: functional
+  type: implementation_completion_check
+  required: true
+  capture_stage: post_execution
+  acceptance_use: verify_functional_web_experience_not_static_mockup
+- evidence_id: E-003
+  dimension: visual
+  type: visual_consistency_review
+  required: true
+  capture_stage: post_execution
+  acceptance_use: visual_coherence_and_art_direction
+- evidence_id: E-004
+  dimension: responsive
+  type: responsive_behavior_check
+  required: true
+  capture_stage: post_execution
+  acceptance_use: verify_no_catastrophic_breakage_between_evaluation_sizes
+- evidence_id: E-005
+  dimension: engineering
+  type: browser_console_log
+  required: true
+  capture_stage: post_execution
+  acceptance_use: detect_obvious_console_runtime_errors
+  browser: chromium
+- evidence_id: E-006
+  dimension: engineering
+  type: network_request_log
+  required: true
+  capture_stage: post_execution
+  acceptance_use: detect_failed_network_requests_where_applicable
+  browser: chromium
+- evidence_id: E-007
+  dimension: motion_quality
+  type: interaction_recording
+  required: true
+  capture_stage: post_execution
+  acceptance_use: meaningful_interaction_or_motion_behavior
+- evidence_id: E-008
+  dimension: accessibility
+  type: reduced_motion_behavior_check
+  required: true
+  capture_stage: post_execution
+  acceptance_use: reduced_motion_considered_where_applicable
+- evidence_id: E-009
+  dimension: performance
+  type: performance_metrics
+  required: true
+  capture_stage: post_execution
+  acceptance_use: relevant_performance_evidence
+- evidence_id: E-010
+  dimension: engineering
+  type: quality_gate_provenance
+  required: true
+  capture_stage: post_execution
+  acceptance_use: acos_quality_gate_decision_provenance
+- evidence_id: E-011
+  dimension: three_d_quality
+  type: conditional_3d_quality_review
+  required: conditional
+  required_when: meaningful_3d_used_in_deliverable
+  capture_stage: post_execution
+  acceptance_use: evaluate_3d_quality_when_meaningful_3d_present
+  evaluation_requirements:
+    independent_3d_critique: required_when_applicable
+    critic_selection: normal_acos_routing
+    quality_gate: required_when_applicable
+  not_required_when: no_meaningful_3d_in_deliverable
+hash_note: 'benchmark_contract_sha256 covers frozen registration fields only. Excludes execution timestamps, runtime results, scores, and evidence outputs.
 
-  - evidence_id: E-002
-    dimension: functional
-    type: implementation_completion_check
-    required: true
-    capture_stage: post_execution
-    acceptance_use: verify_functional_web_experience_not_static_mockup
-
-  - evidence_id: E-003
-    dimension: visual
-    type: visual_consistency_review
-    required: true
-    capture_stage: post_execution
-    acceptance_use: visual_coherence_and_art_direction
-
-  - evidence_id: E-004
-    dimension: responsive
-    type: responsive_behavior_check
-    required: true
-    capture_stage: post_execution
-    acceptance_use: verify_no_catastrophic_breakage_between_evaluation_sizes
-
-  - evidence_id: E-005
-    dimension: engineering
-    type: browser_console_log
-    required: true
-    capture_stage: post_execution
-    acceptance_use: detect_obvious_console_runtime_errors
-    browser: chromium
-
-  - evidence_id: E-006
-    dimension: engineering
-    type: network_request_log
-    required: true
-    capture_stage: post_execution
-    acceptance_use: detect_failed_network_requests_where_applicable
-    browser: chromium
-
-  - evidence_id: E-007
-    dimension: motion_quality
-    type: interaction_recording
-    required: true
-    capture_stage: post_execution
-    acceptance_use: meaningful_interaction_or_motion_behavior
-
-  - evidence_id: E-008
-    dimension: accessibility
-    type: reduced_motion_behavior_check
-    required: true
-    capture_stage: post_execution
-    acceptance_use: reduced_motion_considered_where_applicable
-
-  - evidence_id: E-009
-    dimension: performance
-    type: performance_metrics
-    required: true
-    capture_stage: post_execution
-    acceptance_use: relevant_performance_evidence
-
-  - evidence_id: E-010
-    dimension: engineering
-    type: quality_gate_provenance
-    required: true
-    capture_stage: post_execution
-    acceptance_use: acos_quality_gate_decision_provenance
-
-  - evidence_id: E-011
-    dimension: three_d_quality
-    type: conditional_3d_quality_review
-    required: conditional
-    required_when: meaningful_3d_used_in_deliverable
-    capture_stage: post_execution
-    acceptance_use: evaluate_3d_quality_when_meaningful_3d_present
-    evaluation_requirements:
-      independent_3d_critique: required_when_applicable
-      critic_selection: normal_acos_routing
-      quality_gate: required_when_applicable
-    not_required_when: no_meaningful_3d_in_deliverable
-
-hash_note: >
-  benchmark_contract_sha256 covers frozen registration fields only.
-  Excludes execution timestamps, runtime results, scores, and evidence outputs.
-
+  '
 contract_hash:
   algorithm: sha256
   includes: registration_fields_excluding_hash_and_execution
   excludes:
-    - contract_hash
-    - benchmark_contract_sha256
-    - execution_state
-    - benchmark_score
-    - benchmark_result
-    - frozen_at
-    - scores
-    - evidence_outputs
+  - contract_hash
+  - benchmark_contract_sha256
+  - execution_state
+  - benchmark_score
+  - benchmark_result
+  - frozen_at
+  - scores
+  - evidence_outputs

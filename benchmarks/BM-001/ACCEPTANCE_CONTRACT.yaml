@@ -1,92 +1,89 @@
 benchmark_id: BM-001
-contract_version: "1.1"
-status: REGISTERED
+contract_version: '1.1'
+status: FROZEN
+scoring_note: 'Benchmark score != ACOS Quality Gate status. ACOS certified Quality Gate remains authoritative. Hard rejects cannot be averaged away. Benchmark criteria may add measurability but must not bypass ACOS hard-reject rules or evidence requirements.
 
-scoring_note: >
-  Benchmark score != ACOS Quality Gate status. ACOS certified Quality Gate remains
-  authoritative. Hard rejects cannot be averaged away. Benchmark criteria may add
-  measurability but must not bypass ACOS hard-reject rules or evidence requirements.
-
+  '
 dimensions:
   functional:
     applicable: true
     weight: 15
     minimum_score: null
     hard_fail_conditions:
-      - not_a_functional_web_experience
-      - obvious_layout_breakage
-      - broken_navigation_or_interaction
-      - obvious_console_runtime_errors
+    - not_a_functional_web_experience
+    - obvious_layout_breakage
+    - broken_navigation_or_interaction
+    - obvious_console_runtime_errors
     evidence_required:
-      - E-001
-      - E-002
-      - E-005
-      - E-006
+    - E-001
+    - E-002
+    - E-005
+    - E-006
     evaluator_type: human_and_machine
   visual:
     applicable: true
     weight: 20
     minimum_score: null
     hard_fail_conditions:
-      - placeholder_quality_visual_assets
-      - incoherent_visual_system
+    - placeholder_quality_visual_assets
+    - incoherent_visual_system
     evidence_required:
-      - E-001
-      - E-003
+    - E-001
+    - E-003
     evaluator_type: human_and_machine
   creative:
     applicable: true
     weight: 20
     minimum_score: null
     hard_fail_conditions:
-      - no_intentional_creative_concept
-      - generic_ai_generated_aesthetic
-      - imitates_recognizable_brand
-      - copies_existing_website
+    - no_intentional_creative_concept
+    - generic_ai_generated_aesthetic
+    - imitates_recognizable_brand
+    - copies_existing_website
     evidence_required:
-      - E-001
-      - E-003
+    - E-001
+    - E-003
     evaluator_type: human
   responsive:
     applicable: true
     weight: 15
     minimum_score: null
     hard_fail_conditions:
-      - catastrophic_breakage_at_required_viewports
-      - desktop_only_designed_experience
+    - catastrophic_breakage_at_required_viewports
+    - desktop_only_designed_experience
     evidence_required:
-      - E-001
-      - E-004
+    - E-001
+    - E-004
     evaluator_type: machine
   performance:
     applicable: true
     weight: 10
     minimum_score: null
     hard_fail_conditions:
-      - unjustified_severe_performance_degradation
+    - unjustified_severe_performance_degradation
     evidence_required:
-      - E-009
+    - E-009
     evaluator_type: machine
   accessibility:
     applicable: true
     weight: 5
     minimum_score: null
     hard_fail_conditions:
-      - reduced_motion_not_considered_where_applicable
+    - reduced_motion_not_considered_where_applicable
     evidence_required:
-      - E-008
+    - E-008
     evaluator_type: machine
   engineering:
     applicable: true
     weight: 10
     minimum_score: null
     hard_fail_conditions:
-      - prototype_quality_shortcuts_in_final_acceptance
-      - insufficient_evidence_for_quality_gate
+    - prototype_quality_shortcuts_in_final_acceptance
+    - insufficient_evidence_for_quality_gate
     evidence_required:
-      - E-005
-      - E-006
-      - E-010
+    - E-005
+    - E-006
+    - E-010
     evaluator_type: machine
   reference_fidelity:
     applicable: false
@@ -105,22 +102,17 @@ dimensions:
     applicable_when: meaningful_3d_used_in_deliverable
     activation_criteria:
       meaningful_3d_used_in_deliverable:
-        definition: >
-          Deliverable materially implements a three-dimensional scene, object, or spatial
-          experience that meaningfully contributes to the benchmark — e.g. navigable 3D space,
-          dimensional product/object presentation, or spatial interaction. WebGL, shaders, or
-          Three.js alone do NOT automatically qualify; they count only when used to implement
-          such a three-dimensional scene/object/spatial experience. Excludes decorative CSS-only
-          pseudo-3D, shader-only effects without dimensional spatial content, unused assets, or
-          3D forced without creative justification.
+        definition: 'Deliverable materially implements a three-dimensional scene, object, or spatial experience that meaningfully contributes to the benchmark — e.g. navigable 3D space, dimensional product/object presentation, or spatial interaction. WebGL, shaders, or Three.js alone do NOT automatically qualify; they count only when used to implement such a three-dimensional scene/object/spatial experience. Excludes decorative CSS-only pseudo-3D, shader-only effects without dimensional spatial content, unused assets, or 3D forced without creative justification.
+
+          '
         determination: post_execution_evidence_and_routing_provenance_review
         routing: normal_acos_routing_only_no_manual_skill_activation
     minimum_score: null
     hard_fail_conditions:
-      - forced_unjustified_3d
-      - poor_3d_quality_when_meaningful_3d_used
+    - forced_unjustified_3d
+    - poor_3d_quality_when_meaningful_3d_used
     evidence_required_when_applicable:
-      - E-011
+    - E-011
     evidence_required: []
     evaluator_type: human
     evaluation_requirements:
@@ -134,44 +126,41 @@ dimensions:
     weight: 5
     minimum_score: null
     hard_fail_conditions:
-      - meaningless_decorative_animation
+    - meaningless_decorative_animation
     evidence_required:
-      - E-007
+    - E-007
     evaluator_type: human
-
 hard_failures:
-  - copies_existing_website
-  - recreates_supplied_commercial_design
-  - imitates_recognizable_brand
-  - generic_saas_landing_template
-  - predictable_gradient_heavy_ai_aesthetics
-  - arbitrary_glassmorphism
-  - excessive_glow_without_purpose
-  - random_floating_cards
-  - meaningless_decorative_animation
-  - forced_unjustified_3d
-  - poor_3d_quality_when_meaningful_3d_used
-  - usability_sacrificed_for_effects
-  - unjustified_performance_sacrifice
-  - desktop_only_designed_experience
-  - placeholder_quality_visual_assets
-  - not_a_functional_web_experience
-  - obvious_layout_breakage
-  - obvious_console_runtime_errors
-  - broken_navigation_or_interaction
-  - benchmark_aesthetic_cross_system_memory_promotion_forbidden
-
+- copies_existing_website
+- recreates_supplied_commercial_design
+- imitates_recognizable_brand
+- generic_saas_landing_template
+- predictable_gradient_heavy_ai_aesthetics
+- arbitrary_glassmorphism
+- excessive_glow_without_purpose
+- random_floating_cards
+- meaningless_decorative_animation
+- forced_unjustified_3d
+- poor_3d_quality_when_meaningful_3d_used
+- usability_sacrificed_for_effects
+- unjustified_performance_sacrifice
+- desktop_only_designed_experience
+- placeholder_quality_visual_assets
+- not_a_functional_web_experience
+- obvious_layout_breakage
+- obvious_console_runtime_errors
+- broken_navigation_or_interaction
+- benchmark_aesthetic_cross_system_memory_promotion_forbidden
 weight_normalization:
   rule: frozen_conditional_dimension_profiles
   enforced: true
   post_execution_weight_mutation: forbidden
   conditional_dimensions:
-    - three_d_quality
+  - three_d_quality
   default_profile: no_meaningful_3d
-  selection_rule: >
-    Profile selected at scoring from deliverable evidence only. If meaningful 3D is absent,
-    use no_meaningful_3d. If meaningful 3D is present, use meaningful_3d_used. Weights are
-    fixed at contract freeze — never adjusted after execution results are known.
+  selection_rule: 'Profile selected at scoring from deliverable evidence only. If meaningful 3D is absent, use no_meaningful_3d. If meaningful 3D is present, use meaningful_3d_used. Weights are fixed at contract freeze — never adjusted after execution results are known.
+
+    '
   profiles:
     no_meaningful_3d:
       condition: no_meaningful_3d_in_deliverable
@@ -201,10 +190,9 @@ weight_normalization:
         three_d_quality: 10
       sum: 100
       base_pool_redistribution: proportional_90_percent_of_default_profile_weights
-
 revision:
-  version: "1.1"
-  parent_version: "1.0"
-  reason: remove_hardcoded_skill_ids_from_3d_evaluation_semantics
-  changed_by: system_integrity_correction
-  changed_at: "2026-09-04T21:15:00Z"
+  version: '1.1'
+  parent_version: '1.0'
+  reason: operator_approved_freeze
+  changed_by: operator
+  changed_at: '2026-09-04T20:30:00Z'

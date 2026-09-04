@@ -1,6 +1,6 @@
 benchmark_id: BM-001
 title: Premium Interactive Digital Experience — Fictional High-End Technology Product
-status: REGISTERED
+status: FROZEN
 created_at: '2026-09-04T20:05:00Z'
 contract_version: '1.1'
 operator_input:
@@ -165,7 +165,7 @@ creative_requirements:
 acceptance_contract:
   benchmark_id: BM-001
   contract_version: '1.1'
-  status: REGISTERED
+  status: FROZEN
   scoring_note: 'Benchmark score != ACOS Quality Gate status. ACOS certified Quality Gate remains authoritative. Hard rejects cannot be averaged away. Benchmark criteria may add measurability but must not bypass ACOS hard-reject rules or evidence requirements.
 
     '
@@ -358,9 +358,9 @@ acceptance_contract:
   revision:
     version: '1.1'
     parent_version: '1.0'
-    reason: remove_hardcoded_skill_ids_from_3d_evaluation_semantics
-    changed_by: system_integrity_correction
-    changed_at: '2026-09-04T21:15:00Z'
+    reason: operator_approved_freeze
+    changed_by: operator
+    changed_at: '2026-09-04T20:30:00Z'
 evidence_plan:
 - evidence_id: E-001
   dimension: responsive
@@ -515,21 +515,21 @@ constraint_evaluation:
   reason_code: NO_GLOBAL_MEMORY_PROMOTION
   reason: Benchmark independence preserved; global memory promotion forbidden.
 operator_confirmation:
-  brief_correct: pending
-  references_correct: pending
-  acceptance_contract_correct: pending
-  confirmed_at: null
-  confirmed_by: null
-  note: Awaiting explicit operator review and approval of derived acceptance contract.
+  brief_correct: confirmed
+  references_correct: confirmed
+  acceptance_contract_correct: confirmed
+  confirmed_at: '2026-09-04T20:30:00Z'
+  confirmed_by: operator
+  approval_note: Operator explicitly approved BM-001 v1.1 acceptance contract including conditional 3D evaluation and frozen weight-normalization profiles.
 execution_state:
   benchmark_score: null
   benchmark_result: NOT_EXECUTED
 revision:
   version: '1.1'
   parent_version: '1.0'
-  reason: remove_hardcoded_skill_ids_from_3d_evaluation_semantics_pending_operator_confirmation
-  changed_by: system_integrity_correction
-  changed_at: '2026-09-04T20:45:00Z'
+  reason: operator_approved_acceptance_contract_freeze
+  changed_by: operator
+  changed_at: '2026-09-04T20:30:00Z'
 global_memory_promotion: false
 integrity_correction:
   supersedes_active_version: '1.0'
@@ -539,3 +539,4 @@ integrity_correction:
   v1_0_preservation: v1.0 remains immutable in Git history; not rewritten or amended
   corrected_at: '2026-09-04T20:45:00Z'
   pending_correction: conditional_3d_quality_and_weight_normalization
+benchmark_contract_sha256: b2cb2dbaea31e07331fe1c94df1271e3c167f9a64461e2dc25410d13696cadf3
