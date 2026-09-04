@@ -12,7 +12,7 @@
 | Family | Tool ID | Structural | Runtime (this environment) |
 |---|---|---|---|
 | browser | TOOL-BROWSER-01 | CONFIGURED | **AVAILABLE** — Playwright 1.49.1, Chromium, multi-viewport capture |
-| blender | TOOL-BLENDER-01 | CONFIGURED | **BLOCKED** — Blender not on PATH; MCP not tested |
+| blender | TOOL-BLENDER-01 | CONFIGURED | **AVAILABLE** when MCP Server running (see BLENDER_RUNTIME_CORRECTION.md) |
 | git | TOOL-GIT-01 | CONFIGURED | **AVAILABLE** — git 2.32.0 |
 | shell | TOOL-SHELL-01 | CONFIGURED | **AVAILABLE** — PowerShell |
 | filesystem | TOOL-FS-01 | CONFIGURED | **AVAILABLE** — dedicated `check_filesystem_tool.py` |

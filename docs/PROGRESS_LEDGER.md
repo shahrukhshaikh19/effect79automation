@@ -35,13 +35,14 @@
 | D5 — Health checks | COMPLETE | `validation/check_*_tool.py` (4 scripts) |
 | D6 — Full validation sequence | COMPLETE | All 4 structural validators PASSED |
 | D7 — Filesystem health-check hardening | COMPLETE | Dedicated `validation/check_filesystem_tool.py`; registry + validator mapping fix |
+| D8 — Blender MCP runtime correction | COMPLETE | Addon protocol 5 sync; health check discovers exe + MCP socket — `docs/BLENDER_RUNTIME_CORRECTION.md` |
 
 ### Phase D runtime health (this environment)
 
 | Tool | Structural | Runtime |
 |---|---|---|
 | Browser (Playwright) | CONFIGURED | AVAILABLE — neutral fixture load + multi-viewport capture succeeded |
-| Blender MCP | CONFIGURED | BLOCKED — Blender executable not on PATH; MCP connection not tested |
+| Blender MCP | CONFIGURED | AVAILABLE when MCP Server running — see `docs/BLENDER_RUNTIME_CORRECTION.md` |
 | Git | CONFIGURED | AVAILABLE — git 2.32.0, inside work tree |
 | Shell | CONFIGURED | AVAILABLE — PowerShell on Windows |
 | Filesystem | CONFIGURED | AVAILABLE — dedicated fs-health probe under validation/evidence/ |
@@ -94,6 +95,7 @@
 | capture-evidence.mjs timestamp typo | `toISOJSON` TypeError | Fixed to `toISOString()` |
 | capture target path | ERR_FILE_NOT_FOUND for file://./ relative | Fixed resolveTarget + example config |
 | TOOL-FS-01 health_check mismatch | Filesystem pointed to shell health check | Added `check_filesystem_tool.py`; hardened `validate_tools.py` mapping |
+| Blender MCP runtime BLOCKED misreport | exe not on PATH; MCP socket not probed; addon protocol 4 vs 5 | `uvx blender-mcp install-addon`; upgraded check_blender_tool.py — see BLENDER_RUNTIME_CORRECTION.md |
 
 ---
 
@@ -106,7 +108,7 @@
 
 ## Blockers
 
-- **Blender MCP runtime:** Blender not installed on PATH in current environment — structural Phase D complete; runtime BLOCKED until Blender + MCP + addon configured.
+- **Blender MCP runtime:** Was BLOCKED (PATH-only detection + addon protocol mismatch). Corrected 2026-09-04 — see `docs/BLENDER_RUNTIME_CORRECTION.md`. Run MCP Server in Blender for AVAILABLE status.
 
 ---
 
