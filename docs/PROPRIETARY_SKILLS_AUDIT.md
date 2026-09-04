@@ -236,15 +236,15 @@ All 14 proprietary skills under `skills/acos/` contain mandatory operational sec
 
 | Field | Value |
 |---|---|
-| **Responsibility** | Final ship/no-ship: APPROVE, REJECT, or BLOCKED INSUFFICIENT EVIDENCE; hard reject enforcement |
+| **Responsibility** | Final ship/no-ship: APPROVED, REJECTED, or BLOCKED_INSUFFICIENT_EVIDENCE; hard reject enforcement |
 | **Activates when** | Completion claimed; ship decision requested; evidence audit possible |
 | **Must not activate when** | Mid-implementation; fix tasks; self-check only; design gate (pre-build) |
 | **Upstream inputs** | Critic reports, domain evidence, `core/QUALITY_GATES.md` |
-| **Downstream handoff** | APPROVE → `acos-failure-learning`; REJECT → correction owners; BLOCKED → evidence collectors |
+| **Downstream handoff** | APPROVED → `acos-failure-learning`; REJECTED → correction owners; BLOCKED_INSUFFICIENT_EVIDENCE → evidence collectors |
 | **Evidence type** | Structured gate report (`references/gate-report-schema.yaml`) |
 | **Memory interaction** | Read evidence/critic inputs; write gate outcome; no auto-global promotion |
 | **Nearest overlap risk** | All critics (aggregation vs authorship) |
-| **Overlap prevention** | Gate aggregates; never creates/fixes; missing evidence → BLOCKED not approve |
+| **Overlap prevention** | Gate aggregates; never creates/fixes; missing evidence → BLOCKED_INSUFFICIENT_EVIDENCE not approval |
 | **References/templates** | `references/gate-report-schema.yaml` |
 | **Review status** | PASS |
 

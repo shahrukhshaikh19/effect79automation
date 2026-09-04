@@ -26,14 +26,15 @@
 | **Purpose** | Rendered experience inspection; screenshot/console/page-error evidence for critics |
 | **Implementation** | Playwright 1.49.1 + Node scripts under `tools/browser/` |
 | **Version/pin** | `playwright@1.49.1` in `tools/browser/package.json` |
-| **Capabilities** | Multi-viewport capture, full-page/ viewport screenshots, console/page errors, network failures, reduced-motion, readiness waits, YAML manifest |
+| **Capabilities** | Multi-viewport capture (per-viewport browser context + deviceScaleFactor), full-page/viewport/element screenshots, console/page errors, network failures, reduced-motion, readiness waits, YAML manifest + console_log.json |
 | **Not capabilities** | Visual quality approval, design judgments, arbitrary crawling, credential storage |
 | **Filesystem** | yes — explicit `--output` dir; local fixtures |
 | **Network** | yes — only to supplied target URL |
 | **Subprocess** | yes — Chromium via Playwright |
 | **Destructive actions** | overwrites files in explicit output directory |
 | **Approval boundary** | authenticated remote targets; non-workspace output paths |
-| **Evidence outputs** | `manifest.yaml`, PNG screenshots |
+| **Evidence outputs** | `manifest.yaml`, PNG screenshots, `console_log.json` |
+| **DPR integrity** | Requested vs effective DPR measured via `window.devicePixelRatio`; mismatch → `runtime_healthy=false` |
 | **Health status** | structural CONFIGURED; runtime **AVAILABLE** (Chromium launch + neutral capture succeeded) |
 | **Risks** | Requires explicit `npm ci` + bootstrap; not installed by validators |
 | **Review status** | PASS |
@@ -46,6 +47,24 @@ Browser/Playwright → render/runtime evidence → Visual/Creative/3D Critics �
 
 Browser must NOT output: "approved", "premium", quality scores.
 
+### Browser capability audit (2026-09-04 hardening)
+
+| Capability | Implementation | Evidence | Status |
+|---|---|---|---|
+| open_local_or_authorized_target | `resolveTarget()` in capture-evidence.mjs | manifest `target` field | PASS |
+| viewport_controlled_render | per-viewport `browser.newContext({ deviceScaleFactor })` | capture `viewport.requested/effective_device_scale_factor` | PASS |
+| deterministic_screenshot | Playwright `page.screenshot()` | PNG paths in manifest | PASS |
+| full_page_screenshot | `fullPage: true` when `capture.full_page` | `full_page.png` per viewport | PASS |
+| element_region_screenshot | `page.locator(selector).screenshot()`; fails if missing | `element.png` + selector in manifest | PASS |
+| multi_viewport_capture | iterates `config.viewports` with separate contexts | multiple capture records | PASS |
+| console_error_capture | `page.on("console")` type error | `console_errors` array per capture | PASS |
+| page_error_capture | `page.on("pageerror")` | `page_errors` array per capture | PASS |
+| network_failure_capture | `page.on("requestfailed")` | `network_failures` array per capture | PASS |
+| reduced_motion_emulation | `reducedMotion: "reduce"` in context | manifest `reduced_motion` | PASS |
+| readiness_wait_conditions | `page.goto` waitUntil + optional settle | `readiness_condition` in manifest | PASS |
+| evidence_manifest_generation | writes `manifest.yaml` | manifest file | PASS |
+| console_log_json (evidence output) | writes `console_log.json` | manifest `console_log_json` path | PASS |
+
 ---
 
 ## Blender MCP — TOOL-BLENDER-01
@@ -55,7 +74,7 @@ Browser must NOT output: "approved", "premium", quality scores.
 | **Purpose** | Execution bridge to Blender via MCP (inspect/mutate/render/export evidence) |
 | **Implementation** | Upstream `blender-mcp` pinned at `5866814479b4e2ca674d8d44969a9a2a78fdc8bb` (v1.9.1) |
 | **Version/pin** | Commit SHA + package 1.9.1 — see `tools/blender-mcp/UPSTREAM.yaml` |
-| **Capabilities** | Scene/object inspection, viewport screenshot, execute_blender_code, asset integrations (verified from source) |
+| **Capabilities** | See `tools/blender-mcp/capabilities.yaml`: native MCP inspection/integrations; material/render/export derived via `execute_blender_code`; restricted arbitrary Python |
 | **Not capabilities** | Creative direction, quality gate, critic judgments, ACOS skill knowledge |
 | **Filesystem** | yes — temp screenshots; bpy file ops via execute_blender_code |
 | **Network** | yes — localhost socket; external asset APIs; optional telemetry |
@@ -63,8 +82,8 @@ Browser must NOT output: "approved", "premium", quality scores.
 | **Destructive actions** | delete objects, overwrite .blend/exports, arbitrary Python execution |
 | **Approval boundary** | execute_blender_code, deletes, overwrites, external downloads — human required |
 | **Evidence outputs** | `blender-evidence.schema.yaml` manifest fields |
-| **Health status** | structural CONFIGURED; MCP connection NOT auto-tested |
-| **Risks** | High privilege; safe mode recommended; RESTRICTED until runtime verified |
+| **Health status** | structural CONFIGURED; TCP socket probe only (not MCP protocol handshake) — see check_blender_tool.py fields |
+| **Risks** | High privilege; safe mode recommended; RESTRICTED until live MCP handshake verified |
 | **Review status** | RESTRICTED |
 
 ### Blender → critic handoff

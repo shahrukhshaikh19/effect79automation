@@ -3,12 +3,14 @@ title: ACOS Browser Evidence Manifest
 description: >
   Machine-readable browser evidence from Playwright capture.
   A screenshot does NOT imply visual quality approval.
+  requested_device_scale_factor and effective_device_scale_factor must match for dpr_integrity.
 type: object
 required:
   - run_id
   - timestamp
   - target
   - captures
+  - console_log_json
 properties:
   run_id:
     type: string
@@ -17,7 +19,6 @@ properties:
     format: date-time
   target:
     type: string
-    description: URL or file path inspected
   browser:
     type: string
   browser_version:
@@ -33,30 +34,50 @@ properties:
     type: integer
   runtime_healthy:
     type: boolean
-    description: >
-      True when no console errors, page errors, or critical network failures.
-      Does NOT mean visual quality approved.
+  dpr_integrity:
+    type: boolean
+    description: True when all captures have matching requested vs effective DPR
   visual_quality_approved:
     type: boolean
     const: false
-    description: Always false at tool layer — critics/gate own approval
+  console_log_json:
+    type: string
+    description: Relative path to console_log.json artifact
   captures:
     type: array
     items:
       type: object
-      required: [viewport, capture_type, screenshot_path]
+      required:
+        - viewport
+        - capture_type
+        - screenshot_path
+        - browser
+        - browser_version
       properties:
         viewport:
           type: object
+          required: [name, width, height, requested_device_scale_factor, effective_device_scale_factor, dpr_integrity]
           properties:
             name: { type: string }
             width: { type: integer }
             height: { type: integer }
-            device_scale_factor: { type: number }
+            requested_device_scale_factor: { type: number }
+            effective_device_scale_factor: { type: number }
+            dpr_integrity: { type: boolean }
         capture_type:
           type: string
           enum: [viewport, full_page, element, region]
+        selector:
+          type: string
         screenshot_path:
+          type: string
+        browser:
+          type: string
+        browser_version:
+          type: string
+        reduced_motion:
+          type: boolean
+        readiness_condition:
           type: string
         console_errors:
           type: array

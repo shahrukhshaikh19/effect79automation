@@ -39,7 +39,13 @@ entries:
   upstream_path: plugins/build-web-apps/skills/frontend-app-builder/
   commit_sha: 1e285826e604f66f7208f7ac4dba0fe8341d1f57
   license: LICENSE_REVIEW_REQUIRED
-  license_note: No license file in build-web-apps plugin path at pinned commit
+  license_note: No LICENSE/COPYING at repo root or build-web-apps path at pinned commit; GitHub API license=null
+  license_evidence_inspected:
+    - repo root (no LICENSE)
+    - plugins/build-web-apps/ (no LICENSE)
+    - README.md (no license terms)
+  license_reinspection_date: "2026-09-04"
+  commercial_redistribution_status: blocked_pending_license_review
   local_path: skills/external/frontend/openai-frontend-app-builder
   scripts_present: false
   script_review_status: n/a
@@ -57,7 +63,13 @@ entries:
   upstream_path: plugins/build-web-apps/skills/frontend-testing-debugging/
   commit_sha: 1e285826e604f66f7208f7ac4dba0fe8341d1f57
   license: LICENSE_REVIEW_REQUIRED
-  license_note: No license file in build-web-apps plugin path at pinned commit
+  license_note: No LICENSE/COPYING at repo root or build-web-apps path at pinned commit; GitHub API license=null
+  license_evidence_inspected:
+    - repo root (no LICENSE)
+    - plugins/build-web-apps/ (no LICENSE)
+    - README.md (no license terms)
+  license_reinspection_date: "2026-09-04"
+  commercial_redistribution_status: blocked_pending_license_review
   local_path: skills/external/frontend/openai-frontend-testing-debugging
   scripts_present: false
   script_review_status: n/a

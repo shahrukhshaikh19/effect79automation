@@ -494,8 +494,9 @@ CREATIVE QA
 PERFORMANCE + ACCESSIBILITY QA
   ↓
 QUALITY GATE
-  ├── REJECT → route defect to responsible upstream skill
-  └── APPROVE
+  ├── REJECTED → route defect to responsible upstream skill
+  ├── BLOCKED_INSUFFICIENT_EVIDENCE → collect/repair evidence
+  └── APPROVED
   ↓
 SHIP
   ↓
@@ -561,6 +562,19 @@ Scores are diagnostic. Hard failures override averages.
 - obvious 3D credibility defect
 - visual work breaks existing business logic
 - materially generic/interchangeable design despite differentiated brief
+- required evidence was not collected
+
+## Terminal gate status
+
+Three terminal outcomes — hard failures override averages:
+
+| Status | Meaning |
+|---|---|
+| **APPROVED** | Required evidence exists; applicable gates pass; may ship |
+| **REJECTED** | Sufficient evidence to evaluate; critical/unacceptable failure demonstrated |
+| **BLOCKED_INSUFFICIENT_EVIDENCE** | Cannot make reliable ship/no-ship judgment; evidence insufficient — nothing may ship |
+
+BLOCKED is not approval. BLOCKED is not artifact-quality rejection.
 
 ---
 

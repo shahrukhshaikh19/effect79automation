@@ -1,28 +1,23 @@
-version: "1.0"
+version: "1.1"
 tool_id: TOOL-BLENDER-01
 source_commit: "5866814479b4e2ca674d8d44969a9a2a78fdc8bb"
 inspection_date: "2026-09-04"
+updated: "2026-09-04 certification hardening"
 
-# Verified from upstream server.py @ pinned commit — do not invent capabilities.
+# Verified from upstream server.py @ pinned commit.
 
-capabilities:
+native_capabilities:
   inspection:
     - get_addon_status
     - get_scene_info
     - get_object_info
     - get_viewport_screenshot
+  integrations_status:
     - get_polyhaven_status
     - get_hyper3d_status
     - get_sketchfab_status
     - get_polypizza_status
     - get_hunyuan3d_status
-
-  scene_mutation:
-    - execute_blender_code
-    - set_texture
-    - import_generated_asset
-    - import_generated_asset_hunyuan
-
   external_asset_integrations:
     - search_polyhaven_assets
     - download_polyhaven_asset
@@ -36,13 +31,32 @@ capabilities:
     - poll_rodin_job_status
     - generate_hunyuan3d_model
     - poll_hunyuan_job_status
-
+    - import_generated_asset
+    - import_generated_asset_hunyuan
+  mutating_native:
+    - set_texture
   telemetry:
     - disable_telemetry
     - record_trajectory_feedback
-
   guidance:
     - asset_creation_strategy
+
+derived_via_execute_blender_code:
+  description: >
+    Material edits, render invocation, file save/export, object create/delete,
+    and other bpy operations achievable only through arbitrary Blender Python —
+    NOT first-class MCP methods.
+  examples:
+    - material_operations
+    - render_invocation
+    - file_save_export
+    - object_create_modify_delete
+    - scene_state_mutation
+
+restricted_capabilities:
+  - execute_blender_code
+  - external_asset_downloads
+  - generative_3d_model_tools
 
 not_capabilities:
   - creative_3d_direction
@@ -50,7 +64,10 @@ not_capabilities:
   - visual_critic_judgment
   - automatic_global_memory_writes
 
-acos_restricted_by_default:
-  - execute_blender_code
-  - external_asset_downloads
-  - generative_3d_model_tools
+acos_policy:
+  BLENDER_MCP_SAFE_MODE: recommended
+  human_approval_required:
+    - execute_blender_code
+    - delete_objects
+    - overwrite_blend_file
+    - external_downloads

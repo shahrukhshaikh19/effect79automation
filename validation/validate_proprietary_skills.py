@@ -190,7 +190,8 @@ def main() -> int:
 
     print("VALIDATION: PASSED")
     print(f"Verified {len(expected)} proprietary ACOS skills.")
-    print("Phase D+ (tools/adapters/benchmarks): NOT VALIDATED (not started)")
+    print("Phase C proprietary skill checks complete.")
+    print("Later phases are outside this validator's scope.")
     return 0
 
 

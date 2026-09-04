@@ -229,6 +229,24 @@ def validate_browser_layer(errors: list[str]) -> None:
         fail(errors, "Playwright must be pinned to 1.49.1 in tools/browser/package.json")
     if "latest" in pkg.lower():
         fail(errors, "Browser package.json must not reference latest")
+    schema_path = REPO / "tools/browser/schemas/browser-evidence.schema.yaml"
+    if schema_path.is_file():
+        schema_text = schema_path.read_text(encoding="utf-8")
+        for field in (
+            "requested_device_scale_factor",
+            "effective_device_scale_factor",
+            "dpr_integrity",
+            "console_log_json",
+        ):
+            if field not in schema_text:
+                fail(errors, f"Browser evidence schema missing field: {field}")
+    script = REPO / "tools/browser/scripts/capture-evidence.mjs"
+    if script.is_file():
+        script_text = script.read_text(encoding="utf-8")
+        if "deviceScaleFactor" not in script_text:
+            fail(errors, "Browser capture script must apply deviceScaleFactor per viewport context")
+        if "window.devicePixelRatio" not in script_text:
+            fail(errors, "Browser capture script must measure effective DPR via window.devicePixelRatio")
 
 
 def validate_blender_layer(errors: list[str]) -> None:
@@ -357,8 +375,8 @@ def main() -> int:
 
     print("VALIDATION: PASSED")
     print("Phase D structural tool layer checks complete.")
-    print("Runtime health: run validation/check_*_tool.py separately.")
-    print("Phase E+ (adapters/orchestration): NOT VALIDATED (not started)")
+    print("Runtime health is validated separately.")
+    print("Later phases are outside this validator's scope.")
     return 0
 
 

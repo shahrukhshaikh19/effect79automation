@@ -9,7 +9,7 @@ gate_report:
   evaluated_at: "<ISO-8601 timestamp>"
 
   # Exactly one terminal status — gate authority
-  status: APPROVE | REJECT | BLOCKED_INSUFFICIENT_EVIDENCE
+  status: APPROVED | REJECTED | BLOCKED_INSUFFICIENT_EVIDENCE
 
   # Dimensions evaluated — omit N/A dimensions; do not score uninvented evidence
   applicable_dimensions:
@@ -118,7 +118,7 @@ gate_report:
       ref: "<uri or path>"
       notes: "<coverage note>"
 
-  # Every REJECT must populate required_corrections fully
+  # Every REJECTED must populate required_corrections fully
   required_corrections:
     - correction_id: GC-001
       failed_gate: visual | creative | 3d | functional | performance | accessibility | engineering | responsive | motion
@@ -138,15 +138,15 @@ gate_report:
     - gate_report_yaml
 
   next_owner:
-    APPROVE: acos-failure-learning  # success/failure learning when applicable
-    REJECT: "<highest severity responsible_owner from required_corrections>"
+    APPROVED: acos-failure-learning  # success/failure learning when applicable
+    REJECTED: "<highest severity responsible_owner from required_corrections>"
     BLOCKED_INSUFFICIENT_EVIDENCE: "<party who must collect evidence>"
 
-  rejection_route: []  # populated on REJECT — mirror required_corrections routing
+  rejection_route: []  # populated on REJECTED — mirror required_corrections routing
 
   # Standard handoff fields (phase-C minimum shape)
   handoff:
-    status: APPROVE | REJECT | BLOCKED_INSUFFICIENT_EVIDENCE
+    status: APPROVED | REJECTED | BLOCKED_INSUFFICIENT_EVIDENCE
     inputs_used: []
     decisions: {}
     constraints: []

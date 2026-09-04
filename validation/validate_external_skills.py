@@ -447,11 +447,8 @@ def main() -> int:
     print(f"Verified {len(entries)} locked external skill entries.")
     print("Directory allowlists derived from lockfile: OK")
     print("Script security inventory: OK")
-    skill_count = len(list((REPO / "skills" / "acos").rglob("SKILL.md")))
-    if skill_count == 14:
-        print("Phase C proprietary skills present: 14 (structural check only; use validate_proprietary_skills.py)")
-    else:
-        print("Phase C (proprietary skills): NOT VALIDATED (not started)")
+    print("Phase B external skill checks complete.")
+    print("Later phases are outside this validator's scope.")
     return 0
 
 

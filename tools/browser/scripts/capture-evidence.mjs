@@ -2,6 +2,7 @@
 /**
  * Deterministic multi-viewport browser evidence capture for ACOS.
  * Captures evidence only — no quality judgments.
+ * Requested vs effective DPR must match or runtime_healthy=false.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -32,6 +33,111 @@ function resolveTarget(target, browserRoot) {
   return `file://${abs.replace(/\\/g, "/")}`;
 }
 
+function attachListeners(page, consoleErrors, pageErrors, networkFailures, consoleLog) {
+  page.on("console", (msg) => {
+    const entry = { type: msg.type(), text: msg.text(), timestamp: new Date().toISOString() };
+    consoleLog.push(entry);
+    if (msg.type() === "error") consoleErrors.push(msg.text());
+  });
+  page.on("pageerror", (err) => pageErrors.push(String(err)));
+  page.on("requestfailed", (req) => {
+    networkFailures.push(
+      `${req.method()} ${req.url()} — ${req.failure()?.errorText ?? "failed"}`,
+    );
+  });
+}
+
+async function captureViewport(browser, browserVersion, vp, target, config, outputDir) {
+  const requestedDpr = vp.device_scale_factor ?? 1;
+  const contextOptions = {
+    viewport: { width: vp.width, height: vp.height },
+    deviceScaleFactor: requestedDpr,
+  };
+  if (config.reduced_motion) contextOptions.reducedMotion = "reduce";
+
+  const context = await browser.newContext(contextOptions);
+  const page = await context.newPage();
+
+  const consoleErrors = [];
+  const pageErrors = [];
+  const networkFailures = [];
+  const consoleLog = [];
+  attachListeners(page, consoleErrors, pageErrors, networkFailures, consoleLog);
+
+  const readiness = config.readiness ?? {};
+  await page.goto(target, {
+    waitUntil: readiness.wait_until ?? "networkidle",
+    timeout: readiness.timeout_ms ?? 30000,
+  });
+  if (readiness.animation_settle_ms) {
+    await page.waitForTimeout(readiness.animation_settle_ms);
+  }
+
+  const effectiveDpr = await page.evaluate(() => window.devicePixelRatio);
+  const dprMatch = Math.abs(effectiveDpr - requestedDpr) < 0.01;
+
+  const vpDir = path.join(outputDir, vp.name);
+  fs.mkdirSync(vpDir, { recursive: true });
+
+  const captureRecords = [];
+  const baseEntry = {
+    viewport: {
+      name: vp.name,
+      width: vp.width,
+      height: vp.height,
+      requested_device_scale_factor: requestedDpr,
+      effective_device_scale_factor: effectiveDpr,
+      dpr_integrity: dprMatch,
+    },
+    browser: "chromium",
+    browser_version: browserVersion,
+    reduced_motion: Boolean(config.reduced_motion),
+    readiness_condition: readiness.wait_until ?? "networkidle",
+    console_errors: [...consoleErrors],
+    page_errors: [...pageErrors],
+    network_failures: [...networkFailures],
+  };
+
+  const viewportPath = path.join(vpDir, "viewport.png");
+  await page.screenshot({ path: viewportPath, fullPage: false });
+  captureRecords.push({
+    ...baseEntry,
+    capture_type: "viewport",
+    screenshot_path: path.relative(outputDir, viewportPath).replace(/\\/g, "/"),
+  });
+
+  if (config.capture?.full_page) {
+    const fullPath = path.join(vpDir, "full_page.png");
+    await page.screenshot({ path: fullPath, fullPage: true });
+    captureRecords.push({
+      ...baseEntry,
+      capture_type: "full_page",
+      screenshot_path: path.relative(outputDir, fullPath).replace(/\\/g, "/"),
+    });
+  }
+
+  const selector = vp.element_selector ?? config.element_capture?.selector;
+  if (selector) {
+    const locator = page.locator(selector);
+    const count = await locator.count();
+    if (count === 0) {
+      await context.close();
+      throw new Error(`Element capture failed: selector not found: ${selector}`);
+    }
+    const elementPath = path.join(vpDir, "element.png");
+    await locator.first().screenshot({ path: elementPath });
+    captureRecords.push({
+      ...baseEntry,
+      capture_type: "element",
+      selector,
+      screenshot_path: path.relative(outputDir, elementPath).replace(/\\/g, "/"),
+    });
+  }
+
+  await context.close();
+  return { captureRecords, consoleLog, dprMatch };
+}
+
 async function main() {
   const args = parseArgs(process.argv);
   if (!args.config || !args.output) {
@@ -51,80 +157,42 @@ async function main() {
   const target = resolveTarget(config.target, browserRoot);
 
   const browser = await chromium.launch({ headless: true });
-  const contextOptions = config.reduced_motion
-    ? { reducedMotion: "reduce" }
-    : {};
-  const context = await browser.newContext(contextOptions);
-  const page = await context.newPage();
-
-  const consoleErrors = [];
-  const pageErrors = [];
-  const networkFailures = [];
-
-  page.on("console", (msg) => {
-    if (msg.type() === "error") consoleErrors.push(msg.text());
-  });
-  page.on("pageerror", (err) => pageErrors.push(String(err)));
-  page.on("requestfailed", (req) => {
-    networkFailures.push(`${req.method()} ${req.url()} — ${req.failure()?.errorText ?? "failed"}`);
-  });
-
-  const readiness = config.readiness ?? {};
-  await page.goto(target, {
-    waitUntil: readiness.wait_until ?? "networkidle",
-    timeout: readiness.timeout_ms ?? 30000,
-  });
-  if (readiness.animation_settle_ms) {
-    await page.waitForTimeout(readiness.animation_settle_ms);
-  }
-
   const browserVersion = browser.version();
   const captures = [];
+  const allConsoleLog = [];
+  let allDprMatch = true;
 
-  for (const vp of config.viewports ?? [{ name: "default", width: 1280, height: 720, device_scale_factor: 1 }]) {
-    await page.setViewportSize({
-      width: vp.width,
-      height: vp.height,
-    });
-    const vpDir = path.join(outputDir, vp.name);
-    fs.mkdirSync(vpDir, { recursive: true });
-
-    const viewportPath = path.join(vpDir, "viewport.png");
-    await page.screenshot({ path: viewportPath, fullPage: false });
-
-    const entry = {
-      viewport: {
-        name: vp.name,
-        width: vp.width,
-        height: vp.height,
-        device_scale_factor: vp.device_scale_factor ?? 1,
-      },
-      capture_type: "viewport",
-      screenshot_path: path.relative(outputDir, viewportPath).replace(/\\/g, "/"),
-      console_errors: [...consoleErrors],
-      page_errors: [...pageErrors],
-      network_failures: [...networkFailures],
-    };
-
-    if (config.capture?.full_page) {
-      const fullPath = path.join(vpDir, "full_page.png");
-      await page.screenshot({ path: fullPath, fullPage: true });
-      captures.push({
-        ...entry,
-        capture_type: "full_page",
-        screenshot_path: path.relative(outputDir, fullPath).replace(/\\/g, "/"),
-      });
+  try {
+    for (const vp of config.viewports ?? [
+      { name: "default", width: 1280, height: 720, device_scale_factor: 1 },
+    ]) {
+      const result = await captureViewport(
+        browser,
+        browserVersion,
+        vp,
+        target,
+        config,
+        outputDir,
+      );
+      captures.push(...result.captureRecords);
+      allConsoleLog.push(...result.consoleLog.map((e) => ({ ...e, viewport: vp.name })));
+      if (!result.dprMatch) allDprMatch = false;
     }
-
-    captures.push(entry);
+  } finally {
+    await browser.close();
   }
 
-  await browser.close();
+  const consoleLogPath = path.join(outputDir, "console_log.json");
+  fs.writeFileSync(consoleLogPath, JSON.stringify(allConsoleLog, null, 2), "utf8");
 
-  const runtimeHealthy =
-    consoleErrors.length === 0 &&
-    pageErrors.length === 0 &&
-    networkFailures.length === 0;
+  const hasErrors = captures.some(
+    (c) =>
+      c.console_errors.length > 0 ||
+      c.page_errors.length > 0 ||
+      c.network_failures.length > 0,
+  );
+
+  const runtimeHealthy = !hasErrors && allDprMatch;
 
   const manifest = {
     run_id: runId,
@@ -134,17 +202,27 @@ async function main() {
     browser_version: browserVersion,
     page_state: "loaded",
     reduced_motion: Boolean(config.reduced_motion),
-    readiness_condition: readiness.wait_until ?? "networkidle",
+    readiness_condition: config.readiness?.wait_until ?? "networkidle",
     duration_ms: Date.now() - start,
     runtime_healthy: runtimeHealthy,
+    dpr_integrity: allDprMatch,
     visual_quality_approved: false,
+    console_log_json: path.relative(outputDir, consoleLogPath).replace(/\\/g, "/"),
     captures,
-    notes: "Evidence capture only — critics interpret; quality gate decides approval.",
+    notes:
+      "Evidence capture only — critics interpret; quality gate decides approval. runtime_healthy requires DPR integrity.",
   };
 
   const manifestPath = path.join(outputDir, "manifest.yaml");
   fs.writeFileSync(manifestPath, stringifyYaml(manifest), "utf8");
-  console.log(stringifyYaml({ status: "complete", manifest_path: manifestPath, runtime_healthy: runtimeHealthy }));
+  console.log(
+    stringifyYaml({
+      status: "complete",
+      manifest_path: manifestPath,
+      runtime_healthy: runtimeHealthy,
+      dpr_integrity: allDprMatch,
+    }),
+  );
 }
 
 main().catch((err) => {

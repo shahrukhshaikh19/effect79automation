@@ -1,7 +1,25 @@
 # ACOS v1.2 — Implementation Progress Ledger
 
 **Last updated:** 2026-09-04  
-**Current phase:** D — Production Tool Layer (COMPLETE)
+**Current phase:** D — Production Tool Layer (COMPLETE) + A–D certification hardening (COMPLETE)
+
+---
+
+## Certification hardening — 2026-09-04
+
+| Task | Status | Evidence |
+|---|---|---|
+| H1 — Quality Gate semantic alignment | COMPLETE | APPROVED/REJECTED/BLOCKED_INSUFFICIENT_EVIDENCE across canonical, core, skill, schema |
+| H2 — Browser DPR integrity | COMPLETE | Per-viewport deviceScaleFactor + effective DPR measurement in capture-evidence.mjs |
+| H3 — Browser capability audit | COMPLETE | Claim→implementation→evidence table in TOOLS_AUDIT.md |
+| H4 — OpenAI license reinspection | COMPLETE | EXT-FE-01/02 remain LICENSE_REVIEW_REQUIRED; blocked_pending_license_review |
+| H5 — Blender health semantics | COMPLETE | tcp_socket_* / protocol_handshake_* fields in check_blender_tool.py |
+| H6 — Blender capability taxonomy | COMPLETE | native/derived/restricted in capabilities.yaml + TOOLS.yaml |
+| H7 — Cross-phase validator | COMPLETE | validation/validate_cross_phase_consistency.py |
+| H8 — Checklist/ledger sync | COMPLETE | IMPLEMENTATION_CHECKLIST.md + this ledger |
+| H9 — Full validation sequence | COMPLETE | 5 structural validators + 5 health checks |
+
+See `docs/FOUNDATION_CERTIFICATION_HARDENING.md` for full audit trail.
 
 ---
 

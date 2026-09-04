@@ -58,7 +58,7 @@ def blender_version_text(exe: str) -> str | None:
     return None
 
 
-def mcp_socket_reachable(host: str = DEFAULT_MCP_HOST, port: int = DEFAULT_MCP_PORT) -> bool:
+def tcp_socket_probe(host: str, port: int) -> bool:
     try:
         with socket.create_connection((host, port), timeout=2.0):
             return True
@@ -99,19 +99,19 @@ def main() -> int:
 
     blender_exe = discover_blender_executable()
     blender_version = blender_version_text(blender_exe) if blender_exe else None
-    mcp_reachable = mcp_socket_reachable()
+    tcp_reachable = tcp_socket_probe(DEFAULT_MCP_HOST, DEFAULT_MCP_PORT)
     on_path = shutil.which("blender") is not None
 
-    if blender_exe and mcp_reachable:
-        runtime = "AVAILABLE"
+    if blender_exe and tcp_reachable:
+        runtime = "RESTRICTED"
         runtime_reason = (
-            "Blender executable found and MCP addon socket reachable on "
-            f"{DEFAULT_MCP_HOST}:{DEFAULT_MCP_PORT}"
+            "Blender executable found; TCP socket reachable on "
+            f"{DEFAULT_MCP_HOST}:{DEFAULT_MCP_PORT} — MCP protocol handshake not verified by this script"
         )
     elif blender_exe:
         runtime = "RESTRICTED"
         runtime_reason = (
-            "Blender executable found but MCP socket not reachable — "
+            "Blender executable found but MCP TCP socket not reachable — "
             "start MCP Server in Blender (addon must be enabled)"
         )
     else:
@@ -128,12 +128,15 @@ def main() -> int:
         "blender_executable": blender_exe,
         "blender_on_path": on_path,
         "blender_version": blender_version,
-        "mcp_host": DEFAULT_MCP_HOST,
-        "mcp_port": DEFAULT_MCP_PORT,
-        "mcp_socket_reachable": mcp_reachable,
-        "mcp_connection_tested": mcp_reachable,
+        "tcp_socket_probe_attempted": True,
+        "tcp_socket_reachable": tcp_reachable,
+        "host": DEFAULT_MCP_HOST,
+        "port": DEFAULT_MCP_PORT,
+        "protocol_handshake_attempted": False,
+        "protocol_handshake_verified": False,
+        "addon_runtime_verified": False,
         "reason": runtime_reason,
-        "notes": "Full addon protocol handshake is environment-specific; socket probe is neutral runtime signal",
+        "notes": "TCP reachability is not MCP protocol verification; use live MCP client for handshake evidence",
     }))
     return 0
 

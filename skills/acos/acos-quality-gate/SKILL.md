@@ -1,11 +1,11 @@
 ---
 name: acos-quality-gate
-description: Activate at final QA aggregation when ship/no-ship decision is required. Consumes critic reports and domain evidence to emit exactly APPROVE, REJECT, or BLOCKED INSUFFICIENT EVIDENCE — enforcing hard rejects from core/QUALITY_GATES.md. Never activate to create, fix, or self-approve work without evidence; gate not creator.
+description: Activate at final QA aggregation when ship/no-ship decision is required. Consumes critic reports and domain evidence to emit exactly APPROVED, REJECTED, or BLOCKED_INSUFFICIENT_EVIDENCE — enforcing hard rejects from core/QUALITY_GATES.md. Never activate to create, fix, or self-approve work without evidence; gate not creator.
 ---
 
 # acos-quality-gate (ACOS-13)
 
-Final evidence-based quality gate. Aggregates applicable dimensions, enforces canonical hard reject conditions, and emits exactly one terminal status: **APPROVE**, **REJECT**, or **BLOCKED / INSUFFICIENT EVIDENCE**.
+Final evidence-based quality gate. Aggregates applicable dimensions, enforces canonical hard reject conditions, and emits exactly one terminal status: **APPROVED**, **REJECTED**, or **BLOCKED_INSUFFICIENT_EVIDENCE**.
 
 This skill is a **gate, not a creator**. It does not implement fixes, invent evidence, or waive missing required proof.
 
@@ -23,7 +23,7 @@ Own the final ship/no-ship decision for an evaluated project scope by:
 4. Enforcing **hard reject conditions** from canonical quality policy.
 5. Producing a structured gate report with routing for every rejection.
 
-The gate **aggregates**; critics **specialize**. Missing evidence yields **BLOCKED / INSUFFICIENT EVIDENCE**, not silent approval.
+The gate **aggregates**; critics **specialize**. Missing evidence yields **BLOCKED_INSUFFICIENT_EVIDENCE**, not silent approval.
 
 ---
 
@@ -61,7 +61,7 @@ Do **not** activate when:
 
 ### Owns
 
-- Final terminal status: `APPROVE` | `REJECT` | `BLOCKED_INSUFFICIENT_EVIDENCE`
+- Final terminal status: `APPROVED` | `REJECTED` | `BLOCKED_INSUFFICIENT_EVIDENCE`
 - Applicable dimension selection (functional, visual, creative, responsive, 3D, motion, performance, accessibility, engineering)
 - Hard reject enforcement per `core/QUALITY_GATES.md`
 - Evidence sufficiency audit
@@ -99,7 +99,7 @@ Do **not** activate when:
 | Motion evidence | When motion dimension applies | Recordings or captured states |
 | Prior gate report | On re-gate | Verify corrections |
 
-If a **required** input for an applicable dimension is absent, prefer **BLOCKED_INSUFFICIENT_EVIDENCE** over REJECT or APPROVE.
+If a **required** input for an applicable dimension is absent, prefer **BLOCKED_INSUFFICIENT_EVIDENCE** over REJECTED or APPROVED.
 
 ---
 
@@ -136,11 +136,11 @@ If **required evidence not collected** → set hard reject `HR-11` and terminal 
 1. Ingest handoffs from `acos-visual-critic`, `acos-creative-critic`, `acos-3d-critic`.
 2. Do not override critic defect registers without counter-evidence.
 3. If critic marked `blocked_insufficient_evidence` or `not_run` when required → propagate to gate BLOCKED.
-4. If critic independence risk documented → record in `open_risks`; do not APPROVE on creator self-check alone.
+4. If critic independence risk documented → record in `open_risks`; do not approve on creator self-check alone.
 
 ### Step 4 — Hard reject scan
 
-Evaluate each canonical hard reject (see Section 8). Any triggered relevant hard reject → **REJECT** regardless of average scores.
+Evaluate each canonical hard reject (see Section 8). Any triggered relevant hard reject → **REJECTED** regardless of average scores.
 
 Hard reject catalog (from `core/QUALITY_GATES.md`):
 
@@ -166,7 +166,7 @@ Hard reject catalog (from `core/QUALITY_GATES.md`):
 
 1. Collect unresolved **critical** and **major** findings from critics and QA inputs.
 2. Map each to `required_corrections` entry with owner and retest requirement.
-3. Any unresolved critical/major in applicable dimension → **REJECT**.
+3. Any unresolved critical/major in applicable dimension → **REJECTED**.
 
 ### Step 7 — Terminal decision
 
@@ -174,11 +174,11 @@ Apply exactly one:
 
 | Status | Conditions |
 |---|---|
-| **APPROVE** | All applicable dimensions evidenced; no hard rejects; no unresolved critical/major defects; critics pass or pass_with_observations within policy |
-| **REJECT** | Hard reject triggered OR unresolved critical/major defect OR critic fail in applicable dimension |
+| **APPROVED** | All applicable dimensions evidenced; no hard rejects; no unresolved critical/major defects; critics pass or pass_with_observations within policy |
+| **REJECTED** | Hard reject triggered OR unresolved critical/major defect OR critic fail in applicable dimension |
 | **BLOCKED_INSUFFICIENT_EVIDENCE** | Required evidence missing, critics blocked, or independence insufficient to gate |
 
-Never emit APPROVE because code compiles, creator claims premium quality, or averages look acceptable without evidence.
+Never emit APPROVED because code compiles, creator claims premium quality, or averages look acceptable without evidence.
 
 ### Step 8 — Report and handoff
 
@@ -190,7 +190,7 @@ Never emit APPROVE because code compiles, creator claims premium quality, or ave
 
 ```text
 QUALITY GATE
-Status: APPROVE | REJECT | BLOCKED INSUFFICIENT EVIDENCE
+Status: APPROVED | REJECTED | BLOCKED_INSUFFICIENT_EVIDENCE
 
 Evidence:
 - ...
@@ -215,18 +215,18 @@ Responsible route:
 1. **Quality Gate Report** (human-readable, canonical format above)
 2. **gate_report.yaml** (schema in `references/gate-report-schema.yaml`)
 3. **Handoff block** (Section 9)
-4. On REJECT: complete `required_corrections` for every failure
+4. On REJECTED: complete `required_corrections` for every failure
 5. On BLOCKED: explicit list of missing evidence and who must collect it
 
 ---
 
 ## 8. Rejection / failure conditions
 
-### Gate emits REJECT when
+### Gate emits REJECTED when
 
 Any applicable hard reject is triggered, OR unresolved critical/major findings exist in applicable dimensions.
 
-Every REJECT entry must include:
+Every REJECTED entry must include:
 
 - failed gate (dimension)
 - evidence reference
@@ -235,7 +235,7 @@ Every REJECT entry must include:
 - required correction
 - re-test requirement
 
-### Gate emits BLOCKED INSUFFICIENT EVIDENCE when
+### Gate emits BLOCKED_INSUFFICIENT_EVIDENCE when
 
 - Required dimension evidence missing (including HR-11)
 - Required critic not run or critic blocked
@@ -244,9 +244,9 @@ Every REJECT entry must include:
 ### Gate contract failure (invalid output)
 
 - Status other than the three terminal statuses
-- APPROVE with missing required evidence
-- APPROVE with triggered hard reject
-- REJECT without owner/correction/retest
+- APPROVED with missing required evidence
+- APPROVED with triggered hard reject
+- REJECTED without owner/correction/retest
 - Gate implements fixes instead of routing
 - Invented or waived evidence
 
@@ -257,7 +257,7 @@ Every REJECT entry must include:
 ```yaml
 handoff:
   skill: acos-quality-gate
-  status: APPROVE | REJECT | BLOCKED_INSUFFICIENT_EVIDENCE
+  status: APPROVED | REJECTED | BLOCKED_INSUFFICIENT_EVIDENCE
   inputs_used:
     - brief_ref
     - visual_critic_handoff_ref
@@ -265,7 +265,7 @@ handoff:
     - 3d_critic_handoff_ref
     - qa_evidence_refs
   decisions:
-    terminal_status: APPROVE | REJECT | BLOCKED_INSUFFICIENT_EVIDENCE
+    terminal_status: APPROVED | REJECTED | BLOCKED_INSUFFICIENT_EVIDENCE
     applicable_dimensions: [functional, visual, creative]
     hard_reject_triggered: false
     hard_reject_ids: []
@@ -281,7 +281,7 @@ handoff:
   deliverables:
     - quality_gate_report
     - gate_report_yaml
-  next_owner: acos-failure-learning | "<correction owner on REJECT>" | "<evidence collector on BLOCKED>"
+  next_owner: acos-failure-learning | "<correction owner on REJECTED>" | "<evidence collector on BLOCKED>"
   rejection_route:
     - correction_id: GC-001
       failed_gate: visual
@@ -292,9 +292,9 @@ handoff:
       retest_requirement: "<evidence to re-collect>"
 ```
 
-On **APPROVE**, `next_owner` is typically `acos-failure-learning` for outcome recording when policy applies.
+On **APPROVED**, `next_owner` is typically `acos-failure-learning` for outcome recording when policy applies.
 
-On **REJECT**, `next_owner` is highest-severity `responsible_owner`; include full `rejection_route`.
+On **REJECTED**, `next_owner` is highest-severity `responsible_owner`; include full `rejection_route`.
 
 On **BLOCKED**, `next_owner` identifies who collects missing evidence; `rejection_route` empty until evidence exists.
 
@@ -312,7 +312,7 @@ Full schema: `references/gate-report-schema.yaml`.
 
 ### Re-gate requirements
 
-After REJECT or BLOCKED resolution:
+After REJECTED or BLOCKED resolution:
 
 1. Verify each `retest_requirement` satisfied with new evidence refs.
 2. Re-run affected critic(s) when domain changed.
@@ -352,11 +352,11 @@ Gate must distinguish planning, implementation, runtime, and visual evidence typ
 
 Phase C: do not populate real memory.
 
-### On APPROVE (later runtime)
+### On APPROVED (later runtime)
 
 - May hand off to `acos-failure-learning` for success recording when policy applies.
 
-### On REJECT (later runtime)
+### On REJECTED (later runtime)
 
 - Hand off failure observations to `acos-failure-learning` with evidence — gate does not promote globals.
 
@@ -378,7 +378,7 @@ Phase C: do not populate real memory.
 | `acos-webgl-performance` | Supplies performance policy/evidence; gate enforces unacceptable performance hard reject |
 | `acos-responsive-art-direction` | Upstream; gate checks responsive evidence |
 | `acos-failure-learning` | Downstream on outcomes |
-| ACOS direction skills (01–09) | Receive REJECT routes for direction-level failures |
+| ACOS direction skills (01–09) | Receive REJECTED routes for direction-level failures |
 | External QA/testing skills | Supply evidence; gate aggregates |
 
 **Overlap prevention:** Critics judge domains; gate **only** decides terminal status and routes. Gate never duplicates detailed defect analysis — it verifies critic/QA completeness and enforces hard rejects.
@@ -402,5 +402,5 @@ Phase C: do not populate real memory.
 
 - `core/QUALITY_GATES.md` — dimensions, hard rejects, evidence types, critic independence
 - `core/WORKFLOW.md` — gate placement in QA loop
-- `core/ROUTING.md` — defect routing after REJECT
+- `core/ROUTING.md` — defect routing after REJECTED
 - `references/gate-report-schema.yaml` — machine-readable report contract

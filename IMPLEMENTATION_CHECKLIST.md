@@ -3,65 +3,66 @@
 A checked box requires evidence.
 
 ## A — Canonical foundation
-- [ ] repository created
-- [ ] canonical master committed
-- [ ] `AGENTS.md` committed
-- [ ] core policies committed
-- [ ] registry committed
-- [ ] tools/memory/benchmarks/adapters/model-profiles/projects structures created
-- [ ] exactly one canonical authority declared
+- [x] repository created
+- [x] canonical master committed
+- [x] `AGENTS.md` committed
+- [x] core policies committed
+- [x] registry committed
+- [x] tools/memory/benchmarks/adapters/model-profiles/projects structures created
+- [x] exactly one canonical authority declared
 
 ## B — External skill import
-- [ ] 4 frontend/design/accessibility foundation entries handled
-- [ ] 10 selected Three.js skills handled
-- [ ] R3F production reference handled
-- [ ] 5 selected GSAP skills handled
-- [ ] 15 selected Blender skills handled
-- [ ] `img2threejs` P0 handled
-- [ ] no unapproved mega-pack import
-- [ ] provenance recorded
-- [ ] upstream revision/pin recorded where practical
-- [ ] license reviewed
-- [ ] executable scripts reviewed before execution
-- [ ] network/filesystem/tool permissions reviewed where relevant
+- [x] 4 frontend/design/accessibility foundation entries handled
+- [x] 10 selected Three.js skills handled
+- [x] R3F production reference handled
+- [x] 5 selected GSAP skills handled
+- [x] 15 selected Blender skills handled
+- [x] img2threejs P0 handled
+- [x] no unapproved mega-pack import
+- [x] provenance recorded
+- [x] upstream revision/pin recorded where practical
+- [x] license reviewed (34/36 explicit; EXT-FE-01/02 remain `LICENSE_REVIEW_REQUIRED` — `blocked_pending_license_review`)
+- [x] executable scripts reviewed before execution
+- [x] network/filesystem/tool permissions reviewed where relevant
 
 ## C — 14 proprietary ACOS skills
 For every proprietary skill:
-- [ ] folder exists
-- [ ] valid `SKILL.md`
-- [ ] trigger conditions
-- [ ] responsibility boundary
-- [ ] required inputs
-- [ ] exact procedure
-- [ ] required outputs
-- [ ] rejection conditions
-- [ ] handoff contract
-- [ ] QA/evaluation contract
-- [ ] memory interaction
-- [ ] references/templates/rubrics when useful
+- [x] folder exists
+- [x] valid `SKILL.md`
+- [x] trigger conditions
+- [x] responsibility boundary
+- [x] required inputs
+- [x] exact procedure
+- [x] required outputs
+- [x] rejection conditions
+- [x] handoff contract
+- [x] QA/evaluation contract
+- [x] memory interaction
+- [x] references/templates/rubrics when useful
 
 Skills:
-- [ ] acos-creative-director
-- [ ] acos-reference-analysis
-- [ ] acos-anti-generic-design
-- [ ] acos-art-director
-- [ ] acos-experience-architect
-- [ ] acos-cinematic-3d-director
-- [ ] acos-motion-director
-- [ ] acos-responsive-art-direction
-- [ ] acos-webgl-performance
-- [ ] acos-visual-critic
-- [ ] acos-creative-critic
-- [ ] acos-3d-critic
-- [ ] acos-quality-gate
-- [ ] acos-failure-learning
+- [x] acos-creative-director
+- [x] acos-reference-analysis
+- [x] acos-anti-generic-design
+- [x] acos-art-director
+- [x] acos-experience-architect
+- [x] acos-cinematic-3d-director
+- [x] acos-motion-director
+- [x] acos-responsive-art-direction
+- [x] acos-webgl-performance
+- [x] acos-visual-critic
+- [x] acos-creative-critic
+- [x] acos-3d-critic
+- [x] acos-quality-gate
+- [x] acos-failure-learning
 
 ## D — Tools
-- [ ] Blender MCP classified/configured as tool
-- [ ] browser/Playwright classified/configured as tool
-- [ ] Git workflow
-- [ ] deterministic validation scripts
-- [ ] tools do not masquerade as skills
+- [x] Blender MCP classified/configured as tool
+- [x] browser/Playwright classified/configured as tool
+- [x] Git workflow
+- [x] deterministic validation scripts
+- [x] tools do not masquerade as skills
+- [x] A–D certification hardening (DPR integrity, gate semantics, cross-phase validator)
 
 ## E — Adapters/model independence
 - [ ] Claude adapter
@@ -93,23 +94,23 @@ Test representative classifications without introducing a benchmark project:
 - [ ] defects can route back to responsible skill
 
 ## H — Quality validation
-- [ ] hard reject rules implemented/documented
-- [ ] evidence requirement enforced
-- [ ] creator/critic separation
-- [ ] visual signoff requires render/browser evidence
-- [ ] business-logic protection
-- [ ] performance/accessibility gates available
+- [x] hard reject rules implemented/documented
+- [x] evidence requirement enforced
+- [x] creator/critic separation
+- [x] visual signoff requires render/browser evidence
+- [x] business-logic protection
+- [x] performance/accessibility gates available
 
 ## I — Domain-neutrality audit
-- [ ] no predefined brand/product/project embedded
-- [ ] no benchmark-specific aesthetic embedded
-- [ ] no 3D-first assumption
-- [ ] no default "premium" visual trope
-- [ ] benchmarks remain external project packages
+- [x] no predefined brand/product/project embedded
+- [x] no benchmark-specific aesthetic embedded
+- [x] no 3D-first assumption
+- [x] no default "premium" visual trope
+- [x] benchmarks remain external project packages
 
 ## J — Foundation handoff
-- [ ] structural validation passed
-- [ ] content validation passed
-- [ ] no placeholders counted as implementation
-- [ ] progress/evidence ledger produced
-- [ ] foundation ready to accept first real project package
+- [x] structural validation passed
+- [x] content validation passed
+- [x] no placeholders counted as implementation
+- [x] progress/evidence ledger produced
+- [ ] foundation ready to accept first real project package (await Phase E+ authorization)

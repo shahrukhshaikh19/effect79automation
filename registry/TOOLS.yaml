@@ -79,11 +79,13 @@ tools:
       - scene_inspection
       - object_inspection
       - viewport_screenshot
+      - asset_integration_status
+      - external_asset_downloads_integrations
       - execute_blender_code
       - material_operations
-      - asset_download_integrations
       - render_invocation
       - export_operations
+    capability_taxonomy: tools/blender-mcp/capabilities.yaml
     evidence_outputs:
       - blender_evidence_manifest_yaml
       - viewport_screenshot_png
@@ -109,6 +111,8 @@ tools:
     notes: >
       Upstream pinned in tools/blender-mcp/UPSTREAM.yaml. Runtime requires Blender
       installation + MCP server + addon. BLENDER_MCP_SAFE_MODE recommended for ACOS.
+      Native vs derived vs restricted capabilities classified in capabilities.yaml —
+      material/render/export are derived_via_execute_blender_code, not native MCP methods.
 
   - id: TOOL-GIT-01
     name: acos-git-workspace

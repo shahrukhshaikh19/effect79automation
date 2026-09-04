@@ -36,6 +36,24 @@ Quality is multi-dimensional. Only score dimensions relevant to the actual proje
 - materially generic/interchangeable result despite a differentiated brief;
 - required evidence was not collected.
 
+## Terminal gate status
+
+Exactly one terminal outcome per gate evaluation:
+
+| Status | Meaning | May ship? |
+|---|---|---|
+| **APPROVED** | Required evidence exists; applicable gates pass | Yes |
+| **REJECTED** | Sufficient evidence to evaluate; hard failure or unacceptable quality demonstrated | No — route corrections |
+| **BLOCKED_INSUFFICIENT_EVIDENCE** | Reliable ship/no-ship judgment impossible — evidence missing, invalid, stale, contradictory, or unverifiable | No — collect/repair evidence |
+
+**BLOCKED_INSUFFICIENT_EVIDENCE is not approval.** It is not a quality rejection of the artifact itself; it is an evaluation-state failure.
+
+```text
+APPROVED → may ship
+REJECTED → route defects → correct → regenerate evidence → re-evaluate
+BLOCKED_INSUFFICIENT_EVIDENCE → collect/repair evidence → re-evaluate
+```
+
 ## Evidence requirements
 
 Functional:
@@ -61,7 +79,7 @@ The implementation skill may self-check, but final creative/visual/domain approv
 
 ```text
 QUALITY GATE
-Status: APPROVED | REJECTED
+Status: APPROVED | REJECTED | BLOCKED_INSUFFICIENT_EVIDENCE
 
 Evidence:
 - ...

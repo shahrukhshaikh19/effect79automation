@@ -34,7 +34,7 @@ records:
     credential_access: "no"
     review_status: reviewed
     risk_classification: medium
-    notes: Writes screenshots/manifest to explicit --output dir; target must be supplied
+    notes: Writes screenshots/manifest/console_log.json to explicit --output dir; per-viewport deviceScaleFactor; DPR integrity check; target must be supplied
 
   - path_or_tool: tools/browser/scripts/health-check.mjs
     category: browser

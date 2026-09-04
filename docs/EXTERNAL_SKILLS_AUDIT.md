@@ -44,7 +44,7 @@ Floating `main` / `latest` references were **not** used.
 
 | Source | License | Evidence | Notes |
 |---|---|---|---|
-| OpenAI frontend skills (2) | `LICENSE_REVIEW_REQUIRED` | No LICENSE in `build-web-apps` path at pinned commit | Repo root also lacks root LICENSE |
+| OpenAI frontend skills (2) | `LICENSE_REVIEW_REQUIRED` | Reinspected 2026-09-04 at pin `1e285826e604f66f7208f7ac4dba0fe8341d1f57`: no LICENSE/COPYING at repo root or `plugins/build-web-apps/`; GitHub API `license: null` | `commercial_redistribution_status: blocked_pending_license_review` in lockfile |
 | Anthropic design-critique | Apache-2.0 | `anthropic-kwp/LICENSE` | Skill imported; shared `CONNECTORS.md` copied |
 | web-accessibility | MIT | `UPSTREAM_LICENSE.md` copied into skill | From magnus919/agent-skills repo LICENSE |
 | threejs-skills (10) | MIT | `skills/external/threejs/UPSTREAM_LICENSE` | Repo LICENSE |
@@ -140,7 +140,7 @@ Reason: large scripted workflow surface; Playwright bridge not validated here; o
 | Anthropic `../../CONNECTORS.md` | **Resolved** — copied to `skills/external/CONNECTORS.md` |
 | Blender `../references/*` | **Resolved** — shared `blender/references/` directory |
 | img2threejs runtime state `.img2threejs/state.json` | **Expected runtime artifact** — created during project use, not import |
-| OpenAI frontend LICENSE file | **Missing at source** — flagged `LICENSE_REVIEW_REQUIRED` |
+| OpenAI frontend LICENSE file | **Missing at source** — reinspected 2026-09-04; `blocked_pending_license_review`; no invented license |
 
 No broken required static files detected by Phase B validator after import.
 

@@ -1,5 +1,4 @@
 # Example viewport matrix — copy and customize per project.
-# ACOS does not hardcode a single universal design viewport.
 
 target: fixtures/blank.html
 
@@ -10,16 +9,15 @@ readiness:
 
 reduced_motion: false
 
+element_capture:
+  selector: "#health-root"
+
 viewports:
-  - name: desktop
+  - name: desktop-dpr1
     width: 1440
     height: 900
     device_scale_factor: 1
-  - name: tablet
-    width: 834
-    height: 1194
-    device_scale_factor: 2
-  - name: mobile
+  - name: mobile-dpr3
     width: 390
     height: 844
     device_scale_factor: 3
@@ -29,3 +27,4 @@ capture:
   types:
     - viewport
     - full_page
+    - element
