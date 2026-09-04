@@ -97,7 +97,7 @@ Skills:
 - [x] `validation/validate_runtime_integration.py` PASSED
 - [x] `validation/tests/runtime/test_scenarios.py` T1–T18 PASSED
 
-## G — Foundation validation / certification (NOT STARTED)
+## G — Foundation validation / certification (IN PROGRESS)
 - [ ] integrated foundation validation pass
 - [ ] hard reject + evidence blocker rules validated end-to-end
 - [ ] creator/critic separation validated operationally

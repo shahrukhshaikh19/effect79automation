@@ -1,0 +1,39 @@
+version: "1.0"
+phase: G
+purpose: >
+  Index of foundation certification evidence classes and artifact locations.
+  Does not fabricate runtime probe results — populated by certify_foundation.py execution.
+
+evidence_classes:
+  - STATIC_INSPECTION
+  - DETERMINISTIC_VALIDATOR
+  - UNIT_TEST
+  - INTEGRATION_TEST
+  - SMOKE_TEST
+  - LOCAL_RUNTIME_PROBE
+  - EXTERNAL_RUNTIME_PROBE
+  - MANUAL_REVIEW_REQUIRED
+
+artifacts:
+  certification_manifest:
+    path: validation/evidence/foundation/CERTIFICATION_MANIFEST.json
+    producer: validation/certify_foundation.py
+    generated_on_run: true
+  certification_result:
+    path: validation/FOUNDATION_CERTIFICATION_RESULT.json
+    producer: validation/certify_foundation.py
+    generated_on_pass_only: true
+  runtime_smoke:
+    path: validation/evidence/runtime/smoke/last-run.json
+    producer: runtime/smoke.py
+    note: Local evidence — may not be committed
+
+layers:
+  G1_structural:
+    checks: [canonical_authority, skill_inventory, adapter_inventory, tool_inventory, runtime_modular, empty_post_foundation]
+  G2_semantic:
+    checks: [quality_gate_hr_eb, design_gate_authority, routing_ownership, license_canonical, memory_promotion, model_portability]
+  G3_runtime_evidence:
+    checks: [runtime_tests, smoke_probe, tool_health_checks, design_gate_lifecycle]
+  G4_adversarial:
+    checks: [G-A01 through G-A20]

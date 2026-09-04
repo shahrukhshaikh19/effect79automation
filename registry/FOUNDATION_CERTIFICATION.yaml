@@ -1,0 +1,59 @@
+version: "1.0"
+phase: G
+authority: phase-G foundation_validation
+scope:
+  foundation_phases: [A, B, C, D, E, F]
+
+certification_layers:
+  structural:
+    required: true
+    description: Repository structure matches canonical A-F architecture
+  semantic:
+    required: true
+    description: Cross-component meaning consistency (HR/EB, routing, gate, memory, license)
+  runtime_evidence:
+    required: true
+    description: Executable probes, tests, smoke, and truthful tool evidence
+  adversarial:
+    required: true
+    description: Invalid-state rejection and contamination guards
+
+terminal_statuses:
+  - CERTIFIED
+  - NOT_CERTIFIED
+  - BLOCKED
+
+foundation_ready_requires:
+  - structural
+  - semantic
+  - runtime_evidence
+  - adversarial
+
+post_foundation_allowed_only_if:
+  foundation_status: CERTIFIED
+
+expected_inventory:
+  external_skills: 36
+  proprietary_skills: 14
+  adapter_families: [claude, cursor, codex, local]
+
+validators_orchestrated:
+  - validate_foundation.py
+  - validate_external_skills.py
+  - validate_proprietary_skills.py
+  - validate_tools.py
+  - validate_adapters.py
+  - validate_runtime_integration.py
+  - validate_cross_phase_consistency.py
+  - validate_foundation_adversarial.py
+
+evidence_artifacts:
+  manifest: validation/evidence/foundation/CERTIFICATION_MANIFEST.json
+  result: validation/FOUNDATION_CERTIFICATION_RESULT.json
+  index: validation/FOUNDATION_EVIDENCE_INDEX.yaml
+
+truthful_restrictions_expected:
+  - EXT-FE-01 LICENSE_REVIEW_REQUIRED
+  - EXT-FE-02 LICENSE_REVIEW_REQUIRED
+  - EXT-IMG3D-01 operational restricted
+  - Blender TCP reachability != MCP protocol handshake
