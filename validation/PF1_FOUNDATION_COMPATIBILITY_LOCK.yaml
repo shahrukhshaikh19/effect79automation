@@ -1,0 +1,26 @@
+# PF-1 foundation validator compatibility content lock.
+# Anchors exact approved content for validators PF-1 may reference but must not weaken.
+# Baseline: e3d9988 (PF-1 hardening commit before historical freeze provenance).
+
+baseline_sha: e3d9988e26881c23aeb9acf93f3c0448dfba7981
+purpose: >
+  Foundation compatibility files allowed to differ from Phase G attestation (525eeb0)
+  only at this exact approved content. Any drift after this lock fails PF-1 validation.
+
+files:
+  validation/validate_foundation.py:
+    sha256: cae0b5e7ac2a73c3be452561c688c08262785345b60ee0ef37c14cfff337d1b0
+  validation/validate_cross_phase_consistency.py:
+    sha256: 1e57c09c8049ebcc136ca1ba5abd1fa645dc0b5c9e60540f51d3960a55ea092e
+  validation/validate_runtime_integration.py:
+    sha256: 684749cb39fe6204a5afd2d577ed525330470b8ba73bf1cc59892b113dfede8e
+  validation/validate_external_skills.py:
+    sha256: 3f9faada199cb187850d7afeef378febe6de339b654aca2956734d26fbe30c9b
+  validation/validate_proprietary_skills.py:
+    sha256: 3b43a14677e4a4aaff2095ce56099714c3582fa0f25d90c47be40671f380d199
+  validation/validate_tools.py:
+    sha256: e5a765114f7b1c5a20aa02e0b048e966e33cf452be48cb6c75e6f3245e027b2a
+  validation/validate_foundation_adversarial.py:
+    sha256: d3058a604f6b0b93216095ee4dfe7d5afdc960663a4c3016537d40c7b12b9525
+  validation/certify_foundation.py:
+    sha256: 823c87d5be1c081c5711ce1974061f87a3991d2b9f37c1a9eb76cab3d002855d

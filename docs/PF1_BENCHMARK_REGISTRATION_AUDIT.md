@@ -3,7 +3,8 @@
 **Date:** 2026-09-05  
 **Baseline SHA:** `525eeb02b8eecc88845e5ed1e8aecbbaa4393d7f` (final foundation attestation)  
 **PF-1 framework SHA:** `65512f19f237d9b9481c9aab8cbc20d171e9623d`  
-**Scope:** Post-foundation benchmark registration infrastructure + hardening (no execution)
+**PF-1 hardening SHA:** `e3d9988e26881c23aeb9acf93f3c0448dfba7981`  
+**Scope:** Post-foundation benchmark registration infrastructure + integrity hardening (no execution)
 
 ---
 
@@ -18,19 +19,66 @@
 
 ---
 
-## Frozen contract anchoring
+## Remaining integrity fixes (PF-1_remaining-fixes)
+
+| Fix | Description |
+|-----|-------------|
+| R1 | Historical freeze provenance via `frozen_source_commit_sha` + `git show` content lookup |
+| R2 | Git diff / baseline lookup fail-closed (never treat unknown Git state as clean) |
+| R3 | Foundation compatibility files content-anchored via `PF1_FOUNDATION_COMPATIBILITY_LOCK.yaml` |
+| R4 | Schema/docs use `frozen_source_commit_sha` (not ambiguous `frozen_commit_sha`) |
+
+---
+
+## Historical frozen contract anchoring
 
 When a benchmark reaches FROZEN:
 
+**Step A — frozen source commit:** Registration artifacts finalized in an existing Git commit (`frozen_source_commit_sha`).
+
+**Step B — registry attestation:** A later commit records provenance in `registry/BENCHMARKS.yaml`.
+
+Verification:
+
 ```text
-computed hash(REGISTRATION.yaml)
-== REGISTRATION.yaml benchmark_contract_sha256
-== registry/BENCHMARKS.yaml frozen_contract_sha256
+git show <frozen_source_commit_sha>:<registration_path>
+→ historical registration hash H(A)
+
+H(A) == registry frozen_contract_sha256
+H(A) == current registration hash (unless valid explicit revision)
+H(A) == embedded benchmark_contract_sha256
 ```
 
-Registry also records `contract_version`, optional `versions[]` history, `frozen_commit_sha`, `frozen_at`.
+Dual rewrite of current registration + registry hash cannot bypass: historical Git content still returns A while current tree holds B.
 
-Silent same-version mutation with recomputed local hash fails because registry anchor does not match.
+Registry attestation commit is inferred from Git history — not self-referential.
+
+---
+
+## Git fail-closed
+
+`git_changed_paths()` returns `(paths, error)`. Any unknown commit, git diff failure, or missing baseline → validation FAIL.
+
+---
+
+## Foundation compatibility lock
+
+Baseline content: `e3d9988` (approved PF-1 compatibility state).
+
+Locked files (content SHA256):
+
+- `validation/validate_foundation.py`
+- `validation/validate_cross_phase_consistency.py`
+- `validation/validate_runtime_integration.py`
+- `validation/validate_external_skills.py`
+- `validation/validate_proprietary_skills.py`
+- `validation/validate_tools.py`
+- `validation/validate_foundation_adversarial.py`
+- `validation/certify_foundation.py`
+
+PF-1-owned files (path-allowed, not content-locked): `validate_benchmark_registration.py`, `benchmarks/*`, `registry/BENCHMARKS.yaml`, tests, docs.
+
+Unanchored foundation validator paths in allowlist → FAIL.
 
 ---
 
@@ -39,16 +87,6 @@ Silent same-version mutation with recomputed local hash fails because registry a
 - `operator_input.original_text` — immutable source evidence (may contain blocked requests)
 - `constraint_evaluation[]` — classifies operator requests vs executable contract
 - Executable fields scanned: `normalized_brief`, requirements, acceptance, tools, etc.
-
----
-
-## Foundation immutability
-
-Baseline: `525eeb02b8eecc88845e5ed1e8aecbbaa4393d7f`  
-Forbidden changes: `core/`, `skills/acos/`, `runtime/`, `adapters/`, routing/runtime policies, canonical master, AGENTS.md  
-Allowed: PF-1 registration infrastructure + narrowly scoped validator compatibility files.
-
-`tested_implementation_sha` remains `e0bd72b` (unchanged).
 
 ---
 
@@ -68,6 +106,7 @@ BM-001 absent
 PF-1 = IN_PROGRESS / INPUT_REQUIRED
 PF-2..PF-5 = NOT_STARTED
 FOUNDATION_READY = VALID
+tested_implementation_sha = e0bd72b (unchanged)
 ```
 
 ---

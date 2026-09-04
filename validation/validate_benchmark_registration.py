@@ -20,6 +20,7 @@ except ImportError:
 REPO = Path(__file__).resolve().parent.parent
 PHASE = "PF-1"
 FOUNDATION_PF_BASELINE_SHA = "525eeb02b8eecc88845e5ed1e8aecbbaa4393d7f"
+PF1_COMPATIBILITY_LOCK_PATH = REPO / "validation" / "PF1_FOUNDATION_COMPATIBILITY_LOCK.yaml"
 
 if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
@@ -66,24 +67,22 @@ EXECUTABLE_POLICY_KEYS = (
     "assets",
 )
 
-PF1_ALLOWED_CHANGE_PREFIXES = (
+PF1_OWNED_CHANGE_PREFIXES = (
     "registry/BENCHMARKS.yaml",
     "registry/PHASES.yaml",
     "benchmarks/",
     "validation/benchmark_scope.py",
     "validation/validate_benchmark_registration.py",
     "validation/tests/benchmark/",
-    "validation/validate_foundation.py",
-    "validation/validate_cross_phase_consistency.py",
-    "validation/validate_runtime_integration.py",
-    "validation/validate_external_skills.py",
-    "validation/validate_proprietary_skills.py",
-    "validation/validate_tools.py",
-    "validation/validate_foundation_adversarial.py",
-    "validation/certify_foundation.py",
+    "validation/PF1_FOUNDATION_COMPATIBILITY_LOCK.yaml",
     "docs/PF1_BENCHMARK_REGISTRATION_AUDIT.md",
     "docs/PROGRESS_LEDGER.md",
     "IMPLEMENTATION_CHECKLIST.md",
+)
+
+FOUNDATION_COMPATIBILITY_PREFIXES = (
+    "validation/validate_",
+    "validation/certify_",
 )
 
 FORBIDDEN_FOUNDATION_PATHS = (
@@ -280,6 +279,135 @@ def validate_registry_data(registry: dict[str, Any], errors: list[str]) -> None:
             _validate_registry_frozen_lock(entry, errors)
 
 
+def load_compatibility_lock() -> dict[str, str]:
+    if not PF1_COMPATIBILITY_LOCK_PATH.is_file() or yaml is None:
+        return {}
+    data = yaml.safe_load(PF1_COMPATIBILITY_LOCK_PATH.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        return {}
+    files = data.get("files") or {}
+    if not isinstance(files, dict):
+        return {}
+    return {str(path): str(spec.get("sha256", "")) for path, spec in files.items() if isinstance(spec, dict)}
+
+
+def file_content_sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _is_foundation_compatibility_path(path: str) -> bool:
+    norm = _normalize_changed_path(path)
+    return any(norm.startswith(prefix) for prefix in FOUNDATION_COMPATIBILITY_PREFIXES)
+
+
+def validate_compatibility_lock(errors: list[str]) -> None:
+    lock = load_compatibility_lock()
+    if not lock:
+        fail(errors, "PF1 foundation compatibility lock missing or empty")
+        return
+    for rel_path, expected_hash in sorted(lock.items()):
+        if not expected_hash:
+            fail(errors, f"compatibility lock missing sha256 for {rel_path}")
+            continue
+        file_path = REPO / rel_path
+        if not file_path.is_file():
+            fail(errors, f"compatibility lock references missing file: {rel_path}")
+            continue
+        current_hash = file_content_sha256(file_path)
+        if current_hash != expected_hash:
+            fail(errors, f"foundation compatibility file drift: {rel_path}")
+
+
+def validate_pf1_allowlist_anchoring(errors: list[str]) -> None:
+    lock_paths = set(load_compatibility_lock())
+    for rel_path in lock_paths:
+        if not (REPO / rel_path).is_file():
+            fail(errors, f"compatibility lock references missing file: {rel_path}")
+
+
+def commit_exists(commit_sha: str) -> tuple[bool, str | None]:
+    proc = subprocess.run(
+        ["git", "cat-file", "-e", f"{commit_sha}^{{commit}}"],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        return False, f"unknown commit: {commit_sha}"
+    return True, None
+
+
+def load_file_from_commit(commit_sha: str, repo_path: str) -> tuple[str | None, str | None]:
+    proc = subprocess.run(
+        ["git", "show", f"{commit_sha}:{repo_path}"],
+        cwd=REPO,
+        capture_output=True,
+    )
+    if proc.returncode != 0:
+        err = proc.stderr.decode("utf-8", errors="replace").strip()
+        if not err:
+            err = f"git show failed for {commit_sha}:{repo_path}"
+        return None, err
+    return proc.stdout.decode("utf-8"), None
+
+
+def validate_frozen_provenance(
+    registry_entry: dict[str, Any],
+    current_registration: dict[str, Any] | None,
+    errors: list[str],
+    *,
+    load_from_commit=load_file_from_commit,
+) -> None:
+    bid = str(registry_entry.get("benchmark_id", "BM-???"))
+    source_commit = registry_entry.get("frozen_source_commit_sha")
+    reg_path_rel = str(registry_entry.get("registration_path", f"benchmarks/{bid}/REGISTRATION.yaml"))
+    registry_hash = registry_entry.get("frozen_contract_sha256")
+
+    if not registry_hash:
+        fail(errors, f"{bid}: FROZEN registry entry requires frozen_contract_sha256")
+    if not source_commit:
+        fail(errors, f"{bid}: FROZEN registry entry requires frozen_source_commit_sha")
+        return
+
+    exists, commit_err = commit_exists(str(source_commit))
+    if not exists:
+        fail(errors, f"{bid}: {commit_err}")
+        return
+
+    content, load_err = load_from_commit(str(source_commit), reg_path_rel)
+    if load_err:
+        fail(errors, f"{bid}: historical registration lookup failed: {load_err}")
+        return
+
+    historical_reg = yaml.safe_load(content) if yaml else None
+    if not isinstance(historical_reg, dict):
+        fail(errors, f"{bid}: historical registration YAML invalid")
+        return
+
+    if str(historical_reg.get("benchmark_id", "")) != bid:
+        fail(errors, f"{bid}: historical benchmark_id mismatch")
+
+    entry_version = str(registry_entry.get("contract_version", ""))
+    hist_version = str(historical_reg.get("contract_version", ""))
+    if entry_version and hist_version and entry_version != hist_version:
+        fail(errors, f"{bid}: historical contract_version != registry contract_version")
+
+    historical_hash = canonical_hash(historical_reg)
+    if registry_hash and str(registry_hash) != historical_hash:
+        fail(errors, f"{bid}: registry frozen_contract_sha256 != historical registration hash")
+
+    if current_registration is not None:
+        current_hash = canonical_hash(current_registration)
+        embedded_hash = current_registration.get("benchmark_contract_sha256") or current_registration.get("contract_hash")
+
+        if str(current_hash) != historical_hash:
+            fail(errors, f"{bid}: current registration changed from historical frozen contract")
+        if embedded_hash and str(embedded_hash) != historical_hash:
+            fail(errors, f"{bid}: embedded hash != historical frozen hash")
+        if registry_hash and embedded_hash and str(registry_hash) != str(embedded_hash):
+            fail(errors, f"{bid}: registry anchor != embedded hash (independent lock violation)")
+
+
 def _validate_registry_frozen_lock(entry: dict[str, Any], errors: list[str]) -> None:
     bid = entry.get("benchmark_id")
     reg_path_rel = entry.get("registration_path", f"benchmarks/{bid}/REGISTRATION.yaml")
@@ -293,18 +421,12 @@ def _validate_registry_frozen_lock(entry: dict[str, Any], errors: list[str]) -> 
         fail(errors, f"{bid}: registration file must be a mapping")
         return
 
-    registry_hash = entry.get("frozen_contract_sha256")
+    validate_frozen_provenance(entry, reg_data, errors)
+
     embedded_hash = reg_data.get("benchmark_contract_sha256") or reg_data.get("contract_hash")
     computed_hash = canonical_hash(reg_data)
-
-    if not registry_hash:
-        fail(errors, f"{bid}: FROZEN registry entry requires frozen_contract_sha256")
     if not embedded_hash:
         fail(errors, f"{bid}: FROZEN registration requires benchmark_contract_sha256")
-    if registry_hash and embedded_hash and str(registry_hash) != str(embedded_hash):
-        fail(errors, f"{bid}: registry frozen_contract_sha256 != registration embedded hash")
-    if registry_hash and str(registry_hash) != computed_hash:
-        fail(errors, f"{bid}: registry frozen_contract_sha256 != computed contract hash")
     if embedded_hash and str(embedded_hash) != computed_hash:
         fail(errors, f"{bid}: registration embedded hash != computed contract hash")
 
@@ -320,6 +442,14 @@ def _validate_registry_frozen_lock(entry: dict[str, Any], errors: list[str]) -> 
         ]
         if len(frozen_versions) != 1:
             fail(errors, f"{bid}: versions history must contain exactly one record for contract_version {entry_version}")
+        for version_entry in versions:
+            if not isinstance(version_entry, dict):
+                continue
+            if not version_entry.get("frozen_source_commit_sha"):
+                continue
+            merged_entry = dict(entry)
+            merged_entry.update(version_entry)
+            validate_frozen_provenance(merged_entry, None, errors, load_from_commit=load_file_from_commit)
 
 
 def validate_registry(errors: list[str]) -> None:
@@ -422,18 +552,16 @@ def validate_frozen_lock_against_registry(
     registration: dict[str, Any],
     registry_entry: dict[str, Any],
     errors: list[str],
+    *,
+    load_from_commit=load_file_from_commit,
 ) -> None:
-    """Validate triple-hash anchoring for fixture/tests without filesystem registry."""
+    """Validate historical freeze provenance for fixture/tests without filesystem registry."""
+    validate_frozen_provenance(registry_entry, registration, errors, load_from_commit=load_from_commit)
+
     bid = registration.get("benchmark_id", "BM-???")
-    registry_hash = registry_entry.get("frozen_contract_sha256")
     embedded_hash = registration.get("benchmark_contract_sha256")
     computed = canonical_hash(registration)
-
-    if str(registry_hash) != str(embedded_hash):
-        fail(errors, f"{bid}: registry anchor != embedded hash (independent lock violation)")
-    if str(registry_hash) != computed:
-        fail(errors, f"{bid}: registry anchor != computed hash (silent mutation detected)")
-    if str(embedded_hash) != computed:
+    if embedded_hash and str(embedded_hash) != computed:
         fail(errors, f"{bid}: embedded hash != computed hash")
 
     if str(registry_entry.get("contract_version", "")) != str(registration.get("contract_version", "")):
@@ -469,9 +597,14 @@ def _normalize_changed_path(path: str) -> str:
     return path.replace("\\", "/")
 
 
-def _is_allowed_pf1_change(path: str) -> bool:
+def _is_allowed_pf1_owned_change(path: str) -> bool:
     norm = _normalize_changed_path(path)
-    return any(norm == prefix or norm.startswith(prefix) for prefix in PF1_ALLOWED_CHANGE_PREFIXES)
+    return any(norm == prefix or norm.startswith(prefix) for prefix in PF1_OWNED_CHANGE_PREFIXES)
+
+
+def _is_locked_compatibility_change(path: str, lock_paths: set[str]) -> bool:
+    norm = _normalize_changed_path(path)
+    return norm in lock_paths
 
 
 def _is_forbidden_foundation_change(path: str) -> bool:
@@ -485,20 +618,34 @@ def _is_forbidden_foundation_change(path: str) -> bool:
     return False
 
 
-def classify_changed_paths(changed_paths: list[str]) -> list[str]:
+def classify_changed_paths(
+    changed_paths: list[str],
+    lock_paths: set[str] | None = None,
+) -> list[str]:
     violations: list[str] = []
+    locked = lock_paths or set(load_compatibility_lock())
     for raw in changed_paths:
         path = _normalize_changed_path(raw.strip())
         if not path:
             continue
         if _is_forbidden_foundation_change(path):
             violations.append(f"forbidden foundation path changed: {path}")
-        elif not _is_allowed_pf1_change(path):
+        elif _is_allowed_pf1_owned_change(path):
+            continue
+        elif _is_locked_compatibility_change(path, locked):
+            continue
+        elif _is_foundation_compatibility_path(path):
+            violations.append(f"unanchored foundation compatibility file changed: {path}")
+        else:
             violations.append(f"unexpected path changed since PF baseline: {path}")
     return violations
 
 
-def _git_changed_paths(baseline_sha: str) -> list[str]:
+def git_changed_paths(baseline_sha: str) -> tuple[list[str], str | None]:
+    exists, commit_err = commit_exists(baseline_sha)
+    if not exists:
+        return [], commit_err or f"unknown baseline commit: {baseline_sha}"
+
     proc = subprocess.run(
         ["git", "diff", "--name-only", baseline_sha, "HEAD"],
         cwd=REPO,
@@ -506,12 +653,19 @@ def _git_changed_paths(baseline_sha: str) -> list[str]:
         text=True,
     )
     if proc.returncode != 0:
-        return []
-    return [line for line in proc.stdout.splitlines() if line.strip()]
+        err = proc.stderr.strip() or proc.stdout.strip() or "git diff failed"
+        return [], err
+    return [line for line in proc.stdout.splitlines() if line.strip()], None
 
 
 def validate_foundation_unmodified(errors: list[str]) -> None:
-    changed = _git_changed_paths(FOUNDATION_PF_BASELINE_SHA)
+    validate_compatibility_lock(errors)
+    validate_pf1_allowlist_anchoring(errors)
+
+    changed, git_err = git_changed_paths(FOUNDATION_PF_BASELINE_SHA)
+    if git_err:
+        fail(errors, f"foundation git diff failed: {git_err}")
+        return
     if not changed:
         return
     for violation in classify_changed_paths(changed):
@@ -531,6 +685,8 @@ def main() -> int:
     validate_registry(errors)
     validate_benchmark_directories(errors)
     validate_no_execution_artifacts(errors)
+    validate_compatibility_lock(errors)
+    validate_pf1_allowlist_anchoring(errors)
     validate_foundation_unmodified(errors)
 
     if errors:
