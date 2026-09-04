@@ -1,0 +1,50 @@
+version: "1.0"
+tool_id: TOOL-SHELL-01
+category: shell
+
+command_classes:
+  read_only:
+    examples:
+      - git status
+      - git diff
+      - python --version
+      - node --version
+      - dir
+      - ls
+    approval: none
+
+  workspace_write:
+    examples:
+      - python validation/validate_tools.py
+      - node tools/browser/scripts/capture-evidence.mjs
+    approval: task_scoped
+    scope: approved_workspace_roots
+
+  dependency_install:
+    examples:
+      - npm ci --prefix tools/browser
+      - npx playwright install chromium
+    approval: explicit
+    notes: Never run inside structural validators
+
+  network_access:
+    examples:
+      - git clone (when authorized)
+      - npm registry fetch during install
+    approval: explicit
+
+  destructive:
+    examples:
+      - rm -rf
+      - git clean -fd
+      - git reset --hard
+    approval: human_required
+
+  privileged:
+    examples:
+      - sudo
+      - runas
+    approval: human_required
+    default_allowed: false
+
+arbitrary_execution_default: false

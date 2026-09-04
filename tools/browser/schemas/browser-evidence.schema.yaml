@@ -1,0 +1,71 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: ACOS Browser Evidence Manifest
+description: >
+  Machine-readable browser evidence from Playwright capture.
+  A screenshot does NOT imply visual quality approval.
+type: object
+required:
+  - run_id
+  - timestamp
+  - target
+  - captures
+properties:
+  run_id:
+    type: string
+  timestamp:
+    type: string
+    format: date-time
+  target:
+    type: string
+    description: URL or file path inspected
+  browser:
+    type: string
+  browser_version:
+    type: string
+  page_state:
+    type: string
+    enum: [loaded, error, timeout, blocked]
+  reduced_motion:
+    type: boolean
+  readiness_condition:
+    type: string
+  duration_ms:
+    type: integer
+  runtime_healthy:
+    type: boolean
+    description: >
+      True when no console errors, page errors, or critical network failures.
+      Does NOT mean visual quality approved.
+  visual_quality_approved:
+    type: boolean
+    const: false
+    description: Always false at tool layer — critics/gate own approval
+  captures:
+    type: array
+    items:
+      type: object
+      required: [viewport, capture_type, screenshot_path]
+      properties:
+        viewport:
+          type: object
+          properties:
+            name: { type: string }
+            width: { type: integer }
+            height: { type: integer }
+            device_scale_factor: { type: number }
+        capture_type:
+          type: string
+          enum: [viewport, full_page, element, region]
+        screenshot_path:
+          type: string
+        console_errors:
+          type: array
+          items: { type: string }
+        page_errors:
+          type: array
+          items: { type: string }
+        network_failures:
+          type: array
+          items: { type: string }
+  notes:
+    type: string

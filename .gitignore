@@ -46,9 +46,13 @@ htmlcov/
 .nyc_output/
 
 # Tool outputs (Phase D+)
+tools/browser/node_modules/
+tools/browser/output/
 tools/browser/screenshots/
 tools/browser/traces/
 tools/blender-mcp/.cache/
+validation/evidence/*
+!validation/evidence/.gitkeep
 
 # Local import/cache (Phase B transient)
 .tmp-import/

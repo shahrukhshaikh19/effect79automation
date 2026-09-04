@@ -1,0 +1,57 @@
+version: "1.0"
+tool_id: TOOL-BLENDER-01
+source_commit: "5866814479b4e2ca674d8d44969a9a2a78fdc8bb"
+review_date: "2026-09-04"
+review_status: RESTRICTED
+
+summary: >
+  Blender MCP exposes high-privilege Blender execution including arbitrary Python via
+  execute_blender_code. External asset integrations perform network access. ACOS marks
+  runtime RESTRICTED until Blender + MCP + addon are verified in environment with
+  safe mode and approval policies enforced.
+
+classifications:
+  filesystem_access:
+    value: yes
+    scope: temp screenshots; Blender bpy file operators via execute_blender_code
+  network_access:
+    value: yes
+    scope: localhost:9876; optional external APIs (Poly Haven, Sketchfab, Hyper3D, Hunyuan); telemetry httpx.post
+  subprocess_execution:
+    value: yes
+    scope: MCP server process; Blender launched separately by user
+  shell_execution:
+    value: no
+    scope: MCP server does not invoke arbitrary shell; Blender addon may run Python
+  package_install_behavior:
+    value: yes
+    scope: addon_manager / uvx install-addon path when explicitly invoked
+  environment_variable_access:
+    value: yes
+    scope: BLENDER_MCP_SAFE_MODE, telemetry consent env vars
+  external_binaries:
+    value: yes
+    scope: Blender executable required
+  destructive_write_delete_behavior:
+    value: yes
+    scope: via Blender operators (delete, save, export) — see destructive-action-policy.yaml
+  arbitrary_python_execution:
+    value: yes
+    scope: execute_blender_code → Blender addon execute_code socket command
+  blender_scene_mutation:
+    value: yes
+    scope: all mutation tools
+
+known_risks:
+  - execute_blender_code is arbitrary code in user's Blender process by design
+  - safe_mode optional — must be enabled for ACOS model-authored code path
+  - external asset tool responses may contain prompt-injection surface (upstream documents this)
+  - telemetry may POST usage data unless disabled
+
+mitigations:
+  - Pin upstream commit in UPSTREAM.yaml
+  - Require BLENDER_MCP_SAFE_MODE=1 for ACOS
+  - Human approval for destructive tier
+  - Restrict generative/download tools unless explicitly authorized
+
+unresolved_unknowns: []

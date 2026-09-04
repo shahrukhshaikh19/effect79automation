@@ -1,0 +1,20 @@
+# Example Blender MCP runtime configuration — placeholders only, never commit secrets.
+
+mcp_server:
+  host: localhost
+  port: 9876
+
+blender:
+  executable_path: "${BLENDER_EXECUTABLE}"
+  # Example: C:/Program Files/Blender Foundation/Blender 4.2/blender.exe
+
+security:
+  blender_mcp_safe_mode: "1"
+  disable_telemetry: true
+
+acos_policy:
+  require_human_approval_for:
+    - execute_blender_code
+    - delete_objects
+    - overwrite_blend_file
+    - external_asset_downloads

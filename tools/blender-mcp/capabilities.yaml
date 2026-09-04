@@ -1,0 +1,56 @@
+version: "1.0"
+tool_id: TOOL-BLENDER-01
+source_commit: "5866814479b4e2ca674d8d44969a9a2a78fdc8bb"
+inspection_date: "2026-09-04"
+
+# Verified from upstream server.py @ pinned commit — do not invent capabilities.
+
+capabilities:
+  inspection:
+    - get_addon_status
+    - get_scene_info
+    - get_object_info
+    - get_viewport_screenshot
+    - get_polyhaven_status
+    - get_hyper3d_status
+    - get_sketchfab_status
+    - get_polypizza_status
+    - get_hunyuan3d_status
+
+  scene_mutation:
+    - execute_blender_code
+    - set_texture
+    - import_generated_asset
+    - import_generated_asset_hunyuan
+
+  external_asset_integrations:
+    - search_polyhaven_assets
+    - download_polyhaven_asset
+    - search_sketchfab_models
+    - get_sketchfab_model_preview
+    - download_sketchfab_model
+    - search_polypizza_models
+    - download_polypizza_model
+    - generate_hyper3d_model_via_text
+    - generate_hyper3d_model_via_images
+    - poll_rodin_job_status
+    - generate_hunyuan3d_model
+    - poll_hunyuan_job_status
+
+  telemetry:
+    - disable_telemetry
+    - record_trajectory_feedback
+
+  guidance:
+    - asset_creation_strategy
+
+not_capabilities:
+  - creative_3d_direction
+  - quality_gate_approval
+  - visual_critic_judgment
+  - automatic_global_memory_writes
+
+acos_restricted_by_default:
+  - execute_blender_code
+  - external_asset_downloads
+  - generative_3d_model_tools

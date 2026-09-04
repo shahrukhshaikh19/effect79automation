@@ -218,8 +218,7 @@ def main() -> int:
 
     print("VALIDATION: PASSED")
     print(f"Phase {PHASE} checks complete.")
-    print("Phase B (external skills): NOT VALIDATED (not started)")
-    print("Phase C (proprietary skills): NOT VALIDATED (not started)")
+    print("Later phases are outside this validator's scope.")
     return 0
 
 

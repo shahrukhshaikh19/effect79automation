@@ -1,0 +1,41 @@
+version: "1.0"
+tool_id: TOOL-FS-01
+category: filesystem
+
+operations:
+  - read
+  - create
+  - modify
+  - delete
+  - move
+  - copy
+
+default_scope: workspace_roots
+
+workspace_roots:
+  - skills
+  - tools
+  - registry
+  - validation
+  - docs
+  - core
+  - templates
+  - adapters
+  - memory
+  - model-profiles
+
+evidence_output_root: validation/evidence
+
+prohibited:
+  - credential_harvesting
+  - home_directory_scanning
+  - arbitrary_machine_traversal
+  - committed_secrets
+
+destructive_operations:
+  - delete
+  - move_overwrite
+
+human_approval_required_for:
+  - delete_outside_temp_evidence
+  - modify_outside_workspace

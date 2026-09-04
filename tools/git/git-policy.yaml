@@ -1,0 +1,58 @@
+version: "1.0"
+tool_id: TOOL-GIT-01
+category: git
+
+operation_classes:
+  read_only:
+    commands:
+      - status
+      - diff
+      - log
+      - show
+      - branch
+      - rev-parse
+      - describe
+    approval: none
+    network: optional
+
+  local_mutation:
+    commands:
+      - add
+      - commit
+      - checkout
+      - switch
+      - merge
+      - stash
+    approval: task_scoped
+    network: no
+
+  remote_mutation:
+    commands:
+      - push
+      - fetch
+      - pull
+    approval: explicit_for_push
+    network: yes
+
+  destructive:
+    commands:
+      - push --force
+      - reset --hard
+      - clean -fd
+      - rebase
+      - filter-branch
+      - branch -D
+    approval: human_required
+    network: varies
+    normalized_as_ordinary: false
+
+evidence:
+  commit_record_fields:
+    - sha
+    - message
+    - author
+    - timestamp
+  push_record_fields:
+    - remote
+    - branch
+    - result

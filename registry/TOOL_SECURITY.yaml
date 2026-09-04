@@ -1,0 +1,153 @@
+version: "1.2"
+authority: ACOS_FINAL_CANONICAL_v1.2.md
+phase: D
+tri_state: ["yes", "no", "unknown"]
+
+records:
+  - path_or_tool: tools/browser/scripts/bootstrap.mjs
+    category: browser
+    runtime_role: explicit_dependency_bootstrap
+    filesystem_access: "yes"
+    network_access: "yes"
+    subprocess_execution: "yes"
+    shell_execution: "no"
+    package_install_behavior: "yes"
+    environment_variable_access: unknown
+    destructive_write_delete_behavior: "no"
+    external_binary_requirements: node, npm, playwright browsers
+    credential_access: "no"
+    review_status: reviewed
+    risk_classification: medium
+    notes: Installs Chromium via npx playwright install — explicit invocation only
+
+  - path_or_tool: tools/browser/scripts/capture-evidence.mjs
+    category: browser
+    runtime_role: evidence_capture
+    filesystem_access: "yes"
+    network_access: "yes"
+    subprocess_execution: "yes"
+    shell_execution: "no"
+    package_install_behavior: "no"
+    environment_variable_access: unknown
+    destructive_write_delete_behavior: "yes"
+    external_binary_requirements: node, playwright chromium
+    credential_access: "no"
+    review_status: reviewed
+    risk_classification: medium
+    notes: Writes screenshots/manifest to explicit --output dir; target must be supplied
+
+  - path_or_tool: tools/browser/scripts/health-check.mjs
+    category: browser
+    runtime_role: health_check
+    filesystem_access: "yes"
+    network_access: "no"
+    subprocess_execution: "yes"
+    shell_execution: "no"
+    package_install_behavior: "no"
+    environment_variable_access: unknown
+    destructive_write_delete_behavior: "no"
+    external_binary_requirements: node, playwright chromium
+    credential_access: "no"
+    review_status: reviewed
+    risk_classification: low
+    notes: Loads neutral local fixture only
+
+  - path_or_tool: validation/check_browser_tool.py
+    category: browser
+    runtime_role: health_check_wrapper
+    filesystem_access: "yes"
+    network_access: "no"
+    subprocess_execution: "yes"
+    shell_execution: "no"
+    package_install_behavior: "no"
+    environment_variable_access: unknown
+    destructive_write_delete_behavior: "no"
+    external_binary_requirements: python, node
+    credential_access: "no"
+    review_status: reviewed
+    risk_classification: low
+    notes: Structural check; optional subprocess to health-check.mjs
+
+  - path_or_tool: validation/check_blender_tool.py
+    category: blender
+    runtime_role: health_check
+    filesystem_access: "yes"
+    network_access: "no"
+    subprocess_execution: "yes"
+    shell_execution: "no"
+    package_install_behavior: "no"
+    environment_variable_access: unknown
+    destructive_write_delete_behavior: "no"
+    external_binary_requirements: python; optional blender
+    credential_access: "no"
+    review_status: reviewed
+    risk_classification: low
+    notes: Does not start MCP server or mutate Blender scenes
+
+  - path_or_tool: validation/check_git_tool.py
+    category: git
+    runtime_role: health_check
+    filesystem_access: "yes"
+    network_access: "no"
+    subprocess_execution: "yes"
+    shell_execution: "no"
+    package_install_behavior: "no"
+    environment_variable_access: unknown
+    destructive_write_delete_behavior: "no"
+    external_binary_requirements: git
+    credential_access: "no"
+    review_status: reviewed
+    risk_classification: low
+    notes: Read-only git commands only
+
+  - path_or_tool: validation/check_shell_tool.py
+    category: shell
+    runtime_role: health_check
+    filesystem_access: "yes"
+    network_access: "no"
+    subprocess_execution: "no"
+    shell_execution: "no"
+    package_install_behavior: "no"
+    environment_variable_access: unknown
+    destructive_write_delete_behavior: "no"
+    external_binary_requirements: python
+    credential_access: "no"
+    review_status: reviewed
+    risk_classification: low
+    notes: Inspects policy files and shell availability only
+
+  - path_or_tool: validation/validate_tools.py
+    category: validation
+    runtime_role: structural_validator
+    filesystem_access: "yes"
+    network_access: "no"
+    subprocess_execution: "yes"
+    shell_execution: "no"
+    package_install_behavior: "no"
+    environment_variable_access: unknown
+    destructive_write_delete_behavior: "no"
+    external_binary_requirements: python
+    credential_access: "no"
+    review_status: reviewed
+    risk_classification: low
+    notes: Invokes regression validators via subprocess; no dependency install
+
+upstream_integrations:
+  - path_or_tool: tools/blender-mcp/UPSTREAM.yaml
+    category: blender
+    runtime_role: upstream_pin_metadata
+    upstream_commit: "5866814479b4e2ca674d8d44969a9a2a78fdc8bb"
+    filesystem_access: unknown
+    network_access: "yes"
+    subprocess_execution: "yes"
+    shell_execution: unknown
+    package_install_behavior: "yes"
+    environment_variable_access: "yes"
+    destructive_write_delete_behavior: "yes"
+    external_binary_requirements: blender, python>=3.10
+    credential_access: unknown
+    review_status: RESTRICTED
+    risk_classification: high
+    notes: >
+      Upstream blender-mcp not vendored; execute_blender_code is arbitrary Python in Blender.
+      ACOS requires safe mode + human approval for high-impact ops.

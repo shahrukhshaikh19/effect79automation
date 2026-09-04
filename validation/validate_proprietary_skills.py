@@ -179,21 +179,6 @@ def main() -> int:
             if item.is_file():
                 fail(errors, f"{name}/ must remain empty: {item.relative_to(REPO)}")
 
-    tools_blender = REPO / "tools" / "blender-mcp"
-    tools_browser = REPO / "tools" / "browser"
-    for tool_dir in (tools_blender, tools_browser):
-        if tool_dir.is_dir():
-            configured = [
-                p.name
-                for p in tool_dir.iterdir()
-                if p.name != ".gitkeep" and p.is_file()
-            ]
-            if configured:
-                fail(
-                    errors,
-                    f"Phase D tool configuration detected in {tool_dir.relative_to(REPO)}: {configured}",
-                )
-
     run_validator("validate_foundation.py", errors, "Phase A foundation validator")
     run_validator("validate_external_skills.py", errors, "Phase B external skills validator")
 

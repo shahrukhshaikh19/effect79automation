@@ -1,0 +1,50 @@
+version: "1.0"
+tool_id: TOOL-BLENDER-01
+
+risk_tiers:
+  low_risk:
+    operations:
+      - get_scene_info
+      - get_object_info
+      - get_viewport_screenshot
+      - get_addon_status
+      - status_checks
+    approval: none
+    reversible: yes
+
+  mutating:
+    operations:
+      - create_object
+      - modify_geometry
+      - modify_material
+      - change_camera
+      - change_lights
+      - set_texture
+      - import_generated_asset
+    approval: task_scoped
+    reversible: partial
+
+  destructive_high_impact:
+    operations:
+      - delete_objects
+      - overwrite_blend_file
+      - overwrite_export_assets
+      - execute_blender_code
+      - execute_arbitrary_scripts
+      - modify_files_outside_workspace
+    approval: human_required
+    reversible: often_no
+
+acos_defaults:
+  execute_blender_code: human_required
+  delete_objects: human_required
+  overwrite_blend_file: human_required
+  overwrite_export_assets: human_required
+  external_downloads: explicit_approval
+
+safe_mode:
+  env_var: BLENDER_MCP_SAFE_MODE
+  recommended_value: "1"
+  scope: validates model-authored code before socket send; not a full Blender sandbox
+
+hidden_blanket_approval: false

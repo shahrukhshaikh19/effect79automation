@@ -1,7 +1,7 @@
 # ACOS v1.2 — Implementation Progress Ledger
 
 **Last updated:** 2026-09-04  
-**Current phase:** C — Proprietary ACOS Skills (COMPLETE)
+**Current phase:** D — Production Tool Layer (COMPLETE)
 
 ---
 
@@ -12,7 +12,7 @@
 | A | Canonical repository foundation | COMPLETE |
 | B | Import approved external skills | COMPLETE |
 | C | Implement 14 proprietary ACOS skills | COMPLETE |
-| D | Tools configuration | NOT STARTED |
+| D | Production tool layer | COMPLETE |
 | E | Platform adapters | NOT STARTED |
 | F | Benchmark registration | NOT STARTED |
 | G | ACOS correction from benchmark evidence | NOT STARTED |
@@ -22,19 +22,44 @@
 
 ---
 
+## Phase D — Task log
+
+| Task | Status | Evidence |
+|---|---|---|
+| D0 — Phase A/B/C preconditions | COMPLETE | All three validators PASSED before implementation |
+| D0b — Foundation validator messaging fix | COMPLETE | `validate_foundation.py` — no stale "not started" for B/C |
+| D1 — Tool architecture (Batch D1) | COMPLETE | `registry/TOOLS.yaml`, git/shell/filesystem contracts |
+| D2 — Browser evidence tooling (Batch D2) | COMPLETE | Playwright 1.49.1, capture scripts, evidence schema |
+| D3 — Blender MCP (Batch D3) | COMPLETE | Pinned upstream, security review, capability/destructive policies |
+| D4 — Security + validation (Batch D4) | COMPLETE | `TOOL_SECURITY.yaml`, `validate_tools.py`, `TOOLS_AUDIT.md` |
+| D5 — Health checks | COMPLETE | `validation/check_*_tool.py` (4 scripts) |
+| D6 — Full validation sequence | COMPLETE | All 4 structural validators PASSED |
+
+### Phase D runtime health (this environment)
+
+| Tool | Structural | Runtime |
+|---|---|---|
+| Browser (Playwright) | CONFIGURED | AVAILABLE — neutral fixture load + multi-viewport capture succeeded |
+| Blender MCP | CONFIGURED | BLOCKED — Blender executable not on PATH; MCP connection not tested |
+| Git | CONFIGURED | AVAILABLE — git 2.32.0, inside work tree |
+| Shell | CONFIGURED | AVAILABLE — PowerShell on Windows |
+| Filesystem | CONFIGURED | AVAILABLE — workspace policy active |
+
+---
+
 ## Phase C — Task log
 
 | Task | Status | Evidence |
 |---|---|---|
-| C0 — Phase A/B preconditions | COMPLETE | `validate_foundation.py` PASSED; `validate_external_skills.py` PASSED |
-| C1 — Batch 1 (direction layer) | COMPLETE | acos-reference-analysis, acos-creative-director, acos-anti-generic-design, acos-art-director, acos-experience-architect |
-| C2 — Batch 2 (3D/motion/responsive/performance) | COMPLETE | acos-cinematic-3d-director, acos-motion-director, acos-responsive-art-direction, acos-webgl-performance |
-| C3 — Batch 3 (critics + gate) | COMPLETE | acos-visual-critic, acos-creative-critic, acos-3d-critic, acos-quality-gate |
+| C0 — Phase A/B preconditions | COMPLETE | Foundation + external validators PASSED |
+| C1 — Batch 1 (direction layer) | COMPLETE | 5 proprietary skills |
+| C2 — Batch 2 (3D/motion/responsive/performance) | COMPLETE | 4 proprietary skills |
+| C3 — Batch 3 (critics + gate) | COMPLETE | 4 proprietary skills |
 | C4 — Batch 4 (learning) | COMPLETE | acos-failure-learning |
-| C5 — Phase C validator | COMPLETE | `validation/validate_proprietary_skills.py` PASSED |
-| C6 — Phase-aware A/B validator updates | COMPLETE | Foundation + external validators allow 14 registry skills in Phase C+ |
+| C5 — Phase C validator | COMPLETE | `validate_proprietary_skills.py` PASSED |
+| C6 — Phase-aware A/B validator updates | COMPLETE | Foundation + external validators |
 | C7 — Semantic audit | COMPLETE | `docs/PROPRIETARY_SKILLS_AUDIT.md` |
-| C8 — Cross-skill contradiction review | COMPLETE | No unresolved contradictions (documented in audit) |
+| C8 — Cross-skill contradiction review | COMPLETE | Documented in audit |
 | C9 — Full validation sequence | COMPLETE | All three validators PASSED |
 
 ---
@@ -44,21 +69,9 @@
 | Task | Status | Evidence |
 |---|---|---|
 | B0 — Phase A precondition | COMPLETE | `validation/validate_foundation.py` PASSED |
-| B1 — Resolve immutable upstream SHAs | COMPLETE | 8 repos pinned in `registry/EXTERNAL_SKILLS_LOCK.yaml` |
-| B2 — Import frontend/design/a11y (4) | COMPLETE | `skills/external/frontend/*` |
-| B3 — Import Three.js selected (10) | COMPLETE | `skills/external/threejs/*` |
-| B4 — Import R3F merge reference (1) | COMPLETE | `skills/external/threejs/references/react-three-fiber-production-rules/` |
-| B5 — Import GSAP selected (5) | COMPLETE | `skills/external/gsap/*` |
-| B6 — Import Blender curated (15) + shared refs | COMPLETE | `skills/external/blender/*` + `blender/references/` |
-| B7 — Import img2threejs operational subset | COMPLETE | `skills/external/img2threejs/` — status `restricted` |
-| B8 — License review | COMPLETE | `docs/EXTERNAL_SKILLS_AUDIT.md` |
-| B9 — Script security review | COMPLETE | `registry/EXTERNAL_SCRIPT_SECURITY.yaml` — 213 static records, not executed |
-| B10 — External lockfile | COMPLETE | `registry/EXTERNAL_SKILLS_LOCK.yaml` (36 entries) |
-| B11 — Human-readable audit | COMPLETE | `docs/EXTERNAL_SKILLS_AUDIT.md` |
-| B12 — Phase B validator | COMPLETE | `validation/validate_external_skills.py` PASSED |
-| B13 — Phase A re-validation | COMPLETE | Foundation validator PASSED after imports |
-| B14 — Harden external validation | COMPLETE | Lockfile-derived directory allowlists; duplicate ID/path checks |
-| B15 — Script security inventory | COMPLETE | `registry/EXTERNAL_SCRIPT_SECURITY.yaml` (213 records) |
+| B1 — Resolve immutable upstream SHAs | COMPLETE | 8 repos pinned in lockfile |
+| B2–B7 — External skill imports | COMPLETE | 36 entries in `EXTERNAL_SKILLS_LOCK.yaml` |
+| B8–B15 — Audit, security, validation | COMPLETE | See Phase B commit `55d3f4e` |
 
 ---
 
@@ -66,19 +79,7 @@
 
 | Task | Status | Evidence |
 |---|---|---|
-| A1 — Inspect workspace | COMPLETE | 14 pack files verified at workspace root; no pre-existing git repo |
-| A2 — Canonical directory structure | COMPLETE | All required directories created under `c:\Shahrukh\Effect79\effect79automation` |
-| A3 — Install canonical documentation | COMPLETE | Core policies, registry, adapters, templates placed |
-| A4 — Master specification placement | COMPLETE | `ACOS_FINAL_CANONICAL_v1.2.md` at repository root |
-| A5 — Skill directory boundaries | COMPLETE | `skills/external/*` and `skills/acos/` created |
-| A6 — Tool directory boundaries | COMPLETE | `tools/blender-mcp/`, `tools/browser/`, `tools/validation/` |
-| A7 — Memory structure | COMPLETE | Six memory stores with `.gitkeep` |
-| A8 — Benchmark/project boundaries | COMPLETE | Empty `benchmarks/` and `projects/` |
-| A9 — Model registry | COMPLETE | `registry/MODELS.yaml` schema foundation |
-| A10 — Adapter boundaries | COMPLETE | `adapters/claude|cursor|codex|local/` |
-| A11 — Git foundation | COMPLETE | Git initialized; `.gitignore` added |
-| A12 — Foundation validation | COMPLETE | `validation/validate_foundation.py` passes |
-| A13 — Progress ledger | COMPLETE | This file |
+| A1–A13 | COMPLETE | See Phase A commit `244e208` |
 
 ---
 
@@ -86,28 +87,27 @@
 
 | Item | Evidence | Correction |
 |---|---|---|
-| img2threejs upstream test (1 of 85) | `UnicodeDecodeError` on Windows cp1252 in `test_cs2_assessment_embeds_local_spec_search_results` | Recorded; operational status set to `restricted` — not hidden |
-| img2threejs missing `.gitignore` in initial subset | `test_cs2_textures_gitignored_and_never_tracked` failed | Added `.gitignore` to import subset; test passes |
-| Phase C validator initially blocked by Phase A/B rules | Foundation/external validators rejected any proprietary SKILL.md | Updated validators with phase-aware proprietary check (0 or 14 skills) |
+| img2threejs upstream test (1 of 85) | UnicodeDecodeError on Windows | Recorded; status `restricted` |
+| Phase C validator blocked by Phase A/B rules | Proprietary SKILL.md rejected | Phase-aware proprietary check added |
+| TOOL_SECURITY YAML boolean coercion | PyYAML parsed unquoted yes/no as bool | Quoted tri-state strings |
+| capture-evidence.mjs timestamp typo | `toISOJSON` TypeError | Fixed to `toISOString()` |
+| capture target path | ERR_FILE_NOT_FOUND for file://./ relative | Fixed resolveTarget + example config |
 
 ---
 
 ## Corrections
 
-- Added `skills/external/CONNECTORS.md` for Anthropic design-critique dependency
-- Added `skills/external/blender/references/` shared dependency for 15 Blender skills
-- Added img2threejs `.gitignore` to minimum operational subset
-- **Phase B hardening:** replaced hardcoded Three.js/GSAP blacklists with lockfile-derived allowlists; added per-script security inventory for img2threejs
-- **Phase C:** fixed broken `validate_external_skills.py` structure; added `check_proprietary_skills_phase()` before Phase C commit
+- Phase D: removed obsolete Phase D boundary block from `validate_proprietary_skills.py` (tools now validated by `validate_tools.py`)
+- Phase D: foundation validator messaging no longer falsely claims B/C "not started"
 
 ---
 
 ## Blockers
 
-None for Phase C scope.
+- **Blender MCP runtime:** Blender not installed on PATH in current environment — structural Phase D complete; runtime BLOCKED until Blender + MCP + addon configured.
 
 ---
 
 ## Next action
 
-**Await human review/authorization for Phase D (tools configuration).**
+**Await human review/authorization for Phase E (platform adapters).**

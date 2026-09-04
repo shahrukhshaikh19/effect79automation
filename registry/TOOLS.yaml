@@ -1,0 +1,218 @@
+version: "1.2"
+authority: ACOS_FINAL_CANONICAL_v1.2.md
+phase: D
+domain_neutral: true
+
+status_model:
+  configured: "Contract, registry entry, and required files exist in repository"
+  available: "Dependency installed, executable reachable, health check passed in this environment"
+  restricted: "Partial capability or unresolved high-risk unknown; use with explicit approval"
+  blocked: "Required runtime dependency unavailable or policy forbids use"
+  optional: "Not required for core ACOS structural operation"
+
+readiness_dimensions:
+  - configuration_present
+  - dependency_installed
+  - connection_reachable
+  - health_check_passed
+  - runtime_capability_verified
+
+capability_families:
+  - browser
+  - blender
+  - git
+  - shell
+  - filesystem
+
+tools:
+  - id: TOOL-BROWSER-01
+    name: acos-browser-playwright
+    category: browser
+    purpose: >
+      Capture rendered browser evidence (screenshots, console/page errors, viewport matrix)
+      for ACOS visual/runtime QA. Evidence only — critics interpret; quality gate decides.
+    implementation: playwright
+    status: configured
+    required: true
+    capabilities:
+      - open_local_or_authorized_target
+      - viewport_controlled_render
+      - deterministic_screenshot
+      - full_page_screenshot
+      - element_region_screenshot
+      - multi_viewport_capture
+      - console_error_capture
+      - page_error_capture
+      - network_failure_capture
+      - reduced_motion_emulation
+      - readiness_wait_conditions
+      - evidence_manifest_generation
+    evidence_outputs:
+      - browser_evidence_manifest_yaml
+      - screenshot_png
+      - console_log_json
+    security_class: network_local_target
+    network_access: "yes — only to explicitly supplied target URL/path"
+    filesystem_access: "yes — workspace output dirs and local file:// targets"
+    subprocess_access: "yes — launches pinned Playwright/Chromium subprocess"
+    destructive_operations: []
+    human_approval_required_for:
+      - authenticated_remote_targets
+      - non_workspace_output_paths
+    health_check: validation/check_browser_tool.py
+    version_or_pin: "playwright@1.49.1 (tools/browser/package.json)"
+    configuration_source: tools/browser/
+    notes: >
+      Does not output visual quality judgments. No arbitrary web crawling.
+      Bootstrap via tools/browser/scripts/bootstrap.mjs (explicit, not in validators).
+
+  - id: TOOL-BLENDER-01
+    name: acos-blender-mcp
+    category: blender
+    purpose: >
+      Execution bridge to Blender via Model Context Protocol. Scene inspection,
+      mutation, render/export evidence — not creative direction or quality approval.
+    implementation: blender-mcp-upstream
+    status: restricted
+    required: false
+    capabilities:
+      - scene_inspection
+      - object_inspection
+      - viewport_screenshot
+      - execute_blender_code
+      - material_operations
+      - asset_download_integrations
+      - render_invocation
+      - export_operations
+    evidence_outputs:
+      - blender_evidence_manifest_yaml
+      - viewport_screenshot_png
+      - render_output_paths
+    security_class: high_privilege_local
+    network_access: "yes — localhost Blender socket; optional external asset APIs via MCP tools"
+    filesystem_access: "yes — via Blender bpy operators and temp screenshot paths"
+    subprocess_access: "yes — MCP server process; Blender executable external"
+    destructive_operations:
+      - delete_objects
+      - overwrite_blend_file
+      - overwrite_export_assets
+      - execute_arbitrary_blender_python
+    human_approval_required_for:
+      - execute_blender_code
+      - delete_objects
+      - overwrite_blend_file
+      - overwrite_export_assets
+      - external_asset_downloads
+    health_check: validation/check_blender_tool.py
+    version_or_pin: "5866814479b4e2ca674d8d44969a9a2a78fdc8bb (blender-mcp 1.9.1)"
+    configuration_source: tools/blender-mcp/
+    notes: >
+      Upstream pinned in tools/blender-mcp/UPSTREAM.yaml. Runtime requires Blender
+      installation + MCP server + addon. BLENDER_MCP_SAFE_MODE recommended for ACOS.
+
+  - id: TOOL-GIT-01
+    name: acos-git-workspace
+    category: git
+    purpose: >
+      Version control inspection and controlled mutation for ACOS reproducibility,
+      baseline preservation, and safe rollback evidence.
+    implementation: git-cli-contract
+    status: configured
+    required: true
+    capabilities:
+      - read_only_inspection
+      - local_mutation
+      - remote_mutation
+    evidence_outputs:
+      - git_status_text
+      - git_diff_text
+      - git_log_text
+      - commit_sha_record
+    security_class: workspace_vcs
+    network_access: "optional — only when remote fetch/push explicitly invoked"
+    filesystem_access: "yes — repository working tree"
+    subprocess_access: "yes — invokes git executable"
+    destructive_operations:
+      - force_push
+      - reset_hard
+      - clean_fd
+      - history_rewrite
+      - branch_deletion
+    human_approval_required_for:
+      - force_push
+      - reset_hard
+      - clean_fd
+      - history_rewrite
+      - branch_deletion
+      - push_to_remote
+    health_check: validation/check_git_tool.py
+    version_or_pin: "git executable on PATH (environment-dependent)"
+    configuration_source: tools/git/
+    notes: Committed != pushed. Destructive git ops never normalized as ordinary actions.
+
+  - id: TOOL-SHELL-01
+    name: acos-shell-workspace
+    category: shell
+    purpose: >
+      Classified shell execution for deterministic mechanical operations
+      (validators, evidence capture, diagnostics). No blind arbitrary execution.
+    implementation: shell-policy-contract
+    status: configured
+    required: true
+    capabilities:
+      - read_only_commands
+      - workspace_write_commands
+      - classified_dependency_install
+      - classified_network_commands
+    evidence_outputs:
+      - command_stdout_stderr
+      - exit_code_record
+    security_class: privileged_classifier
+    network_access: "classified — only when command class permits"
+    filesystem_access: "yes — workspace by default"
+    subprocess_access: "yes"
+    destructive_operations:
+      - recursive_delete_outside_approved_paths
+      - privileged_system_modification
+    human_approval_required_for:
+      - destructive
+      - privileged
+      - dependency_install
+      - network_access
+    health_check: validation/check_shell_tool.py
+    version_or_pin: "platform shell (PowerShell/bash — environment-dependent)"
+    configuration_source: tools/shell/
+    notes: Prefer deterministic Python/Node scripts over ad-hoc shell.
+
+  - id: TOOL-FS-01
+    name: acos-filesystem-workspace
+    category: filesystem
+    purpose: >
+      Workspace-scoped filesystem operations with explicit read/create/modify/delete
+      classification. No machine-wide traversal by default.
+    implementation: filesystem-policy-contract
+    status: configured
+    required: true
+    capabilities:
+      - read
+      - create
+      - modify
+      - delete
+      - move
+      - copy
+    evidence_outputs:
+      - path_operation_record
+    security_class: workspace_scoped
+    network_access: "no"
+    filesystem_access: "yes — approved workspace roots only"
+    subprocess_access: "no — direct file operations via tooling/scripts"
+    destructive_operations:
+      - delete
+      - move_overwrite
+    human_approval_required_for:
+      - delete_outside_temp_evidence
+      - modify_outside_workspace
+    health_check: validation/check_shell_tool.py
+    version_or_pin: "n/a — policy contract"
+    configuration_source: tools/filesystem/
+    notes: Evidence paths must be explicit. No credential harvesting.
