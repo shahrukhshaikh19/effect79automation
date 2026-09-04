@@ -1,0 +1,443 @@
+benchmark_id: BM-001
+title: Premium Interactive Digital Experience — Fictional High-End Technology Product
+status: FROZEN
+created_at: '2026-09-04T20:05:00Z'
+contract_version: '1.0'
+operator_input:
+  source_file: benchmarks/BM-001/ORIGINAL_INPUT.md
+  original_text: "# BM-001 — OPERATOR INPUT\n\n## What to build/test\n\nBuild a production-quality, premium interactive digital experience for a fictional high-end technology product.\n\nThe benchmark must test whether ACOS can take a high-level creative brief and produce an original, polished, responsive, visually distinctive web experience without falling into generic AI-generated design patterns.\n\nThis is a benchmark of the complete ACOS creative-production workflow, not a template recreation exercise.\n\n## Primary objective\n\nEvaluate whether ACOS can produce work that feels intentionally art-directed, technically polished, premium, memorable, and suitable for a real high-end commercial website.\n\nThe result should demonstrate strong:\n\n* creative direction\n* visual hierarchy\n* art direction\n* typography\n* composition\n* interaction design\n* motion design\n* responsive art direction\n* technical implementation quality\n* performance awareness\n* visual consistency\n\n3D may\
+    \ be used only if the system determines that it materially improves the experience.\n\n3D is NOT mandatory.\n\n## Creative freedom\n\nACOS has freedom to determine:\n\n* visual concept\n* page structure\n* layout\n* typography direction\n* color system\n* interaction language\n* motion language\n* transitions\n* visual storytelling\n* whether 2D, 3D, WebGL, shaders, or conventional web techniques are appropriate\n\nThe system must make these decisions through its normal routing and creative workflow.\n\nDo not manually prescribe ACOS skill IDs.\n\n## Product\n\nUse a fictional premium technology product.\n\nThe exact fictional product identity, name, positioning, and visual concept may be created specifically for this benchmark as part of the creative process.\n\nIt must not imitate an existing commercial brand.\n\n## Mandatory requirements\n\nThe final experience must:\n\n1. be an actual functional web experience, not a static mockup;\n2. have a clearly intentional creative concept;\n\
+    3. contain multiple meaningful content/experience sections;\n4. have a strong hero experience;\n5. use deliberate typography and visual hierarchy;\n6. include meaningful interaction or motion;\n7. maintain visual coherence throughout the experience;\n8. work responsively across required viewports;\n9. avoid obvious layout breakage;\n10. avoid obvious console/runtime errors;\n11. maintain usable navigation and interaction;\n12. demonstrate production-quality implementation rather than prototype-quality shortcuts;\n13. provide evidence sufficient for ACOS quality gates to judge the result.\n\n## Avoid\n\nDo NOT:\n\n* copy an existing website;\n* recreate a supplied commercial design;\n* imitate Apple, Nothing, Tesla, Stripe, Linear, Awwwards sites, or another recognizable brand;\n* use a generic SaaS landing-page template;\n* default to predictable gradient-heavy AI aesthetics;\n* use arbitrary glassmorphism;\n* use excessive glow merely to appear premium;\n* use random floating cards;\n\
+    * use meaningless decorative animation;\n* force 3D into the experience;\n* sacrifice usability for visual effects;\n* sacrifice performance without a justified creative reason;\n* treat desktop as the only designed viewport;\n* use placeholder-quality visual assets in the final accepted result.\n\n## References / assets\n\nNo visual reference website is supplied.\n\nNo existing design is supplied.\n\nNo brand identity is supplied.\n\nNo production asset pack is supplied.\n\nThis is intentional.\n\nThe benchmark should test ACOS's ability to originate an appropriate creative direction rather than reproduce a reference.\n\nAny generated or internally created benchmark assets must have their provenance recorded.\n\n## Target viewports\n\nRequired evaluation viewports:\n\nDesktop:\n1440 × 900\n\nLaptop:\n1280 × 800\n\nTablet:\n768 × 1024\n\nMobile:\n390 × 844\n\nAlso verify that the experience does not catastrophically break between these fixed evaluation sizes.\n\n## Browser\n\nPrimary\
+    \ benchmark browser:\n\nChromium\n\n## Interaction\n\nThe experience may use:\n\n* scroll interaction\n* pointer interaction\n* hover\n* transitions\n* cinematic sequencing\n* WebGL\n* shaders\n* 3D\n* conventional DOM/CSS animation\n\nOnly when justified by the creative concept.\n\nReduced-motion behavior must be considered where applicable.\n\n## Quality expectation\n\nThis benchmark is intentionally demanding.\n\nThe target is not merely:\n\n\"technically working.\"\n\nThe target is:\n\n\"production-quality creative work that could credibly be presented as premium professional digital work.\"\n\nGeneric, visually weak, incoherent, unfinished, broken, or unjustifiably derivative output should not pass merely because the application runs.\n\n## Acceptance principle\n\nACOS's existing certified Quality Gate remains authoritative.\n\nThe benchmark must not create a weaker parallel quality system.\n\nBenchmark-specific acceptance criteria may make requirements more measurable, but they\
+    \ must not bypass or override ACOS hard-reject rules or evidence requirements.\n\n## Evidence\n\nEvidence should be sufficient to evaluate at minimum:\n\n* required viewport renders\n* responsive behavior\n* visual consistency\n* interaction behavior\n* browser/runtime health\n* console errors\n* failed network requests where applicable\n* reduced-motion behavior where applicable\n* implementation completion\n* relevant performance evidence\n* quality-gate decision provenance\n\n## Benchmark independence\n\nDo not promote the resulting visual style, fictional brand, layout, colors, typography, motion style, or aesthetic decisions into global ACOS memory simply because BM-001 succeeds.\n\nOnly genuinely generalizable lessons may become memory candidates through the existing certified memory process.\n\n## Execution status\n\nThis input authorizes **PF-1 registration and freezing only**.\n\nDo NOT execute BM-001 yet.\n\nDo NOT start PF-2.\n\nRegister this input faithfully, derive measurable\
+    \ acceptance/evidence contracts without inventing unsupported product requirements, perform the certified two-step freeze, run PF-1/foundation regression validation, commit and push, then STOP.\n\n# BM-001 REPOSITORY LOCATION — MANDATORY\n\nBM-001 must remain **inside the existing `effect79automation` repository**.\n\nRepository root:\n\n`C:\\Shahrukh\\Effect79\\effect79automation`\n\nCanonical benchmark directory:\n\n```text\nC:\\Shahrukh\\Effect79\\effect79automation\\\n└── benchmarks\\\n    └── BM-001\\\n        ├── ORIGINAL_INPUT.md\n        ├── REGISTRATION.yaml\n        ├── ACCEPTANCE_CONTRACT.yaml\n        └── EVIDENCE_PLAN.yaml\n```\n\nFor PF-1, create only the registration/freeze artifacts above.\n\nDo NOT create BM-001:\n\n* outside `effect79automation`\n* in a sibling repository\n* in a separate standalone project\n* on Desktop/Documents/temp folders\n* inside `projects/`\n* inside `apps/`\n* inside `runtime/`\n\nAll BM-001 benchmark registration artifacts must be tracked\
+    \ by the **same `effect79automation` Git repository**.\n\nWhen future phases authorize actual benchmark execution, its implementation/evidence locations must follow the canonical ACOS benchmark structure defined by the repository at that phase. Do not invent an external project location now.\n\nBefore committing, verify:\n\n`git rev-parse --show-toplevel`\n\nmust resolve to:\n\n`C:\\Shahrukh\\Effect79\\effect79automation`\n\nThen perform the certified PF-1 source commit → freeze-attestation commit process and STOP.\n\nPF-2 must remain NOT_STARTED.\n"
+normalized_brief:
+  objective: Evaluate whether ACOS can produce intentionally art-directed, technically polished, premium, memorable, production-quality interactive web work suitable for a real high-end commercial website.
+  deliverable_type: functional_interactive_web_experience
+  product:
+    type: fictional_premium_technology_product
+    name: not_supplied
+    positioning: not_supplied
+    visual_concept: to_be_determined_by_acos_creative_process
+    must_not_imitate_existing_commercial_brand: true
+  primary_goal: Test complete ACOS creative-production workflow on an original premium web experience without generic AI-generated design patterns.
+  creative_freedom:
+    visual_concept: true
+    page_structure: true
+    layout: true
+    typography_direction: true
+    color_system: true
+    interaction_language: true
+    motion_language: true
+    transitions: true
+    visual_storytelling: true
+    technique_selection_2d_3d_webgl_shaders_dom_css: true
+    routing: normal_acos_routing_only_no_manual_skill_prescription
+  three_d_policy: optional_only_if_materially_improves_experience_not_mandatory
+  quality_target: production_quality_creative_work_credibly_presentable_as_premium_professional_digital_work
+  avoid_list:
+  - copy_existing_website
+  - recreate_supplied_commercial_design
+  - imitate_apple_nothing_tesla_stripe_linear_awwwards_or_recognizable_brand
+  - generic_saas_landing_page_template
+  - predictable_gradient_heavy_ai_aesthetics
+  - arbitrary_glassmorphism
+  - excessive_glow_without_purpose
+  - random_floating_cards
+  - meaningless_decorative_animation
+  - force_3d_into_experience
+  - sacrifice_usability_for_visual_effects
+  - sacrifice_performance_without_justified_creative_reason
+  - treat_desktop_as_only_designed_viewport
+  - placeholder_quality_visual_assets_in_final_result
+  target_viewports:
+  - name: desktop
+    width: 1440
+    height: 900
+  - name: laptop
+    width: 1280
+    height: 800
+  - name: tablet
+    width: 768
+    height: 1024
+  - name: mobile
+    width: 390
+    height: 844
+  primary_browser: chromium
+  interaction_modalities_allowed_when_justified:
+  - scroll
+  - pointer
+  - hover
+  - transitions
+  - cinematic_sequencing
+  - webgl
+  - shaders
+  - 3d
+  - dom_css_animation
+  reduced_motion_required: true
+  benchmark_independence: bm001_visual_decisions_must_not_become_universal_system_style_rules
+references: []
+assets: []
+functional_requirements:
+- id: FR-01
+  description: Actual functional web experience, not a static mockup.
+  source:
+    type: operator
+    source_ref: mandatory_requirements.1
+- id: FR-02
+  description: Multiple meaningful content/experience sections.
+  source:
+    type: operator
+    source_ref: mandatory_requirements.3
+- id: FR-03
+  description: Strong hero experience.
+  source:
+    type: operator
+    source_ref: mandatory_requirements.4
+- id: FR-04
+  description: Usable navigation and interaction.
+  source:
+    type: operator
+    source_ref: mandatory_requirements.11
+- id: FR-05
+  description: Responsive behavior across required evaluation viewports without catastrophic breakage.
+  source:
+    type: operator
+    source_ref: target_viewports
+- id: FR-06
+  description: Avoid obvious layout breakage.
+  source:
+    type: operator
+    source_ref: mandatory_requirements.9
+- id: FR-07
+  description: Avoid obvious console/runtime errors.
+  source:
+    type: operator
+    source_ref: mandatory_requirements.10
+- id: FR-08
+  description: Production-quality implementation rather than prototype-quality shortcuts.
+  source:
+    type: operator
+    source_ref: mandatory_requirements.12
+- id: FR-09
+  description: Evidence sufficient for ACOS quality gates to judge the result.
+  source:
+    type: operator
+    source_ref: mandatory_requirements.13
+creative_requirements:
+- id: CR-01
+  description: Clearly intentional creative concept.
+  source:
+    type: operator
+    source_ref: mandatory_requirements.2
+- id: CR-02
+  description: Deliberate typography and visual hierarchy.
+  source:
+    type: operator
+    source_ref: mandatory_requirements.5
+- id: CR-03
+  description: Meaningful interaction or motion.
+  source:
+    type: operator
+    source_ref: mandatory_requirements.6
+- id: CR-04
+  description: Visual coherence throughout the experience.
+  source:
+    type: operator
+    source_ref: mandatory_requirements.7
+- id: CR-05
+  description: Demonstrate creative direction, art direction, composition, interaction design, motion design, responsive art direction, and visual consistency.
+  source:
+    type: operator
+    source_ref: primary_objective
+- id: CR-06
+  description: Originate appropriate creative direction without supplied reference design.
+  source:
+    type: operator
+    source_ref: references_assets
+- id: CR-07
+  description: Fictional product identity must not imitate an existing commercial brand.
+  source:
+    type: operator
+    source_ref: product
+acceptance_contract:
+  benchmark_id: BM-001
+  contract_version: '1.0'
+  status: FROZEN
+  scoring_note: 'Benchmark score != ACOS Quality Gate status. ACOS certified Quality Gate remains authoritative. Hard rejects cannot be averaged away. Benchmark criteria may add measurability but must not bypass ACOS hard-reject rules or evidence requirements.
+
+    '
+  dimensions:
+    functional:
+      applicable: true
+      weight: 15
+      minimum_score: null
+      hard_fail_conditions:
+      - not_a_functional_web_experience
+      - obvious_layout_breakage
+      - broken_navigation_or_interaction
+      - obvious_console_runtime_errors
+      evidence_required:
+      - E-001
+      - E-002
+      - E-005
+      - E-006
+      evaluator_type: human_and_machine
+    visual:
+      applicable: true
+      weight: 20
+      minimum_score: null
+      hard_fail_conditions:
+      - placeholder_quality_visual_assets
+      - incoherent_visual_system
+      evidence_required:
+      - E-001
+      - E-003
+      evaluator_type: human_and_machine
+    creative:
+      applicable: true
+      weight: 20
+      minimum_score: null
+      hard_fail_conditions:
+      - no_intentional_creative_concept
+      - generic_ai_generated_aesthetic
+      - imitates_recognizable_brand
+      - copies_existing_website
+      evidence_required:
+      - E-001
+      - E-003
+      evaluator_type: human
+    responsive:
+      applicable: true
+      weight: 15
+      minimum_score: null
+      hard_fail_conditions:
+      - catastrophic_breakage_at_required_viewports
+      - desktop_only_designed_experience
+      evidence_required:
+      - E-001
+      - E-004
+      evaluator_type: machine
+    performance:
+      applicable: true
+      weight: 10
+      minimum_score: null
+      hard_fail_conditions:
+      - unjustified_severe_performance_degradation
+      evidence_required:
+      - E-009
+      evaluator_type: machine
+    accessibility:
+      applicable: true
+      weight: 5
+      minimum_score: null
+      hard_fail_conditions:
+      - reduced_motion_not_considered_where_applicable
+      evidence_required:
+      - E-008
+      evaluator_type: machine
+    engineering:
+      applicable: true
+      weight: 10
+      minimum_score: null
+      hard_fail_conditions:
+      - prototype_quality_shortcuts_in_final_acceptance
+      - insufficient_evidence_for_quality_gate
+      evidence_required:
+      - E-005
+      - E-006
+      - E-010
+      evaluator_type: machine
+    reference_fidelity:
+      applicable: false
+      weight: 0
+      minimum_score: null
+      hard_fail_conditions: []
+      evidence_required: []
+      evaluator_type: human
+      not_applicable_reason: no_reference_design_supplied
+    three_d_quality:
+      applicable: false
+      weight: 0
+      minimum_score: null
+      hard_fail_conditions:
+      - forced_unjustified_3d
+      evidence_required: []
+      evaluator_type: human
+      not_applicable_reason: three_d_not_mandatory_evaluated_only_if_used
+    motion_quality:
+      applicable: true
+      weight: 5
+      minimum_score: null
+      hard_fail_conditions:
+      - meaningless_decorative_animation
+      evidence_required:
+      - E-007
+      evaluator_type: human
+  hard_failures: &id001
+  - copies_existing_website
+  - recreates_supplied_commercial_design
+  - imitates_recognizable_brand
+  - generic_saas_landing_template
+  - predictable_gradient_heavy_ai_aesthetics
+  - arbitrary_glassmorphism
+  - excessive_glow_without_purpose
+  - random_floating_cards
+  - meaningless_decorative_animation
+  - forced_unjustified_3d
+  - usability_sacrificed_for_effects
+  - unjustified_performance_sacrifice
+  - desktop_only_designed_experience
+  - placeholder_quality_visual_assets
+  - not_a_functional_web_experience
+  - obvious_layout_breakage
+  - obvious_console_runtime_errors
+  - broken_navigation_or_interaction
+  - benchmark_aesthetic_cross_system_memory_promotion_forbidden
+  weight_normalization:
+    rule: applicable_dimension_weights_sum_to_100
+    enforced: true
+  revision:
+    version: '1.0'
+    parent_version: null
+    reason: initial_operator_registration
+    changed_by: operator
+    changed_at: '2026-09-04T20:05:00Z'
+evidence_plan:
+- evidence_id: E-001
+  dimension: responsive
+  type: browser_screenshot
+  required: true
+  capture_stage: post_execution
+  acceptance_use: required_viewport_renders
+  viewports:
+  - name: desktop
+    width: 1440
+    height: 900
+  - name: laptop
+    width: 1280
+    height: 800
+  - name: tablet
+    width: 768
+    height: 1024
+  - name: mobile
+    width: 390
+    height: 844
+- evidence_id: E-002
+  dimension: functional
+  type: implementation_completion_check
+  required: true
+  capture_stage: post_execution
+  acceptance_use: verify_functional_web_experience_not_static_mockup
+- evidence_id: E-003
+  dimension: visual
+  type: visual_consistency_review
+  required: true
+  capture_stage: post_execution
+  acceptance_use: visual_coherence_and_art_direction
+- evidence_id: E-004
+  dimension: responsive
+  type: responsive_behavior_check
+  required: true
+  capture_stage: post_execution
+  acceptance_use: verify_no_catastrophic_breakage_between_evaluation_sizes
+- evidence_id: E-005
+  dimension: engineering
+  type: browser_console_log
+  required: true
+  capture_stage: post_execution
+  acceptance_use: detect_obvious_console_runtime_errors
+  browser: chromium
+- evidence_id: E-006
+  dimension: engineering
+  type: network_request_log
+  required: true
+  capture_stage: post_execution
+  acceptance_use: detect_failed_network_requests_where_applicable
+  browser: chromium
+- evidence_id: E-007
+  dimension: motion_quality
+  type: interaction_recording
+  required: true
+  capture_stage: post_execution
+  acceptance_use: meaningful_interaction_or_motion_behavior
+- evidence_id: E-008
+  dimension: accessibility
+  type: reduced_motion_behavior_check
+  required: true
+  capture_stage: post_execution
+  acceptance_use: reduced_motion_considered_where_applicable
+- evidence_id: E-009
+  dimension: performance
+  type: performance_metrics
+  required: true
+  capture_stage: post_execution
+  acceptance_use: relevant_performance_evidence
+- evidence_id: E-010
+  dimension: engineering
+  type: quality_gate_provenance
+  required: true
+  capture_stage: post_execution
+  acceptance_use: acos_quality_gate_decision_provenance
+hard_failures: *id001
+capability_expectations:
+  visual_work: true
+  three_d_possible: true
+  three_d_mandatory: false
+  motion_possible: true
+  motion_expected: true
+  web_experience: true
+  reference_reproduction: false
+tool_requirements:
+  browser_rendering:
+    required: true
+    primary_browser: chromium
+  blender:
+    required: false
+    conditional: only_if_system_determines_3d_materially_improves_experience
+classification:
+  deliverable_family: premium_interactive_web_experience
+  interaction_level: high
+  visual_complexity: high
+  three_d_expected: false
+  motion_expected: true
+  reference_dependency: false
+  benchmark_type: complete_creative_production_workflow
+constraint_evaluation:
+- source_ref: operator_input
+  original_request: Do not manually prescribe ACOS skill IDs.
+  status: APPROVED_CONSTRAINT
+  reason_code: ROUTING_VIA_NORMAL_ACOS_WORKFLOW
+  reason: Executable contract requires normal routing; no manual skill activation embedded.
+- source_ref: operator_input
+  original_request: 3D may be used only if the system determines that it materially improves the experience. 3D is NOT mandatory.
+  status: APPROVED_CONSTRAINT
+  reason_code: OPTIONAL_3D
+  reason: three_d_quality dimension not applicable unless 3D used; forced unjustified 3D is hard failure.
+- source_ref: operator_input
+  original_request: No visual reference website is supplied.
+  status: APPROVED_CONSTRAINT
+  reason_code: NO_REFERENCE_SUPPLIED
+  reason: reference_fidelity dimension not applicable.
+- source_ref: operator_input
+  original_request: Do not promote the resulting visual style ... into global ACOS memory simply because BM-001 succeeds.
+  status: APPROVED_CONSTRAINT
+  reason_code: NO_GLOBAL_MEMORY_PROMOTION
+  reason: Benchmark independence preserved; global memory promotion forbidden.
+operator_confirmation:
+  brief_correct: confirmed
+  references_correct: confirmed
+  acceptance_contract_correct: confirmed
+  confirmed_at: '2026-09-04T20:05:00Z'
+  confirmed_by: operator
+execution_state:
+  benchmark_score: null
+  benchmark_result: NOT_EXECUTED
+revision:
+  version: '1.0'
+  parent_version: null
+  reason: initial_operator_registration
+global_memory_promotion: false
+benchmark_contract_sha256: 7120530bc4a4064795bdb81fe01a74d559388dfeed14050da86bd9e6b6131311
