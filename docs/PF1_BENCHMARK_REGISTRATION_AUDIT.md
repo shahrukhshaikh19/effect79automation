@@ -110,32 +110,29 @@ Unanchored foundation validator paths in allowlist → FAIL.
 ## Benchmark registration state
 
 ```text
-PF-1 IN_PROGRESS — operator contract approval pending
-BM-001 v1.0 FROZEN (historical — integrity defect: unverified operator_confirmation)
-BM-001 v1.1 REGISTERED (pending operator confirmation — not frozen)
+PF-1 COMPLETE
+BM-001 v1.1 FROZEN (operator confirmed)
+BM-001 v1.0 FROZEN (historical — superseded)
 benchmark execution = NOT_EXECUTED
 PF-2 = NOT_STARTED
 ```
 
-### BM-001 v1.0 historical freeze (preserved)
+### BM-001 v1.1 freeze provenance
 
 | Field | Value |
 |-------|-------|
-| benchmark_id | BM-001 |
-| contract_version | 1.0 |
-| frozen_source_commit_sha | f561ae1e6e16ebb7e97f0206d671cd7ca71e7e95 |
-| frozen_contract_sha256 | 7120530bc4a4064795bdb81fe01a74d559388dfeed14050da86bd9e6b6131311 |
-| attestation_commit_sha | 4cfd614d4e257d8219ef27de138410fbbf85d90c |
-
-v1.0 Git history not rewritten. Integrity defect: operator_confirmation marked confirmed without explicit operator approval.
+| contract_version | 1.1 |
+| frozen_source_commit_sha | 18f52a8216c897b08d8dd27cb4f7b14e97b9b955 |
+| frozen_contract_sha256 | b2cb2dbaea31e07331fe1c94df1271e3c167f9a64461e2dc25410d13696cadf3 |
+| operator_confirmation | confirmed (explicit operator approval) |
 
 ---
 
 ## Phase state
 
 ```text
-PF-1 = IN_PROGRESS (operator contract approval pending)
-BM-001 v1.1 = REGISTERED (not frozen)
+PF-1 = COMPLETE
+BM-001 v1.1 = FROZEN
 PF-2..PF-5 = NOT_STARTED
 FOUNDATION_READY = VALID
 tested_implementation_sha = e0bd72b (unchanged)

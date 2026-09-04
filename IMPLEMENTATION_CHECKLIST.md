@@ -108,10 +108,10 @@ Skills:
 
 ## POST-FOUNDATION — PF roadmap
 
-### PF-1 — Benchmark registration (IN PROGRESS — operator contract approval pending)
+### PF-1 — Benchmark registration (COMPLETE)
 - [x] registration framework (registry, templates, validator)
-- [x] BM-001 v1.0 registered and frozen (historical — integrity defect in operator_confirmation)
-- [ ] BM-001 v1.1 operator confirmation + freeze
+- [x] BM-001 v1.0 registered and frozen (historical — integrity defect preserved in Git)
+- [x] BM-001 v1.1 operator confirmation + freeze
 
 ### PF-2 — Correction from benchmark evidence (NOT STARTED)
 - [ ] ACOS corrections from benchmark evidence
