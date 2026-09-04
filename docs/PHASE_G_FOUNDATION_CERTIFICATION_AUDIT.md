@@ -2,59 +2,68 @@
 
 **Date:** 2026-09-05  
 **Baseline SHA:** `0fb45835c4d6b694fde28591ca12899630c7a1d4`  
-**Scope:** Foundation validation and certification (Phase G only — no new creative intelligence)
+**Tested implementation SHA:** `e0bd72b0ec3cc61ae59ac45bdc55fbc60dcb7a3a`  
+**Scope:** Foundation validation and certification (Phase G — no new creative intelligence)
 
 ---
 
-## Provenance correction status
+## Provenance
 
-Prior attestation (`f5420e6` tested SHA, `01a62e7` attestation, `251a0b1` post-attestation fixes) is **superseded**.
+Prior attestation chain (`f5420e6` / `01a62e7` / `251a0b1`) superseded — executable fixes were not fully captured by `tested_implementation_sha`.
 
-Reason: executable validator/runner fixes landed after the recorded `tested_implementation_sha`. Final certification must target the exact commit containing all executable Phase G logic.
+Final clean chain:
 
-**Current status:** pre-attestation — FOUNDATION_READY not declared until clean four-layer PASS and final attestation commit.
+```text
+e0bd72b — implementation SHA (all executable Phase G logic + pre-attestation reset)
+→ four-layer certification PASS against e0bd72b
+→ attestation commit (result/state/docs only)
+```
 
----
-
-## Certification architecture
-
-| Artifact | Role |
-|----------|------|
-| `registry/FOUNDATION_CERTIFICATION.yaml` | Machine-readable certification contract |
-| `validation/certify_foundation.py` | Main runner orchestrating G1–G4 |
-| `validation/validate_foundation_adversarial.py` | Adversarial scenarios |
-| `validation/FOUNDATION_EVIDENCE_INDEX.yaml` | Evidence class index |
-| `validation/evidence/foundation/CERTIFICATION_MANIFEST.json` | Generated manifest (on run) |
-| `validation/FOUNDATION_CERTIFICATION_RESULT.json` | Attestation result (final attestation commit only) |
+`attestation_provenance`: git commit containing `FOUNDATION_CERTIFICATION_RESULT.json` (no self-referential SHA field).
 
 ---
 
-## G1–G4 findings
+## G1 Structural — PASS
 
-*(Pending final certification run against exact implementation SHA.)*
+36 external + 14 proprietary skills; 4 adapters; modular runtime; empty benchmarks/projects.
+
+## G2 Semantic — PASS
+
+HR/EB, Design Gate authority, routing ownership, license canonical blocking, memory rules, empty MODELS.yaml.
+
+## G3 Runtime/Evidence — PASS
+
+50 tests (45 runtime + 5 certification); smoke PASS; tool health truthful (Blender RESTRICTED).
+
+## G4 Adversarial — PASS
+
+G-A01..G-A20 + supplemental probes (22 scenarios).
 
 ---
 
-## Known restrictions (expected truthful)
+## Known restrictions
 
 - EXT-FE-01 / EXT-FE-02: LICENSE_REVIEW_REQUIRED
 - EXT-IMG3D-01: operationally restricted
-- Blender: TCP reachability ≠ MCP protocol handshake
+- Blender: TCP ≠ MCP handshake verification
 
 ---
 
 ## FOUNDATION_READY decision
 
-**NOT DECLARED** — awaiting final provenance-correct attestation.
+**DECLARED** — four layers PASS, zero blockers. See `registry/PHASES.yaml` and `validation/FOUNDATION_CERTIFICATION_RESULT.json`.
 
 ---
 
 ## Post-foundation boundary
 
-PF-1 through PF-5 remain NOT_STARTED.
+PF-1..PF-5 NOT_STARTED.
 
 ---
 
-## Attestation section
+## Attestation
 
-*(Completed in final attestation commit after four-layer PASS.)*
+Implementation tested: `e0bd72b0ec3cc61ae59ac45bdc55fbc60dcb7a3a`  
+Attestation commit: records result and phase state only — no executable validator/runtime changes.
+
+External skill bodies modified: **0**

@@ -1,7 +1,7 @@
 # ACOS v1.2 — Implementation Progress Ledger
 
 **Last updated:** 2026-09-05  
-**Current phase:** G — Foundation validation / certification (IN PROGRESS — final provenance attestation pending)
+**Current phase:** G — Foundation validation / certification (COMPLETE)
 
 ---
 
@@ -15,11 +15,11 @@
 | G3 — Adversarial validator | COMPLETE | `validation/validate_foundation_adversarial.py` (G-A01..G-A20) |
 | G4 — Evidence index + manifest | COMPLETE | `validation/FOUNDATION_EVIDENCE_INDEX.yaml` |
 | G5 — Framework tests | COMPLETE | `validation/tests/certification/` (5 tests) |
-| G6 — Four-layer certification | IN PROGRESS | Prior attestation superseded — final provenance rerun required |
-| G7 — Attestation | PENDING | Awaiting clean tested_implementation_sha attestation |
+| G6 — Four-layer certification | COMPLETE | PASS against `e0bd72b` — `FOUNDATION_CERTIFICATION_RESULT.json` |
+| G7 — Final attestation | COMPLETE | Provenance-correct attestation; `foundation_ready` declared |
 
-**Prior attestation superseded:** `f5420e6` / `01a62e7` provenance chain (executable fixes landed after tested SHA).  
-**FOUNDATION_READY:** not declared (final attestation pending)
+**Tested implementation SHA:** `e0bd72b0ec3cc61ae59ac45bdc55fbc60dcb7a3a`  
+**FOUNDATION_READY:** declared (final provenance-correct certification)
 
 ---
 

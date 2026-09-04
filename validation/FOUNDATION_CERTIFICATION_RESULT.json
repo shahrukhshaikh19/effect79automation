@@ -1,0 +1,25 @@
+{
+  "phase": "G",
+  "status": "CERTIFIED",
+  "layers": {
+    "structural": "PASS",
+    "semantic": "PASS",
+    "runtime_evidence": "PASS",
+    "adversarial": "PASS"
+  },
+  "blockers": [],
+  "restrictions": [
+    "EXT-FE-01: LICENSE_REVIEW_REQUIRED — commercial redistribution blocked pending review",
+    "EXT-FE-02: LICENSE_REVIEW_REQUIRED — commercial redistribution blocked pending review",
+    "EXT-IMG3D-01: operationally restricted (procedural_browser path only)",
+    "Blender: TCP reachability ≠ MCP protocol handshake verification",
+    "Blender MCP: RESTRICTED — TCP reachability ≠ MCP protocol handshake"
+  ],
+  "evidence_index": "validation/FOUNDATION_EVIDENCE_INDEX.yaml",
+  "manifest": "validation/evidence/foundation/CERTIFICATION_MANIFEST.json",
+  "baseline_sha": "0fb45835c4d6b694fde28591ca12899630c7a1d4",
+  "tested_implementation_sha": "e0bd72b0ec3cc61ae59ac45bdc55fbc60dcb7a3a",
+  "certified_sha": "e0bd72b0ec3cc61ae59ac45bdc55fbc60dcb7a3a",
+  "attestation_provenance": "git_commit_containing_this_result",
+  "generated_at": "2026-09-04T19:05:00.000000+00:00"
+}
