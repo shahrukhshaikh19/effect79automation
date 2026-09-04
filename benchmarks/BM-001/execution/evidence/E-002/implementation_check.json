@@ -1,0 +1,8 @@
+{
+  "functional": true,
+  "files": [
+    "index.html",
+    "main.js",
+    "styles.css"
+  ]
+}

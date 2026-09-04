@@ -1,0 +1,29 @@
+artifact_type: creative_direction
+producer_capability: ACOS-01
+routing_id: route-c6369bb8f726
+activated_via_routing: true
+timestamp: '2026-09-04T20:44:07.829261+00:00'
+product:
+  name: Helix Meridian
+  category: spatial field instrument
+  positioning: Precision measurement for environments that resist calibration.
+  concept_thesis: "Editorial instrument catalog \u2014 warm mineral surfaces, copper\
+    \ register accents, typographic hierarchy as primary visual system."
+visual_system:
+  palette:
+    ground: '#E6E2D8'
+    ink: '#141210'
+    accent: '#9A4E2A'
+    muted: '#5C574F'
+  typography:
+    display: Instrument Serif / Libre Baskerville
+    ui: DM Sans
+  anti_patterns_avoided:
+  - generic_saas_gradient
+  - glassmorphism
+  - floating_card_grid
+  - excessive_glow
+three_d_decision:
+  meaningful_3d_used: false
+  rationale: Routing selected visual_creative_route without requires_3d; dimensional
+    storytelling achieved via typographic composition and SVG schematic.

@@ -1,0 +1,23 @@
+{
+  "interactions": [
+    {
+      "type": "click",
+      "selector": "nav .nav-toggle",
+      "timestamp": "2026-09-04T20:44:30.694Z"
+    },
+    {
+      "type": "click",
+      "selector": "a[href=\"#capabilities\"]",
+      "timestamp": "2026-09-04T20:44:30.737Z"
+    },
+    {
+      "type": "click",
+      "selector": ".cap-item button",
+      "timestamp": "2026-09-04T20:44:32.200Z"
+    },
+    {
+      "type": "scroll_settle",
+      "duration_ms": 7473
+    }
+  ]
+}

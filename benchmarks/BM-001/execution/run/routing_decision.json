@@ -1,0 +1,193 @@
+{
+  "routing_id": "route-c6369bb8f726",
+  "task_id": "bm001-8c4500865a01",
+  "stage": "SPECIALIST_ROUTING",
+  "planned_skill_ids": [
+    "ACOS-01",
+    "ACOS-03",
+    "ACOS-04",
+    "ACOS-05",
+    "ACOS-08",
+    "ACOS-10",
+    "ACOS-11",
+    "ACOS-13",
+    "ACOS-14",
+    "EXT-A11Y-01"
+  ],
+  "executable_active_skill_ids": [
+    "ACOS-01",
+    "ACOS-03",
+    "ACOS-04",
+    "ACOS-05",
+    "ACOS-10",
+    "ACOS-11",
+    "ACOS-13",
+    "ACOS-14"
+  ],
+  "activated_skill_ids": [
+    "ACOS-01",
+    "ACOS-03",
+    "ACOS-04",
+    "ACOS-05",
+    "ACOS-10",
+    "ACOS-11",
+    "ACOS-13",
+    "ACOS-14"
+  ],
+  "skill_activations": [
+    {
+      "skill_id": "ACOS-01",
+      "activation_reason": "creative direction requested by task signals",
+      "stage": "CREATIVE_DIRECTION",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for ACOS-01",
+      "allowed_tools": [],
+      "evidence_required": [
+        "stage_appropriate_evidence"
+      ],
+      "handoff_target": "next_workflow_stage"
+    },
+    {
+      "skill_id": "ACOS-04",
+      "activation_reason": "visual art direction for visual deliverable",
+      "stage": "DESIGN_EXPERIENCE",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for ACOS-04",
+      "allowed_tools": [],
+      "evidence_required": [
+        "stage_appropriate_evidence"
+      ],
+      "handoff_target": "next_workflow_stage"
+    },
+    {
+      "skill_id": "ACOS-05",
+      "activation_reason": "experience architecture for visual experience",
+      "stage": "DESIGN_EXPERIENCE",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for ACOS-05",
+      "allowed_tools": [],
+      "evidence_required": [
+        "stage_appropriate_evidence"
+      ],
+      "handoff_target": "next_workflow_stage"
+    },
+    {
+      "skill_id": "ACOS-03",
+      "activation_reason": "anti-generic guard for differentiated visual work",
+      "stage": "DESIGN_EXPERIENCE",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for ACOS-03",
+      "allowed_tools": [],
+      "evidence_required": [
+        "stage_appropriate_evidence"
+      ],
+      "handoff_target": "next_workflow_stage"
+    },
+    {
+      "skill_id": "ACOS-10",
+      "activation_reason": "independent visual critic for visual output",
+      "stage": "INDEPENDENT_CRITICS",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for ACOS-10",
+      "allowed_tools": [],
+      "evidence_required": [
+        "stage_appropriate_evidence"
+      ],
+      "handoff_target": "next_workflow_stage"
+    },
+    {
+      "skill_id": "ACOS-11",
+      "activation_reason": "independent creative critic for creative concept",
+      "stage": "INDEPENDENT_CRITICS",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for ACOS-11",
+      "allowed_tools": [],
+      "evidence_required": [
+        "stage_appropriate_evidence"
+      ],
+      "handoff_target": "next_workflow_stage"
+    },
+    {
+      "skill_id": "ACOS-08",
+      "activation_reason": "responsive art direction when responsive required",
+      "stage": "PRODUCTION",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for ACOS-08",
+      "allowed_tools": [],
+      "evidence_required": [
+        "stage_appropriate_evidence"
+      ],
+      "handoff_target": "next_workflow_stage"
+    },
+    {
+      "skill_id": "EXT-A11Y-01",
+      "activation_reason": "accessibility checks when required",
+      "stage": "PRODUCTION",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for EXT-A11Y-01",
+      "allowed_tools": [],
+      "evidence_required": [
+        "stage_appropriate_evidence"
+      ],
+      "handoff_target": "next_workflow_stage"
+    },
+    {
+      "skill_id": "ACOS-13",
+      "activation_reason": "quality gate mandatory for ship/no-ship decision",
+      "stage": "QUALITY_GATE",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for ACOS-13",
+      "allowed_tools": [],
+      "evidence_required": [
+        "gate_report"
+      ],
+      "handoff_target": "OUTPUT"
+    },
+    {
+      "skill_id": "ACOS-14",
+      "activation_reason": "failure-learning for memory candidate creation post-gate",
+      "stage": "MEMORY_CANDIDATES",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for ACOS-14",
+      "allowed_tools": [],
+      "evidence_required": [
+        "learning_record"
+      ],
+      "handoff_target": "MEMORY_CANDIDATES"
+    }
+  ],
+  "rejected_candidate_skill_ids": [],
+  "required_tool_families": [],
+  "required_critic_ids": [
+    "ACOS-10",
+    "ACOS-11"
+  ],
+  "quality_gate_required": true,
+  "decision_reasons": [
+    "ACOS-01: creative direction requested by task signals",
+    "ACOS-04: visual art direction for visual deliverable",
+    "ACOS-05: experience architecture for visual experience",
+    "ACOS-03: anti-generic guard for differentiated visual work",
+    "ACOS-10: independent visual critic for visual output",
+    "ACOS-11: independent creative critic for creative concept",
+    "ACOS-08: responsive art direction when responsive required",
+    "EXT-A11Y-01: accessibility checks when required",
+    "ACOS-13: quality gate mandatory for ship/no-ship decision",
+    "ACOS-14: failure-learning for memory candidate creation post-gate"
+  ],
+  "evidence_refs": [],
+  "memory_refs": [],
+  "capability_constraints": {
+    "blocked_tools": [],
+    "restricted_skills": [
+      "EXT-IMG3D-01"
+    ],
+    "license_blocked_skills": [
+      "EXT-FE-01",
+      "EXT-FE-02"
+    ]
+  },
+  "fallbacks": [],
+  "design_gate_state": "PENDING",
+  "status": "ROUTED"
+}

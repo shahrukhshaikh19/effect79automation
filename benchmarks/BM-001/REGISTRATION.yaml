@@ -522,8 +522,13 @@ operator_confirmation:
   confirmed_by: operator
   approval_note: Operator explicitly approved BM-001 v1.1 acceptance contract including conditional 3D evaluation and frozen weight-normalization profiles.
 execution_state:
-  benchmark_score: null
-  benchmark_result: NOT_EXECUTED
+  benchmark_score: 85.5
+  benchmark_result: PASS
+  run_id: bm001-run-4bd803dd4125
+  executed_at: '2026-09-04T20:44:32Z'
+  quality_gate_result: APPROVED
+  meaningful_3d_used: false
+  scoring_profile: no_meaningful_3d
 revision:
   version: '1.1'
   parent_version: '1.0'

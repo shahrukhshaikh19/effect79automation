@@ -1,7 +1,7 @@
 # ACOS v1.2 — Implementation Progress Ledger
 
 **Last updated:** 2026-09-05  
-**Current phase:** PF-1 — Benchmark registration (COMPLETE)
+**Current phase:** PF-2 — BM-001 execution (COMPLETE)
 
 ---
 
@@ -36,9 +36,26 @@
 | PF1-6 — Operator contract approval | COMPLETE | Explicit operator approval recorded 2026-09-04 |
 
 **PF-1:** COMPLETE  
-**BM-001 v1.1:** FROZEN (registration only — not executed)  
+**BM-001 v1.1:** FROZEN + EXECUTED (PASS 85.5) — run `bm001-run-4bd803dd4125`  
 **BM-001 v1.0:** FROZEN (historical — superseded by v1.1)  
-**PF-2..PF-5:** NOT_STARTED
+**PF-2:** COMPLETE  
+**PF-3..PF-5:** NOT_STARTED
+
+---
+
+## PF-2 — Task log
+
+| Task | Status | Evidence |
+|---|---|---|
+| PF2-0 — PF-1 + frozen contract precondition | COMPLETE | Source `18f52a8`, hash `b2cb2dba...`, attestation `d93f0fe` |
+| PF2-1 — Execution scope + validators | COMPLETE | `benchmark_scope.py`, `validate_benchmark_execution.py` |
+| PF2-2 — ACOS workflow runner | COMPLETE | `validation/benchmark_execution/run_bm001.py` |
+| PF2-3 — BM-001 implementation | COMPLETE | `benchmarks/BM-001/execution/implementation/` |
+| PF2-4 — Browser evidence E-001..E-010 | COMPLETE | `benchmarks/BM-001/execution/evidence/` |
+| PF2-5 — Critics + Quality Gate + score | COMPLETE | APPROVED — benchmark score 85.5 PASS |
+| PF2-6 — Adversarial tests | COMPLETE | PF2-A01..A08 |
+
+**PF-3..PF-5:** NOT_STARTED
 
 ---
 

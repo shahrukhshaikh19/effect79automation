@@ -1,5 +1,5 @@
 version: "1.0"
-phase: PF-1
+phase: PF-2
 authority: benchmarks/README.md
 purpose: >
   Canonical benchmark registration index. Benchmark-specific intent lives here
@@ -50,3 +50,14 @@ benchmarks:
         frozen_contract_sha256: b2cb2dbaea31e07331fe1c94df1271e3c167f9a64461e2dc25410d13696cadf3
         frozen_source_commit_sha: 18f52a8216c897b08d8dd27cb4f7b14e97b9b955
         revision_reason: operator_approved_acceptance_contract_freeze
+        attestation_commit_sha: d93f0fe70f8478a6d1be55771b1408227f4ad15e
+    execution:
+      status: COMPLETED
+      run_id: bm001-run-4bd803dd4125
+      executed_at: "2026-09-04T20:44:32Z"
+      benchmark_result: PASS
+      benchmark_score: 85.5
+      quality_gate_result: APPROVED
+      meaningful_3d_used: false
+      implementation_path: benchmarks/BM-001/execution/implementation
+      report_path: benchmarks/BM-001/execution/run/EXECUTION_REPORT.yaml

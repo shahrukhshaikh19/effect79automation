@@ -1,0 +1,22 @@
+artifact_type: experience_direction
+producer_capability: ACOS-05
+routing_id: route-c6369bb8f726
+activated_via_routing: true
+timestamp: '2026-09-04T20:44:07.829261+00:00'
+information_architecture:
+- hero_register
+- thesis
+- instrument_schematic
+- capabilities
+- specifications
+- field_experience
+- contact
+interaction_language:
+  primary: scroll_reveal
+  secondary:
+  - nav_scroll_spy
+  - capability_accordion
+  - mobile_menu
+  motion: restrained_ease_out_reveals
+  reduced_motion_fallback: instant_visibility_no_transforms
+responsive_strategy: mobile_first_typography_scale_with_collapsing_nav

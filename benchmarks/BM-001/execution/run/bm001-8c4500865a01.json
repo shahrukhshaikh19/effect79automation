@@ -1,0 +1,62 @@
+{
+  "task_id": "bm001-8c4500865a01",
+  "routing_id": "route-c6369bb8f726",
+  "current_stage": "INTAKE",
+  "completed_stages": [],
+  "planned_skill_ids": [
+    "ACOS-01",
+    "ACOS-03",
+    "ACOS-04",
+    "ACOS-05",
+    "ACOS-08",
+    "ACOS-10",
+    "ACOS-11",
+    "ACOS-13",
+    "ACOS-14",
+    "EXT-A11Y-01"
+  ],
+  "active_skill_ids": [
+    "ACOS-01",
+    "ACOS-03",
+    "ACOS-04",
+    "ACOS-05",
+    "ACOS-08",
+    "ACOS-10",
+    "ACOS-11",
+    "ACOS-13",
+    "ACOS-14",
+    "EXT-A11Y-01"
+  ],
+  "gate_states": {
+    "design_gate": "APPROVED",
+    "quality_gate": "APPROVED"
+  },
+  "critic_states": {},
+  "correction_attempts": [],
+  "memory_candidates": [],
+  "evidence_refs": [],
+  "blocked_reasons": [],
+  "events": [
+    {
+      "event_type": "TASK_NORMALIZED",
+      "timestamp": "2026-09-04T20:44:07.720027+00:00",
+      "payload_ref": "bm001-8c4500865a01"
+    },
+    {
+      "event_type": "ROUTING_CREATED",
+      "timestamp": "2026-09-04T20:44:07.827595+00:00",
+      "payload_ref": "route-c6369bb8f726"
+    },
+    {
+      "event_type": "DESIGN_GATE_APPROVED",
+      "timestamp": "2026-09-04T20:44:07.843136+00:00",
+      "payload_ref": "route-c6369bb8f726"
+    },
+    {
+      "event_type": "GATE_APPROVED",
+      "timestamp": "2026-09-04T20:44:32.829113+00:00",
+      "payload_ref": "APPROVED"
+    }
+  ],
+  "status": "ACTIVE"
+}
