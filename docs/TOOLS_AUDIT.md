@@ -15,7 +15,7 @@
 | blender | TOOL-BLENDER-01 | CONFIGURED | **BLOCKED** — Blender not on PATH; MCP not tested |
 | git | TOOL-GIT-01 | CONFIGURED | **AVAILABLE** — git 2.32.0 |
 | shell | TOOL-SHELL-01 | CONFIGURED | **AVAILABLE** — PowerShell |
-| filesystem | TOOL-FS-01 | CONFIGURED | **AVAILABLE** |
+| filesystem | TOOL-FS-01 | CONFIGURED | **AVAILABLE** — dedicated `check_filesystem_tool.py` |
 
 ---
 
@@ -119,7 +119,12 @@ Blender MCP → scene/render/export evidence → 3D Critic / Visual Critic → Q
 | **Capabilities** | read, create, modify, delete, move, copy within approved roots |
 | **Not capabilities** | Machine-wide traversal, credential harvesting |
 | **Evidence output root** | `validation/evidence/` |
-| **Review status** | PASS (contract) |
+| **Health check** | `validation/check_filesystem_tool.py` (dedicated; not shell) |
+| **Review status** | PASS (contract + runtime probe) |
+
+### Phase D audit correction (2026-09-04)
+
+Independent audit found `TOOL-FS-01` incorrectly pointed to `validation/check_shell_tool.py`. Corrected with dedicated filesystem health check performing neutral temp-file CRUD under `validation/evidence/fs-health-*` only.
 
 ---
 

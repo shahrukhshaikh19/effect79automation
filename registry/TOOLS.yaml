@@ -212,7 +212,7 @@ tools:
     human_approval_required_for:
       - delete_outside_temp_evidence
       - modify_outside_workspace
-    health_check: validation/check_shell_tool.py
+    health_check: validation/check_filesystem_tool.py
     version_or_pin: "n/a — policy contract"
     configuration_source: tools/filesystem/
     notes: Evidence paths must be explicit. No credential harvesting.

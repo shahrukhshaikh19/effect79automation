@@ -34,6 +34,7 @@
 | D4 — Security + validation (Batch D4) | COMPLETE | `TOOL_SECURITY.yaml`, `validate_tools.py`, `TOOLS_AUDIT.md` |
 | D5 — Health checks | COMPLETE | `validation/check_*_tool.py` (4 scripts) |
 | D6 — Full validation sequence | COMPLETE | All 4 structural validators PASSED |
+| D7 — Filesystem health-check hardening | COMPLETE | Dedicated `validation/check_filesystem_tool.py`; registry + validator mapping fix |
 
 ### Phase D runtime health (this environment)
 
@@ -43,7 +44,7 @@
 | Blender MCP | CONFIGURED | BLOCKED — Blender executable not on PATH; MCP connection not tested |
 | Git | CONFIGURED | AVAILABLE — git 2.32.0, inside work tree |
 | Shell | CONFIGURED | AVAILABLE — PowerShell on Windows |
-| Filesystem | CONFIGURED | AVAILABLE — workspace policy active |
+| Filesystem | CONFIGURED | AVAILABLE — dedicated fs-health probe under validation/evidence/ |
 
 ---
 
@@ -92,6 +93,7 @@
 | TOOL_SECURITY YAML boolean coercion | PyYAML parsed unquoted yes/no as bool | Quoted tri-state strings |
 | capture-evidence.mjs timestamp typo | `toISOJSON` TypeError | Fixed to `toISOString()` |
 | capture target path | ERR_FILE_NOT_FOUND for file://./ relative | Fixed resolveTarget + example config |
+| TOOL-FS-01 health_check mismatch | Filesystem pointed to shell health check | Added `check_filesystem_tool.py`; hardened `validate_tools.py` mapping |
 
 ---
 

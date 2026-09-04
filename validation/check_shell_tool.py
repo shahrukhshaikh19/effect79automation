@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ACOS Phase D shell + filesystem tool health check."""
+"""ACOS Phase D shell tool health check."""
 
 from __future__ import annotations
 
@@ -14,15 +14,15 @@ REPO = Path(__file__).resolve().parent.parent
 
 def main() -> int:
     shell_policy = REPO / "tools" / "shell" / "shell-policy.yaml"
-    fs_policy = REPO / "tools" / "filesystem" / "filesystem-policy.yaml"
+    shell_contract = REPO / "tools" / "shell" / "CONTRACT.md"
     missing = [
         str(p.relative_to(REPO))
-        for p in (shell_policy, fs_policy)
+        for p in (shell_policy, shell_contract)
         if not p.is_file()
     ]
     if missing:
         print(json.dumps({
-            "tool": "TOOL-SHELL-01/TOOL-FS-01",
+            "tool": "TOOL-SHELL-01",
             "structural": "BLOCKED",
             "runtime": "BLOCKED",
             "missing": missing,
@@ -39,13 +39,6 @@ def main() -> int:
         "shell_executable": shell,
         "platform": platform.system(),
         "arbitrary_execution_default": False,
-    }))
-    print(json.dumps({
-        "tool": "TOOL-FS-01",
-        "structural": "CONFIGURED",
-        "runtime": "AVAILABLE",
-        "workspace_root": str(REPO),
-        "evidence_output_root": "validation/evidence",
     }))
     return 0
 

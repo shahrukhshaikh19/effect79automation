@@ -67,6 +67,14 @@ GIT_REQUIRED = ["tools/git/CONTRACT.md", "tools/git/git-policy.yaml"]
 SHELL_REQUIRED = ["tools/shell/CONTRACT.md", "tools/shell/shell-policy.yaml"]
 FS_REQUIRED = ["tools/filesystem/CONTRACT.md", "tools/filesystem/filesystem-policy.yaml"]
 
+EXPECTED_HEALTH_CHECKS: dict[str, str] = {
+    "browser": "validation/check_browser_tool.py",
+    "blender": "validation/check_blender_tool.py",
+    "git": "validation/check_git_tool.py",
+    "shell": "validation/check_shell_tool.py",
+    "filesystem": "validation/check_filesystem_tool.py",
+}
+
 SECURITY_EXECUTABLES = [
     "tools/browser/scripts/bootstrap.mjs",
     "tools/browser/scripts/capture-evidence.mjs",
@@ -75,6 +83,7 @@ SECURITY_EXECUTABLES = [
     "validation/check_blender_tool.py",
     "validation/check_git_tool.py",
     "validation/check_shell_tool.py",
+    "validation/check_filesystem_tool.py",
     "validation/validate_tools.py",
 ]
 
@@ -117,6 +126,7 @@ def validate_tools_registry(errors: list[str]) -> None:
 
     ids: set[str] = set()
     cats: set[str] = set()
+    health_by_category: dict[str, str] = {}
     for tool in tools:
         if not isinstance(tool, dict):
             fail(errors, "Tool entry is not a mapping")
@@ -139,9 +149,28 @@ def validate_tools_registry(errors: list[str]) -> None:
         hc = tool.get("health_check")
         if hc and not (REPO / str(hc)).is_file():
             fail(errors, f"{tid}: health_check missing: {hc}")
+        if isinstance(cat, str) and cat in EXPECTED_HEALTH_CHECKS:
+            if cat in health_by_category and health_by_category[cat] != hc:
+                fail(errors, f"Duplicate health_check for category {cat}")
+            health_by_category[cat] = str(hc) if hc else ""
+            expected_hc = EXPECTED_HEALTH_CHECKS[cat]
+            if hc != expected_hc:
+                fail(
+                    errors,
+                    f"{tid}: category {cat} health_check must be {expected_hc}, got {hc}",
+                )
 
     if cats != REQUIRED_FAMILIES:
         fail(errors, f"Tool categories must cover families: missing {REQUIRED_FAMILIES - cats}")
+
+    for family, expected_hc in EXPECTED_HEALTH_CHECKS.items():
+        if family not in health_by_category:
+            fail(errors, f"No tool registered health_check for capability family: {family}")
+        elif health_by_category[family] != expected_hc:
+            fail(
+                errors,
+                f"Capability family {family} must use {expected_hc}, got {health_by_category[family]}",
+            )
 
 
 def validate_tool_security(errors: list[str]) -> None:

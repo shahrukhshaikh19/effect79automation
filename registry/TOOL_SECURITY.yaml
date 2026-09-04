@@ -114,7 +114,25 @@ records:
     credential_access: "no"
     review_status: reviewed
     risk_classification: low
-    notes: Inspects policy files and shell availability only
+    notes: Inspects shell policy files and shell availability only
+
+  - path_or_tool: validation/check_filesystem_tool.py
+    category: filesystem
+    runtime_role: health_check
+    filesystem_access: "yes"
+    network_access: "no"
+    subprocess_execution: "no"
+    shell_execution: "no"
+    package_install_behavior: "no"
+    environment_variable_access: unknown
+    destructive_write_delete_behavior: "yes"
+    external_binary_requirements: python
+    credential_access: "no"
+    review_status: reviewed
+    risk_classification: low
+    notes: >
+      Creates/modifies/deletes temporary probe files only under validation/evidence/fs-health-*;
+      cleanup verified; no user/project file access; no subprocess shell for FS operations
 
   - path_or_tool: validation/validate_tools.py
     category: validation
