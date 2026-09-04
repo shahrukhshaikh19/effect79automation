@@ -24,3 +24,19 @@ lifecycle_statuses:
   - INVALIDATED
 
 benchmarks: []
+
+# FROZEN lock record schema (populated when a benchmark is frozen — not before operator input):
+# benchmarks:
+#   - benchmark_id: BM-001
+#     contract_version: "1.0"
+#     status: FROZEN
+#     registration_path: benchmarks/BM-001/REGISTRATION.yaml
+#     frozen_contract_sha256: "<sha256 — independent anchor>"
+#     frozen_commit_sha: "<git commit sha at freeze>"
+#     frozen_at: "<iso8601 timestamp>"
+#     versions:
+#       - contract_version: "1.0"
+#         parent_version: null
+#         frozen_contract_sha256: "<sha256>"
+#         frozen_commit_sha: "<sha>"
+#         revision_reason: "initial freeze"

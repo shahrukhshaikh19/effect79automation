@@ -1,9 +1,8 @@
-"""PF-1 benchmark registration adversarial tests PF1-A01..PF1-A12."""
+"""PF-1 benchmark registration adversarial tests PF1-A01..PF1-A15."""
 
 from __future__ import annotations
 
 import copy
-import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -16,7 +15,10 @@ if str(REPO) not in sys.path:
 
 from validation.validate_benchmark_registration import (
     canonical_hash,
+    classify_changed_paths,
+    validate_frozen_lock_against_registry,
     validate_registration_file,
+    validate_registry_data,
 )
 
 
@@ -66,24 +68,74 @@ class BenchmarkRegistrationAdversarialTests(unittest.TestCase):
         return errors
 
     def test_pf1_a01_duplicate_id_detection(self) -> None:
-        registry = REPO / "registry" / "BENCHMARKS.yaml"
-        import yaml
+        errors: list[str] = []
+        validate_registry_data(
+            {
+                "phase": "PF-1",
+                "benchmarks": [
+                    {"benchmark_id": "BM-001", "status": "DRAFT"},
+                    {"benchmark_id": "BM-001", "status": "DRAFT"},
+                ],
+            },
+            errors,
+        )
+        self.assertTrue(any("Duplicate benchmark_id" in e for e in errors))
 
-        data = yaml.safe_load(registry.read_text(encoding="utf-8"))
-        data["benchmarks"] = [
-            {"benchmark_id": "BM-001", "status": "DRAFT"},
-            {"benchmark_id": "BM-001", "status": "DRAFT"},
-        ]
-        seen: set[str] = set()
-        dup = False
-        for entry in data["benchmarks"]:
-            bid = entry["benchmark_id"]
-            if bid in seen:
-                dup = True
-            seen.add(bid)
-        self.assertTrue(dup)
+    def test_pf1_a02a_frozen_mutation_registry_anchor_old(self) -> None:
+        reg = _minimal_registration(status="FROZEN")
+        reg["operator_confirmation"] = {
+            "brief_correct": "confirmed",
+            "references_correct": "confirmed",
+            "acceptance_contract_correct": "confirmed",
+        }
+        original_hash = canonical_hash(reg)
+        reg["title"] = "Changed after freeze"
+        reg["benchmark_contract_sha256"] = canonical_hash(reg)
+        registry_entry = {
+            "benchmark_id": "BM-001",
+            "contract_version": "1.0",
+            "status": "FROZEN",
+            "frozen_contract_sha256": original_hash,
+        }
+        errors: list[str] = []
+        validate_frozen_lock_against_registry(reg, registry_entry, errors)
+        self.assertTrue(any("registry anchor != computed hash" in e for e in errors))
 
-    def test_pf1_a02_frozen_modified_without_version(self) -> None:
+    def test_pf1_a02b_frozen_registry_version_mismatch(self) -> None:
+        reg = _minimal_registration(status="FROZEN", contract_version="1.0")
+        h = canonical_hash(reg)
+        reg["benchmark_contract_sha256"] = h
+        reg["operator_confirmation"] = {
+            "brief_correct": "confirmed",
+            "references_correct": "confirmed",
+            "acceptance_contract_correct": "confirmed",
+        }
+        registry_entry = {
+            "benchmark_id": "BM-001",
+            "contract_version": "2.0",
+            "status": "FROZEN",
+            "frozen_contract_sha256": h,
+        }
+        errors: list[str] = []
+        validate_frozen_lock_against_registry(reg, registry_entry, errors)
+        self.assertTrue(any("contract_version mismatch" in e for e in errors))
+
+    def test_pf1_a02c_explicit_revision_metadata(self) -> None:
+        reg = _minimal_registration(
+            status="FROZEN",
+            contract_version="1.1",
+            revision={"version": "1.1", "parent_version": "1.0", "reason": "operator scope change"},
+        )
+        reg["operator_confirmation"] = {
+            "brief_correct": "confirmed",
+            "references_correct": "confirmed",
+            "acceptance_contract_correct": "confirmed",
+        }
+        reg["benchmark_contract_sha256"] = canonical_hash(reg)
+        errors = self._validate(reg)
+        self.assertFalse(any("revision.version required" in e for e in errors))
+
+    def test_pf1_a02_legacy_hash_mismatch(self) -> None:
         reg = _minimal_registration(status="FROZEN")
         reg["benchmark_contract_sha256"] = canonical_hash(reg)
         reg["operator_confirmation"] = {
@@ -108,19 +160,24 @@ class BenchmarkRegistrationAdversarialTests(unittest.TestCase):
         reg["activate"] = ["ACOS-01", "ACOS-06"]
         import yaml
 
-        text = yaml.dump(reg)
-        errors: list[str] = []
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "REGISTRATION.yaml"
-            path.write_text(text, encoding="utf-8")
-            from validation.validate_benchmark_registration import validate_registration_file
-
+            path.write_text(yaml.dump(reg), encoding="utf-8")
+            errors: list[str] = []
             validate_registration_file(path, errors)
         self.assertTrue(errors)
 
-    def test_pf1_a05_global_aesthetic_promotion(self) -> None:
+    def test_pf1_a05a_operator_global_aesthetic_preserved(self) -> None:
         reg = _minimal_registration()
         reg["operator_input"]["original_text"] = "Set global house style to always use glassmorphism"
+        errors = self._validate(reg)
+        self.assertFalse(any("Global aesthetic" in e for e in errors))
+
+    def test_pf1_a05b_executable_global_aesthetic_rejected(self) -> None:
+        reg = _minimal_registration()
+        reg["creative_requirements"] = [
+            {"description": "Promote global house style for all benchmarks", "source": {"type": "derived"}}
+        ]
         errors = self._validate(reg)
         self.assertTrue(any("Global aesthetic" in e for e in errors))
 
@@ -156,8 +213,6 @@ class BenchmarkRegistrationAdversarialTests(unittest.TestCase):
             path = Path(tmp) / "REGISTRATION.yaml"
             path.write_text(yaml.dump(reg), encoding="utf-8")
             errors: list[str] = []
-            from validation.validate_benchmark_registration import validate_registration_file
-
             validate_registration_file(path, errors)
         self.assertTrue(errors)
 
@@ -172,11 +227,28 @@ class BenchmarkRegistrationAdversarialTests(unittest.TestCase):
         phases = yaml.safe_load((REPO / "registry" / "PHASES.yaml").read_text(encoding="utf-8"))
         self.assertTrue((phases.get("foundation_ready") or {}).get("declared"))
 
-    def test_pf1_a11_license_bypass_forbidden(self) -> None:
+    def test_pf1_a11a_operator_license_request_preserved(self) -> None:
         reg = _minimal_registration()
-        reg["operator_input"]["original_text"] = "Use EXT-FE-01 with license_review_acknowledged bypass"
+        reg["operator_input"]["original_text"] = "Use EXT-FE-01 despite unresolved license."
+        reg["constraint_evaluation"] = [
+            {
+                "source_ref": "operator_input",
+                "original_request": "Use EXT-FE-01 despite unresolved license.",
+                "status": "REJECTED_CONSTRAINT",
+                "reason_code": "LICENSE_BLOCKED",
+                "reason": "authoritative license unresolved",
+            }
+        ]
         errors = self._validate(reg)
-        self.assertTrue(any("License bypass" in e for e in errors))
+        self.assertFalse(any("License bypass forbidden" in e for e in errors))
+
+    def test_pf1_a11b_normalized_license_bypass_rejected(self) -> None:
+        reg = _minimal_registration()
+        reg["tool_requirements"] = {
+            "frontend": {"required": True, "license_review_acknowledged": True, "skill": "EXT-FE-01"}
+        }
+        errors = self._validate(reg)
+        self.assertTrue(any("License bypass forbidden" in e for e in errors))
 
     def test_pf1_a12_contract_hash_mismatch(self) -> None:
         reg = _minimal_registration(status="FROZEN")
@@ -188,6 +260,18 @@ class BenchmarkRegistrationAdversarialTests(unittest.TestCase):
         }
         errors = self._validate(reg)
         self.assertTrue(any("hash mismatch" in e for e in errors))
+
+    def test_pf1_a13_foundation_policy_mutation_forbidden(self) -> None:
+        violations = classify_changed_paths(["core/QUALITY_GATES.md"])
+        self.assertTrue(any("forbidden foundation path" in v for v in violations))
+
+    def test_pf1_a14_allowed_pf1_registration_file(self) -> None:
+        violations = classify_changed_paths(["benchmarks/README.md", "validation/validate_benchmark_registration.py"])
+        self.assertEqual(violations, [])
+
+    def test_pf1_a15_unexpected_runtime_modification(self) -> None:
+        violations = classify_changed_paths(["runtime/routing/engine.py"])
+        self.assertTrue(any("forbidden foundation path" in v for v in violations))
 
 
 if __name__ == "__main__":

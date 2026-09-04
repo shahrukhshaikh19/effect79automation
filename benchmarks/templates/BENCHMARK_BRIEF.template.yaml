@@ -52,6 +52,13 @@ operator_confirmation:
   references_correct: pending
   acceptance_contract_correct: pending
 
+constraint_evaluation:
+  - source_ref: operator_input
+    original_request: not_supplied
+    status: PENDING_EVALUATION
+    reason_code: not_supplied
+    reason: classify operator requests separately from executable contract
+
 execution_state:
   benchmark_score: null
   benchmark_result: NOT_EXECUTED

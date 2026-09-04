@@ -1,74 +1,54 @@
 # PF-1 — Benchmark Registration Audit
 
 **Date:** 2026-09-05  
-**Baseline SHA:** `525eeb02b8eecc88845e5ed1e8aecbbaa4393d7f`  
-**Scope:** Post-foundation benchmark registration infrastructure only (no execution)
+**Baseline SHA:** `525eeb02b8eecc88845e5ed1e8aecbbaa4393d7f` (final foundation attestation)  
+**PF-1 framework SHA:** `65512f19f237d9b9481c9aab8cbc20d171e9623d`  
+**Scope:** Post-foundation benchmark registration infrastructure + hardening (no execution)
 
 ---
 
-## Scope
+## Hardening fixes (PF-1-fixes)
 
-PF-1 registers benchmark contracts before PF-2 execution. No benchmark output, scoring, routing overrides, or global memory promotion.
-
----
-
-## Files added
-
-| Path | Purpose |
-|------|---------|
-| `registry/BENCHMARKS.yaml` | Benchmark registry index |
-| `benchmarks/README.md` | Scope and lifecycle documentation |
-| `benchmarks/templates/*` | Registration schemas and templates |
-| `validation/benchmark_scope.py` | PF-1 path allowlist for foundation validators |
-| `validation/validate_benchmark_registration.py` | PF-1 registration validator |
-| `validation/tests/benchmark/test_registration_adversarial.py` | PF1-A01..A12 adversarial tests |
+| Fix | Description |
+|-----|-------------|
+| F1 | Independent frozen lock in `registry/BENCHMARKS.yaml` — triple hash (computed = embedded = registry anchor) |
+| F2 | `operator_input.original_text` is evidence only; policy scans target executable contract fields |
+| F3 | Foundation immutability via `git diff` against `525eeb0` with explicit allowlist |
+| F4 | PF1-A01 calls production `validate_registry_data()` |
 
 ---
 
-## Registration architecture
+## Frozen contract anchoring
 
-- Stable benchmark IDs (`BM-001`, …)
-- Operator input preserved separately from normalized brief
-- Acceptance contract with applicable dimensions and deterministic weights
-- Evidence plan frozen before execution
-- Contract hash (`benchmark_contract_sha256`) excludes execution fields
+When a benchmark reaches FROZEN:
 
----
+```text
+computed hash(REGISTRATION.yaml)
+== REGISTRATION.yaml benchmark_contract_sha256
+== registry/BENCHMARKS.yaml frozen_contract_sha256
+```
 
-## Immutability mechanism
+Registry also records `contract_version`, optional `versions[]` history, `frozen_commit_sha`, `frozen_at`.
 
-- Status lifecycle: DRAFT → INPUT_REQUIRED → REGISTERED → FROZEN
-- FROZEN requires contract hash, operator confirmation, evidence plan, hard failures
-- Revision/version fields for contract changes (no silent mutation)
+Silent same-version mutation with recomputed local hash fails because registry anchor does not match.
 
 ---
 
-## Hash semantics
+## Operator input model
 
-SHA-256 over canonical JSON of registration excluding: `contract_hash`, `benchmark_contract_sha256`, `execution_state`, scores, evidence outputs, frozen_at.
-
----
-
-## Validator coverage
-
-- Foundation ready gate
-- PF phase state (PF-1 IN_PROGRESS; PF-2..5 NOT_STARTED)
-- Infrastructure presence
-- Registration file schema semantics
-- No manual skill routing, license bypass, global aesthetic promotion
-- No execution artifacts or pre-execution scores
+- `operator_input.original_text` — immutable source evidence (may contain blocked requests)
+- `constraint_evaluation[]` — classifies operator requests vs executable contract
+- Executable fields scanned: `normalized_brief`, requirements, acceptance, tools, etc.
 
 ---
 
-## Adversarial tests
+## Foundation immutability
 
-PF1-A01 through PF1-A12 implemented in `validation/tests/benchmark/`.
+Baseline: `525eeb02b8eecc88845e5ed1e8aecbbaa4393d7f`  
+Forbidden changes: `core/`, `skills/acos/`, `runtime/`, `adapters/`, routing/runtime policies, canonical master, AGENTS.md  
+Allowed: PF-1 registration infrastructure + narrowly scoped validator compatibility files.
 
----
-
-## Foundation regression
-
-All A–G validators re-run after PF-1 changes — must remain PASS.
+`tested_implementation_sha` remains `e0bd72b` (unchanged).
 
 ---
 
@@ -76,26 +56,9 @@ All A–G validators re-run after PF-1 changes — must remain PASS.
 
 ```text
 BENCHMARK_INPUT_REQUIRED
+benchmarks registered = 0
+BM-001 absent
 ```
-
-No operator benchmark subject supplied. BM-001 not invented.
-
----
-
-## Missing operator inputs
-
-1. What should ACOS build/test?
-2. What is the primary objective?
-3. What references/assets are supplied?
-4. What requirements are mandatory?
-5. What must it specifically avoid?
-6. Which target devices/viewports matter?
-
----
-
-## PF-2 boundary
-
-PF-2 NOT_STARTED. No benchmark execution, HTML/CSS, 3D production, or scoring.
 
 ---
 
@@ -104,5 +67,11 @@ PF-2 NOT_STARTED. No benchmark execution, HTML/CSS, 3D production, or scoring.
 ```text
 PF-1 = IN_PROGRESS / INPUT_REQUIRED
 PF-2..PF-5 = NOT_STARTED
-FOUNDATION_READY = VALID (unchanged tested_implementation_sha)
+FOUNDATION_READY = VALID
 ```
+
+---
+
+## PF-2 boundary
+
+No benchmark execution, scoring, or BM-001 creation.
