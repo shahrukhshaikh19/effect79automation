@@ -1,6 +1,6 @@
 benchmark_id: BM-001
-contract_version: "1.0"
-status: FROZEN
+contract_version: "1.1"
+status: REGISTERED
 
 evidence_plan:
   - evidence_id: E-001

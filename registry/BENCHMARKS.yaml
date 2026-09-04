@@ -26,15 +26,21 @@ lifecycle_statuses:
 benchmarks:
   - benchmark_id: BM-001
     title: Premium Interactive Digital Experience — Fictional High-End Technology Product
-    contract_version: "1.0"
-    status: FROZEN
+    contract_version: "1.1"
+    status: REGISTERED
     registration_path: benchmarks/BM-001/REGISTRATION.yaml
-    frozen_contract_sha256: 7120530bc4a4064795bdb81fe01a74d559388dfeed14050da86bd9e6b6131311
-    frozen_source_commit_sha: f561ae1e6e16ebb7e97f0206d671cd7ca71e7e95
-    frozen_at: "2026-09-04T20:10:00Z"
+    operator_confirmation_status: pending
+    revision:
+      parent_version: "1.0"
+      reason: integrity_correction_unverified_operator_confirmation_in_v1_0
     versions:
       - contract_version: "1.0"
         parent_version: null
+        status: FROZEN
         frozen_contract_sha256: 7120530bc4a4064795bdb81fe01a74d559388dfeed14050da86bd9e6b6131311
         frozen_source_commit_sha: f561ae1e6e16ebb7e97f0206d671cd7ca71e7e95
+        frozen_at: "2026-09-04T20:10:00Z"
         revision_reason: initial freeze
+        integrity_defect: operator_confirmation_not_explicitly_provided
+        superseded_by: "1.1"
+        attestation_commit_sha: 4cfd614d4e257d8219ef27de138410fbbf85d90c

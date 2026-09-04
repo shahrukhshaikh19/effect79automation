@@ -1,6 +1,6 @@
 benchmark_id: BM-001
-contract_version: "1.0"
-status: FROZEN
+contract_version: "1.1"
+status: REGISTERED
 
 scoring_note: >
   Benchmark score != ACOS Quality Gate status. ACOS certified Quality Gate remains
@@ -141,8 +141,8 @@ weight_normalization:
   enforced: true
 
 revision:
-  version: "1.0"
-  parent_version: null
-  reason: initial_operator_registration
-  changed_by: operator
-  changed_at: "2026-09-04T20:05:00Z"
+  version: "1.1"
+  parent_version: "1.0"
+  reason: integrity_correction_pending_operator_confirmation
+  changed_by: system_integrity_correction
+  changed_at: "2026-09-04T20:45:00Z"

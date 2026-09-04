@@ -110,14 +110,14 @@ Unanchored foundation validator paths in allowlist → FAIL.
 ## Benchmark registration state
 
 ```text
-PF-1 COMPLETE
-BM-001 v1.0 FROZEN
-benchmarks registered = 1
+PF-1 IN_PROGRESS — operator contract approval pending
+BM-001 v1.0 FROZEN (historical — integrity defect: unverified operator_confirmation)
+BM-001 v1.1 REGISTERED (pending operator confirmation — not frozen)
 benchmark execution = NOT_EXECUTED
-benchmark_score = null
+PF-2 = NOT_STARTED
 ```
 
-### BM-001 freeze provenance
+### BM-001 v1.0 historical freeze (preserved)
 
 | Field | Value |
 |-------|-------|
@@ -125,17 +125,17 @@ benchmark_score = null
 | contract_version | 1.0 |
 | frozen_source_commit_sha | f561ae1e6e16ebb7e97f0206d671cd7ca71e7e95 |
 | frozen_contract_sha256 | 7120530bc4a4064795bdb81fe01a74d559388dfeed14050da86bd9e6b6131311 |
-| registration_path | benchmarks/BM-001/REGISTRATION.yaml |
+| attestation_commit_sha | 4cfd614d4e257d8219ef27de138410fbbf85d90c |
 
-Two-step freeze: source artifacts committed first; registry attestation in separate commit.
+v1.0 Git history not rewritten. Integrity defect: operator_confirmation marked confirmed without explicit operator approval.
 
 ---
 
 ## Phase state
 
 ```text
-PF-1 = COMPLETE
-BM-001 v1.0 = FROZEN
+PF-1 = IN_PROGRESS (operator contract approval pending)
+BM-001 v1.1 = REGISTERED (not frozen)
 PF-2..PF-5 = NOT_STARTED
 FOUNDATION_READY = VALID
 tested_implementation_sha = e0bd72b (unchanged)
@@ -145,4 +145,4 @@ tested_implementation_sha = e0bd72b (unchanged)
 
 ## PF-2 boundary
 
-No benchmark execution, scoring, or implementation artifacts. BM-001 registration frozen only.
+No benchmark execution or scoring. BM-001 v1.1 awaits operator contract approval before re-freeze.

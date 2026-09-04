@@ -1,7 +1,7 @@
 # ACOS v1.2 — Implementation Progress Ledger
 
 **Last updated:** 2026-09-05  
-**Current phase:** PF-1 — Benchmark registration (COMPLETE)
+**Current phase:** PF-1 — Benchmark registration (IN PROGRESS — operator contract approval pending)
 
 ---
 
@@ -32,10 +32,12 @@
 | PF1-2 — Templates + README | COMPLETE | `benchmarks/templates/`, `benchmarks/README.md` |
 | PF1-3 — Registration validator | COMPLETE | `validation/validate_benchmark_registration.py` |
 | PF1-4 — Adversarial tests | COMPLETE | PF1-A01..A12 |
-| PF1-5 — First benchmark frozen | COMPLETE | BM-001 v1.0 FROZEN — source `f561ae1`, hash `7120530b...` |
+| PF1-5 — First benchmark frozen | PARTIAL | v1.0 FROZEN (historical); v1.1 REGISTERED pending operator confirmation |
+| PF1-6 — Operator contract approval | PENDING | Awaiting explicit operator approval of derived acceptance contract |
 
-**PF-1:** COMPLETE  
-**BM-001 v1.0:** FROZEN (registration only — not executed)  
+**PF-1:** IN_PROGRESS (operator contract approval pending)  
+**BM-001 v1.0:** FROZEN (historical — unverified operator_confirmation preserved in Git)  
+**BM-001 v1.1:** REGISTERED (pending operator confirmation — not frozen)  
 **PF-2..PF-5:** NOT_STARTED
 
 ---

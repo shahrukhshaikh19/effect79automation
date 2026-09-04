@@ -1,8 +1,8 @@
 benchmark_id: BM-001
 title: Premium Interactive Digital Experience — Fictional High-End Technology Product
-status: FROZEN
+status: REGISTERED
 created_at: '2026-09-04T20:05:00Z'
-contract_version: '1.0'
+contract_version: '1.1'
 operator_input:
   source_file: benchmarks/BM-001/ORIGINAL_INPUT.md
   original_text: "# BM-001 — OPERATOR INPUT\n\n## What to build/test\n\nBuild a production-quality, premium interactive digital experience for a fictional high-end technology product.\n\nThe benchmark must test whether ACOS can take a high-level creative brief and produce an original, polished, responsive, visually distinctive web experience without falling into generic AI-generated design patterns.\n\nThis is a benchmark of the complete ACOS creative-production workflow, not a template recreation exercise.\n\n## Primary objective\n\nEvaluate whether ACOS can produce work that feels intentionally art-directed, technically polished, premium, memorable, and suitable for a real high-end commercial website.\n\nThe result should demonstrate strong:\n\n* creative direction\n* visual hierarchy\n* art direction\n* typography\n* composition\n* interaction design\n* motion design\n* responsive art direction\n* technical implementation quality\n* performance awareness\n* visual consistency\n\n3D may\
@@ -164,8 +164,8 @@ creative_requirements:
     source_ref: product
 acceptance_contract:
   benchmark_id: BM-001
-  contract_version: '1.0'
-  status: FROZEN
+  contract_version: '1.1'
+  status: REGISTERED
   scoring_note: 'Benchmark score != ACOS Quality Gate status. ACOS certified Quality Gate remains authoritative. Hard rejects cannot be averaged away. Benchmark criteria may add measurability but must not bypass ACOS hard-reject rules or evidence requirements.
 
     '
@@ -300,11 +300,11 @@ acceptance_contract:
     rule: applicable_dimension_weights_sum_to_100
     enforced: true
   revision:
-    version: '1.0'
-    parent_version: null
-    reason: initial_operator_registration
-    changed_by: operator
-    changed_at: '2026-09-04T20:05:00Z'
+    version: '1.1'
+    parent_version: '1.0'
+    reason: Integrity correction — pending operator confirmation
+    changed_by: system_integrity_correction
+    changed_at: '2026-09-04T20:45:00Z'
 evidence_plan:
 - evidence_id: E-001
   dimension: responsive
@@ -427,17 +427,26 @@ constraint_evaluation:
   reason_code: NO_GLOBAL_MEMORY_PROMOTION
   reason: Benchmark independence preserved; global memory promotion forbidden.
 operator_confirmation:
-  brief_correct: confirmed
-  references_correct: confirmed
-  acceptance_contract_correct: confirmed
-  confirmed_at: '2026-09-04T20:05:00Z'
-  confirmed_by: operator
+  brief_correct: pending
+  references_correct: pending
+  acceptance_contract_correct: pending
+  confirmed_at: null
+  confirmed_by: null
+  note: Awaiting explicit operator review and approval of derived acceptance contract.
 execution_state:
   benchmark_score: null
   benchmark_result: NOT_EXECUTED
 revision:
-  version: '1.0'
-  parent_version: null
-  reason: initial_operator_registration
+  version: '1.1'
+  parent_version: '1.0'
+  reason: Correct unverified operator_confirmation in frozen v1.0; preserve v1.0 history without mutation.
+  changed_by: system_integrity_correction
+  changed_at: '2026-09-04T20:45:00Z'
 global_memory_promotion: false
-benchmark_contract_sha256: 7120530bc4a4064795bdb81fe01a74d559388dfeed14050da86bd9e6b6131311
+integrity_correction:
+  supersedes_active_version: '1.0'
+  v1_0_frozen_source_commit_sha: f561ae1e6e16ebb7e97f0206d671cd7ca71e7e95
+  v1_0_frozen_contract_sha256: 7120530bc4a4064795bdb81fe01a74d559388dfeed14050da86bd9e6b6131311
+  v1_0_integrity_defect: operator_confirmation_marked_confirmed_without_explicit_operator_approval
+  v1_0_preservation: v1.0 remains immutable in Git history; not rewritten or amended
+  corrected_at: '2026-09-04T20:45:00Z'
