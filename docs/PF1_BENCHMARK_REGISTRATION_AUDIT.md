@@ -4,7 +4,9 @@
 **Baseline SHA:** `525eeb02b8eecc88845e5ed1e8aecbbaa4393d7f` (final foundation attestation)  
 **PF-1 framework SHA:** `65512f19f237d9b9481c9aab8cbc20d171e9623d`  
 **PF-1 hardening SHA:** `e3d9988e26881c23aeb9acf93f3c0448dfba7981`  
-**Scope:** Post-foundation benchmark registration infrastructure + integrity hardening (no execution)
+**PF-1 attestation SHA:** `5e13afb9ece829a1e97be4399d93a3d1d56165e7` (pre-BM-001)  
+**BM-001 source SHA:** `f561ae1e6e16ebb7e97f0206d671cd7ca71e7e95`  
+**Scope:** Post-foundation benchmark registration + BM-001 v1.0 freeze (no execution)
 
 ---
 
@@ -108,17 +110,32 @@ Unanchored foundation validator paths in allowlist → FAIL.
 ## Benchmark registration state
 
 ```text
-BENCHMARK_INPUT_REQUIRED
-benchmarks registered = 0
-BM-001 absent
+PF-1 COMPLETE
+BM-001 v1.0 FROZEN
+benchmarks registered = 1
+benchmark execution = NOT_EXECUTED
+benchmark_score = null
 ```
+
+### BM-001 freeze provenance
+
+| Field | Value |
+|-------|-------|
+| benchmark_id | BM-001 |
+| contract_version | 1.0 |
+| frozen_source_commit_sha | f561ae1e6e16ebb7e97f0206d671cd7ca71e7e95 |
+| frozen_contract_sha256 | 7120530bc4a4064795bdb81fe01a74d559388dfeed14050da86bd9e6b6131311 |
+| registration_path | benchmarks/BM-001/REGISTRATION.yaml |
+
+Two-step freeze: source artifacts committed first; registry attestation in separate commit.
 
 ---
 
 ## Phase state
 
 ```text
-PF-1 = IN_PROGRESS / INPUT_REQUIRED
+PF-1 = COMPLETE
+BM-001 v1.0 = FROZEN
 PF-2..PF-5 = NOT_STARTED
 FOUNDATION_READY = VALID
 tested_implementation_sha = e0bd72b (unchanged)
@@ -128,4 +145,4 @@ tested_implementation_sha = e0bd72b (unchanged)
 
 ## PF-2 boundary
 
-No benchmark execution, scoring, or BM-001 creation.
+No benchmark execution, scoring, or implementation artifacts. BM-001 registration frozen only.

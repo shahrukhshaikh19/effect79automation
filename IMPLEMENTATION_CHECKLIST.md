@@ -108,9 +108,9 @@ Skills:
 
 ## POST-FOUNDATION — PF roadmap
 
-### PF-1 — Benchmark registration (IN PROGRESS / INPUT_REQUIRED)
+### PF-1 — Benchmark registration (COMPLETE)
 - [x] registration framework (registry, templates, validator)
-- [ ] first real benchmark registered and frozen (BM-001)
+- [x] first real benchmark registered and frozen (BM-001 v1.0)
 
 ### PF-2 — Correction from benchmark evidence (NOT STARTED)
 - [ ] ACOS corrections from benchmark evidence

@@ -23,20 +23,18 @@ lifecycle_statuses:
   - COMPLETED
   - INVALIDATED
 
-benchmarks: []
-
-# FROZEN lock record schema (populated when a benchmark is frozen — not before operator input):
-# benchmarks:
-#   - benchmark_id: BM-001
-#     contract_version: "1.0"
-#     status: FROZEN
-#     registration_path: benchmarks/BM-001/REGISTRATION.yaml
-#     frozen_contract_sha256: "<sha256 — independent anchor>"
-#     frozen_source_commit_sha: "<git commit containing frozen registration artifacts>"
-#     frozen_at: "<iso8601 timestamp>"
-#     versions:
-#       - contract_version: "1.0"
-#         parent_version: null
-#         frozen_contract_sha256: "<sha256>"
-#         frozen_source_commit_sha: "<git commit sha>"
-#         revision_reason: "initial freeze"
+benchmarks:
+  - benchmark_id: BM-001
+    title: Premium Interactive Digital Experience — Fictional High-End Technology Product
+    contract_version: "1.0"
+    status: FROZEN
+    registration_path: benchmarks/BM-001/REGISTRATION.yaml
+    frozen_contract_sha256: 7120530bc4a4064795bdb81fe01a74d559388dfeed14050da86bd9e6b6131311
+    frozen_source_commit_sha: f561ae1e6e16ebb7e97f0206d671cd7ca71e7e95
+    frozen_at: "2026-09-04T20:10:00Z"
+    versions:
+      - contract_version: "1.0"
+        parent_version: null
+        frozen_contract_sha256: 7120530bc4a4064795bdb81fe01a74d559388dfeed14050da86bd9e6b6131311
+        frozen_source_commit_sha: f561ae1e6e16ebb7e97f0206d671cd7ca71e7e95
+        revision_reason: initial freeze

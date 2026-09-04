@@ -1,7 +1,7 @@
 # ACOS v1.2 — Implementation Progress Ledger
 
 **Last updated:** 2026-09-05  
-**Current phase:** G — Foundation validation / certification (COMPLETE)
+**Current phase:** PF-1 — Benchmark registration (COMPLETE)
 
 ---
 
@@ -32,9 +32,10 @@
 | PF1-2 — Templates + README | COMPLETE | `benchmarks/templates/`, `benchmarks/README.md` |
 | PF1-3 — Registration validator | COMPLETE | `validation/validate_benchmark_registration.py` |
 | PF1-4 — Adversarial tests | COMPLETE | PF1-A01..A12 |
-| PF1-5 — First benchmark frozen | PENDING | **BENCHMARK_INPUT_REQUIRED** |
+| PF1-5 — First benchmark frozen | COMPLETE | BM-001 v1.0 FROZEN — source `f561ae1`, hash `7120530b...` |
 
-**PF-1:** IN_PROGRESS / INPUT_REQUIRED  
+**PF-1:** COMPLETE  
+**BM-001 v1.0:** FROZEN (registration only — not executed)  
 **PF-2..PF-5:** NOT_STARTED
 
 ---
