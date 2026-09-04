@@ -28,6 +28,21 @@
 | R3 | Foundation compatibility files content-anchored via `PF1_FOUNDATION_COMPATIBILITY_LOCK.yaml` |
 | R4 | Schema/docs use `frozen_source_commit_sha` (not ambiguous `frozen_commit_sha`) |
 
+## Freeze-attestation provenance (PF-1 p2)
+
+Each frozen `benchmark_id + contract_version` anchors its **first registry freeze attestation** via Git history (`git log --reverse registry/BENCHMARKS.yaml`).
+
+Validation proves:
+
+```text
+current frozen_source_commit_sha == first attestation frozen_source_commit_sha
+current frozen_contract_sha256 == first attestation frozen_contract_sha256
+```
+
+Then independently verifies source commit → historical registration → hash chain.
+
+Same-version source-commit repoint (A→B) or hash rewrite fails even when current registry and registration are internally consistent.
+
 ---
 
 ## Historical frozen contract anchoring

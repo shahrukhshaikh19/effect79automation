@@ -255,7 +255,15 @@ def validate_phase_state(errors: list[str]) -> None:
             fail(errors, f"{other} must remain NOT_STARTED during PF-1")
 
 
-def validate_registry_data(registry: dict[str, Any], errors: list[str]) -> None:
+def validate_registry_data(
+    registry: dict[str, Any],
+    errors: list[str],
+    *,
+    load_from_commit=None,
+    find_first_attestation=None,
+) -> None:
+    load_fn = load_file_from_commit if load_from_commit is None else load_from_commit
+    find_fn = find_first_freeze_attestation_commit if find_first_attestation is None else find_first_attestation
     if registry.get("phase") != "PF-1":
         fail(errors, "BENCHMARKS.yaml phase must be PF-1")
     benchmarks = registry.get("benchmarks")
@@ -276,7 +284,12 @@ def validate_registry_data(registry: dict[str, Any], errors: list[str]) -> None:
         seen.add(bid)
 
         if entry.get("status") == "FROZEN":
-            _validate_registry_frozen_lock(entry, errors)
+            _validate_registry_frozen_lock(
+                entry,
+                errors,
+                load_from_commit=load_fn,
+                find_first_attestation=find_fn,
+            )
 
 
 def load_compatibility_lock() -> dict[str, str]:
@@ -351,13 +364,149 @@ def load_file_from_commit(commit_sha: str, repo_path: str) -> tuple[str | None, 
     return proc.stdout.decode("utf-8"), None
 
 
+def list_registry_file_commits() -> tuple[list[str], str | None]:
+    proc = subprocess.run(
+        ["git", "log", "--reverse", "--format=%H", "--", "registry/BENCHMARKS.yaml"],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        err = proc.stderr.strip() or proc.stdout.strip() or "git log failed"
+        return [], err
+    return [line.strip() for line in proc.stdout.splitlines() if line.strip()], None
+
+
+def extract_version_attestation(entry: dict[str, Any], contract_version: str) -> dict[str, Any] | None:
+    if not isinstance(entry, dict):
+        return None
+    bid = entry.get("benchmark_id")
+    version = str(contract_version)
+
+    if str(entry.get("contract_version", "")) == version and entry.get("status") == "FROZEN":
+        source = entry.get("frozen_source_commit_sha")
+        frozen_hash = entry.get("frozen_contract_sha256")
+        if source and frozen_hash:
+            return {
+                "benchmark_id": bid,
+                "contract_version": version,
+                "frozen_source_commit_sha": source,
+                "frozen_contract_sha256": frozen_hash,
+                "registration_path": entry.get("registration_path"),
+            }
+
+    for ver in entry.get("versions") or []:
+        if not isinstance(ver, dict):
+            continue
+        if str(ver.get("contract_version", "")) != version:
+            continue
+        source = ver.get("frozen_source_commit_sha")
+        frozen_hash = ver.get("frozen_contract_sha256")
+        if source and frozen_hash:
+            return {
+                "benchmark_id": bid,
+                "contract_version": version,
+                "frozen_source_commit_sha": source,
+                "frozen_contract_sha256": frozen_hash,
+                "registration_path": ver.get("registration_path") or entry.get("registration_path"),
+            }
+    return None
+
+
+def find_frozen_attestation_in_registry(
+    registry: dict[str, Any],
+    benchmark_id: str,
+    contract_version: str,
+) -> dict[str, Any] | None:
+    benchmarks = registry.get("benchmarks")
+    if not isinstance(benchmarks, list):
+        return None
+    for entry in benchmarks:
+        if not isinstance(entry, dict):
+            continue
+        if str(entry.get("benchmark_id", "")) != benchmark_id:
+            continue
+        attestation = extract_version_attestation(entry, contract_version)
+        if attestation:
+            return attestation
+    return None
+
+
+def find_first_freeze_attestation_commit(
+    benchmark_id: str,
+    contract_version: str,
+    *,
+    load_from_commit=load_file_from_commit,
+    list_commits=list_registry_file_commits,
+) -> tuple[str | None, dict[str, Any] | None, str | None]:
+    commits, list_err = list_commits()
+    if list_err:
+        return None, None, list_err
+    if yaml is None:
+        return None, None, "PyYAML required"
+
+    for commit_sha in commits:
+        content, load_err = load_from_commit(commit_sha, "registry/BENCHMARKS.yaml")
+        if load_err:
+            continue
+        registry = yaml.safe_load(content)
+        if not isinstance(registry, dict):
+            continue
+        attestation = find_frozen_attestation_in_registry(registry, benchmark_id, contract_version)
+        if attestation:
+            record = dict(attestation)
+            record["attestation_commit_sha"] = commit_sha
+            return commit_sha, record, None
+
+    return None, None, None
+
+
+def validate_first_freeze_attestation(
+    registry_entry: dict[str, Any],
+    errors: list[str],
+    *,
+    find_first_attestation=None,
+) -> None:
+    find_fn = find_first_freeze_attestation_commit if find_first_attestation is None else find_first_attestation
+    bid = str(registry_entry.get("benchmark_id", "BM-???"))
+    version = str(registry_entry.get("contract_version", ""))
+    if not version:
+        fail(errors, f"{bid}: FROZEN registry entry requires contract_version")
+        return
+
+    first_commit, first_entry, lookup_err = find_fn(bid, version)
+    if lookup_err:
+        fail(errors, f"{bid} v{version}: first freeze attestation lookup failed: {lookup_err}")
+        return
+    if not first_commit or not first_entry:
+        fail(errors, f"{bid} v{version}: first freeze attestation not found in git history")
+        return
+
+    current_source = registry_entry.get("frozen_source_commit_sha")
+    current_hash = registry_entry.get("frozen_contract_sha256")
+    first_source = first_entry.get("frozen_source_commit_sha")
+    first_hash = first_entry.get("frozen_contract_sha256")
+
+    if str(current_source) != str(first_source):
+        fail(
+            errors,
+            f"{bid} v{version}: frozen_source_commit_sha repointed from first attestation",
+        )
+    if str(current_hash) != str(first_hash):
+        fail(
+            errors,
+            f"{bid} v{version}: frozen_contract_sha256 rewritten from first attestation",
+        )
+
+
 def validate_frozen_provenance(
     registry_entry: dict[str, Any],
     current_registration: dict[str, Any] | None,
     errors: list[str],
     *,
-    load_from_commit=load_file_from_commit,
+    load_from_commit=None,
 ) -> None:
+    load_fn = load_file_from_commit if load_from_commit is None else load_from_commit
     bid = str(registry_entry.get("benchmark_id", "BM-???"))
     source_commit = registry_entry.get("frozen_source_commit_sha")
     reg_path_rel = str(registry_entry.get("registration_path", f"benchmarks/{bid}/REGISTRATION.yaml"))
@@ -374,7 +523,7 @@ def validate_frozen_provenance(
         fail(errors, f"{bid}: {commit_err}")
         return
 
-    content, load_err = load_from_commit(str(source_commit), reg_path_rel)
+    content, load_err = load_fn(str(source_commit), reg_path_rel)
     if load_err:
         fail(errors, f"{bid}: historical registration lookup failed: {load_err}")
         return
@@ -408,7 +557,15 @@ def validate_frozen_provenance(
             fail(errors, f"{bid}: registry anchor != embedded hash (independent lock violation)")
 
 
-def _validate_registry_frozen_lock(entry: dict[str, Any], errors: list[str]) -> None:
+def _validate_registry_frozen_lock(
+    entry: dict[str, Any],
+    errors: list[str],
+    *,
+    load_from_commit=None,
+    find_first_attestation=None,
+) -> None:
+    load_fn = load_file_from_commit if load_from_commit is None else load_from_commit
+    find_fn = find_first_freeze_attestation_commit if find_first_attestation is None else find_first_attestation
     bid = entry.get("benchmark_id")
     reg_path_rel = entry.get("registration_path", f"benchmarks/{bid}/REGISTRATION.yaml")
     reg_path = REPO / reg_path_rel
@@ -421,7 +578,8 @@ def _validate_registry_frozen_lock(entry: dict[str, Any], errors: list[str]) -> 
         fail(errors, f"{bid}: registration file must be a mapping")
         return
 
-    validate_frozen_provenance(entry, reg_data, errors)
+    validate_first_freeze_attestation(entry, errors, find_first_attestation=find_fn)
+    validate_frozen_provenance(entry, reg_data, errors, load_from_commit=load_fn)
 
     embedded_hash = reg_data.get("benchmark_contract_sha256") or reg_data.get("contract_hash")
     computed_hash = canonical_hash(reg_data)
@@ -449,7 +607,17 @@ def _validate_registry_frozen_lock(entry: dict[str, Any], errors: list[str]) -> 
                 continue
             merged_entry = dict(entry)
             merged_entry.update(version_entry)
-            validate_frozen_provenance(merged_entry, None, errors, load_from_commit=load_file_from_commit)
+            validate_first_freeze_attestation(
+                merged_entry,
+                errors,
+                find_first_attestation=find_fn,
+            )
+            validate_frozen_provenance(
+                merged_entry,
+                None,
+                errors,
+                load_from_commit=load_fn,
+            )
 
 
 def validate_registry(errors: list[str]) -> None:
@@ -553,10 +721,18 @@ def validate_frozen_lock_against_registry(
     registry_entry: dict[str, Any],
     errors: list[str],
     *,
-    load_from_commit=load_file_from_commit,
+    load_from_commit=None,
+    find_first_attestation=None,
 ) -> None:
     """Validate historical freeze provenance for fixture/tests without filesystem registry."""
-    validate_frozen_provenance(registry_entry, registration, errors, load_from_commit=load_from_commit)
+    load_fn = load_file_from_commit if load_from_commit is None else load_from_commit
+    find_fn = find_first_freeze_attestation_commit if find_first_attestation is None else find_first_attestation
+    validate_first_freeze_attestation(
+        registry_entry,
+        errors,
+        find_first_attestation=find_fn,
+    )
+    validate_frozen_provenance(registry_entry, registration, errors, load_from_commit=load_fn)
 
     bid = registration.get("benchmark_id", "BM-???")
     embedded_hash = registration.get("benchmark_contract_sha256")

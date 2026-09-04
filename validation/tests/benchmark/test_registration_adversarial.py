@@ -1,4 +1,4 @@
-"""PF-1 benchmark registration adversarial tests PF1-A01..PF1-A24."""
+"""PF-1 benchmark registration adversarial tests PF1-A01..PF1-A29."""
 
 from __future__ import annotations
 
@@ -19,12 +19,32 @@ from validation.validate_benchmark_registration import (
     git_changed_paths,
     load_compatibility_lock,
     validate_compatibility_lock,
+    validate_first_freeze_attestation,
     validate_frozen_lock_against_registry,
     validate_frozen_provenance,
     validate_registration_file,
     validate_registry_data,
-    _is_foundation_compatibility_path,
 )
+
+
+def _mock_first_attestation(registry_entry: dict):
+    def mock_find(bid: str, version: str):
+        return "attest_commit", {
+            "frozen_source_commit_sha": registry_entry["frozen_source_commit_sha"],
+            "frozen_contract_sha256": registry_entry["frozen_contract_sha256"],
+        }, None
+
+    return mock_find
+
+
+def _mock_first_attestation_map(attestations: dict[str, dict]):
+    def mock_find(bid: str, version: str):
+        record = attestations.get(version)
+        if not record:
+            return None, None, None
+        return record.get("attestation_commit", "attest_commit"), record, None
+
+    return mock_find
 
 
 def _minimal_registration(**overrides) -> dict:
@@ -115,7 +135,13 @@ class BenchmarkRegistrationAdversarialTests(unittest.TestCase):
             return yaml.dump(original), None
 
         errors: list[str] = []
-        validate_frozen_lock_against_registry(mutated, registry_entry, errors, load_from_commit=mock_load)
+        validate_frozen_lock_against_registry(
+            mutated,
+            registry_entry,
+            errors,
+            load_from_commit=mock_load,
+            find_first_attestation=_mock_first_attestation(registry_entry),
+        )
         self.assertTrue(
             any("current registration changed from historical frozen contract" in e for e in errors),
             msg=f"errors",
@@ -145,7 +171,13 @@ class BenchmarkRegistrationAdversarialTests(unittest.TestCase):
             return yaml.dump(reg), None
 
         errors: list[str] = []
-        validate_frozen_lock_against_registry(reg, registry_entry, errors, load_from_commit=mock_load)
+        validate_frozen_lock_against_registry(
+            reg,
+            registry_entry,
+            errors,
+            load_from_commit=mock_load,
+            find_first_attestation=_mock_first_attestation(registry_entry),
+        )
         self.assertTrue(any("contract_version mismatch" in e for e in errors))
 
     def test_pf1_a02c_explicit_revision_metadata(self) -> None:
@@ -429,7 +461,13 @@ class BenchmarkRegistrationAdversarialTests(unittest.TestCase):
         }
 
         errors: list[str] = []
-        validate_frozen_lock_against_registry(mutated, registry_entry, errors, load_from_commit=mock_load)
+        validate_frozen_lock_against_registry(
+            mutated,
+            registry_entry,
+            errors,
+            load_from_commit=mock_load,
+            find_first_attestation=_mock_first_attestation(registry_entry),
+        )
         self.assertTrue(
             any(
                 "registry frozen_contract_sha256 != historical registration hash" in e
@@ -437,6 +475,136 @@ class BenchmarkRegistrationAdversarialTests(unittest.TestCase):
                 for e in errors
             )
         )
+
+    def test_pf1_a25_same_version_source_commit_repoint_fails(self) -> None:
+        registry_entry = {
+            "benchmark_id": "BM-001",
+            "contract_version": "1.0",
+            "status": "FROZEN",
+            "registration_path": "benchmarks/BM-001/REGISTRATION.yaml",
+            "frozen_source_commit_sha": "commit_B",
+            "frozen_contract_sha256": "hash_B",
+        }
+
+        def mock_find(bid: str, version: str):
+            return "attest_1", {
+                "frozen_source_commit_sha": "commit_A",
+                "frozen_contract_sha256": "hash_B",
+            }, None
+
+        errors: list[str] = []
+        validate_first_freeze_attestation(registry_entry, errors, find_first_attestation=mock_find)
+        self.assertTrue(any("frozen_source_commit_sha repointed from first attestation" in e for e in errors))
+
+    def test_pf1_a26_same_version_frozen_hash_rewrite_fails(self) -> None:
+        registry_entry = {
+            "benchmark_id": "BM-001",
+            "contract_version": "1.0",
+            "status": "FROZEN",
+            "frozen_source_commit_sha": "commit_A",
+            "frozen_contract_sha256": "hash_B",
+        }
+
+        def mock_find(bid: str, version: str):
+            return "attest_1", {
+                "frozen_source_commit_sha": "commit_A",
+                "frozen_contract_sha256": "hash_A",
+            }, None
+
+        errors: list[str] = []
+        validate_first_freeze_attestation(registry_entry, errors, find_first_attestation=mock_find)
+        self.assertTrue(any("frozen_contract_sha256 rewritten from first attestation" in e for e in errors))
+
+    def test_pf1_a27_first_attestation_missing_fails_closed(self) -> None:
+        registry_entry = {
+            "benchmark_id": "BM-001",
+            "contract_version": "1.0",
+            "status": "FROZEN",
+            "frozen_source_commit_sha": "commit_A",
+            "frozen_contract_sha256": "hash_A",
+        }
+
+        def mock_find(bid: str, version: str):
+            return None, None, None
+
+        errors: list[str] = []
+        validate_first_freeze_attestation(registry_entry, errors, find_first_attestation=mock_find)
+        self.assertTrue(any("first freeze attestation not found in git history" in e for e in errors))
+
+    def test_pf1_a28_untouched_frozen_version_passes(self) -> None:
+        reg = _minimal_registration(status="FROZEN")
+        reg["operator_confirmation"] = {
+            "brief_correct": "confirmed",
+            "references_correct": "confirmed",
+            "acceptance_contract_correct": "confirmed",
+        }
+        reg_hash = canonical_hash(reg)
+        reg["benchmark_contract_sha256"] = reg_hash
+
+        registry_entry = {
+            "benchmark_id": "BM-001",
+            "contract_version": "1.0",
+            "status": "FROZEN",
+            "registration_path": "benchmarks/BM-001/REGISTRATION.yaml",
+            "frozen_source_commit_sha": "e3d9988e26881c23aeb9acf93f3c0448dfba7981",
+            "frozen_contract_sha256": reg_hash,
+        }
+
+        import yaml
+
+        def mock_load(commit_sha: str, repo_path: str) -> tuple[str | None, str | None]:
+            return yaml.dump(reg), None
+
+        errors: list[str] = []
+        validate_frozen_lock_against_registry(
+            reg,
+            registry_entry,
+            errors,
+            load_from_commit=mock_load,
+            find_first_attestation=_mock_first_attestation(registry_entry),
+        )
+        self.assertEqual(errors, [])
+
+    def test_pf1_a29_proper_revision_preserves_v1_history(self) -> None:
+        v10_hash = "hash_v10"
+        v11_hash = "hash_v11"
+        attestations = {
+            "1.0": {
+                "frozen_source_commit_sha": "commit_v10",
+                "frozen_contract_sha256": v10_hash,
+                "attestation_commit": "attest_v10",
+            },
+            "1.1": {
+                "frozen_source_commit_sha": "commit_v11",
+                "frozen_contract_sha256": v11_hash,
+                "attestation_commit": "attest_v11",
+            },
+        }
+        mock_find = _mock_first_attestation_map(attestations)
+
+        v10_entry = {
+            "benchmark_id": "BM-001",
+            "contract_version": "1.0",
+            "frozen_source_commit_sha": "commit_v10",
+            "frozen_contract_sha256": v10_hash,
+        }
+        v11_entry = {
+            "benchmark_id": "BM-001",
+            "contract_version": "1.1",
+            "frozen_source_commit_sha": "commit_v11",
+            "frozen_contract_sha256": v11_hash,
+        }
+
+        errors: list[str] = []
+        validate_first_freeze_attestation(v10_entry, errors, find_first_attestation=mock_find)
+        validate_first_freeze_attestation(v11_entry, errors, find_first_attestation=mock_find)
+        self.assertEqual(errors, [])
+
+        repointed_v10 = dict(v10_entry)
+        repointed_v10["frozen_source_commit_sha"] = "commit_repointed"
+        errors = []
+        validate_first_freeze_attestation(repointed_v10, errors, find_first_attestation=mock_find)
+        self.assertTrue(any("frozen_source_commit_sha repointed from first attestation" in e for e in errors))
 
 
 if __name__ == "__main__":
