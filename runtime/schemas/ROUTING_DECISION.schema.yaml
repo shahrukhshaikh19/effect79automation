@@ -18,12 +18,21 @@ fields:
   activated_skill_ids:
     type: array
     items: string
-    note: Smallest sufficient subset — every ID must exist in registry/SKILLS.yaml or EXTERNAL_SKILLS_LOCK.
+    note: Currently executable skills — adapters load only these IDs now.
+  planned_skill_ids:
+    type: array
+    items: string
+    note: Full routed plan including gate-blocked downstream skills.
+  executable_active_skill_ids:
+    type: array
+    items: string
+    note: Subset of planned skills runnable given current Design Gate state.
   rejected_candidate_skill_ids:
     type: array
     items:
       skill_id: string
       reason: string
+      status: string
   skill_activations:
     type: array
     items:

@@ -202,3 +202,36 @@ FOUNDATION_READY: undeclared
 ---
 
 **Claim:** PHASE F IMPLEMENTED + LOCALLY VALIDATED — awaiting independent certification review.
+
+---
+
+## Certification corrections (2026-09-04)
+
+### F-C1 — License enforcement
+
+- Router reads canonical license state from `registry/EXTERNAL_SKILLS_LOCK.yaml` via `is_skill_license_blocked()`.
+- `license_review_acknowledged` does **not** override `blocked_pending_license_review`.
+- Blocked skills emit `BLOCKED_LICENSE_REVIEW_REQUIRED` with explicit rejection reason.
+
+### F-C2 — Metadata-driven correction routing
+
+- `registry/ROUTING_POLICY.yaml` defines `correction_responsibility` with `owner_domains` and `exclude_roles`.
+- `runtime/correction/route.py` resolves owners from policy — no hard-coded ACOS-01 fallback.
+- Unknown defects → `CORRECTION_ROUTING_REQUIRES_RESOLUTION`.
+- Critics detect defects but are excluded from correction producer role by default.
+
+### F-C3 — Design Gate runtime guard
+
+- `runtime/state/transitions.py::can_transition()` enforces policy `required_before_stages`.
+- Routing splits `planned_skill_ids` vs `executable_active_skill_ids` when gate is PENDING.
+- PENDING/REJECTED/BLOCKED gates block PRODUCTION/SPECIALIST_ROUTING transitions.
+
+### F-C4 — Memory creation/promotion/conflict semantics
+
+- `create_memory_observation()` — normal creation at `observation` only.
+- `promote_memory()` — stateful promotion with evidence and history.
+- Structured `subject_key` + `value` conflict model — same value at different promotion levels is NOT a conflict.
+- Incompatible values or explicit `conflicts_with` → `MEMORY_CONFLICT_REQUIRES_RESOLUTION`.
+- Model-specific scope cannot silently migrate to global.
+
+**Correction claim:** PHASE F CERTIFICATION CORRECTIONS COMPLETE — awaiting independent review.

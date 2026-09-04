@@ -6,6 +6,9 @@ import uuid
 from typing import Any
 
 from runtime.common.registry_loader import default_retry_budget
+from runtime.correction.route import route_defect_to_skill
+
+__all__ = ["create_correction_request", "route_defect_to_skill"]
 
 
 def create_correction_request(
@@ -41,13 +44,3 @@ def create_correction_request(
         "status": status,
     }
 
-
-def route_defect_to_skill(defect_type: str, routing_policy_skill_domains: dict[str, Any]) -> list[str]:
-    mapping = {
-        "motion": ["ACOS-07"],
-        "composition": ["ACOS-04", "ACOS-05"],
-        "3d_fidelity": ["ACOS-06", "ACOS-12"],
-        "responsive": ["ACOS-08"],
-        "generic_visual": ["ACOS-03", "ACOS-01"],
-    }
-    return mapping.get(defect_type, ["ACOS-01"])

@@ -84,7 +84,9 @@ fields:
       license_review_acknowledged: {type: boolean, default: false}
   license_overrides:
     type: object
-    description: Explicit acknowledgments only — never silent license resolution.
+    description: >
+      Reserved — does NOT bypass blocked_pending_license_review.
+      Canonical license state is read from registry/EXTERNAL_SKILLS_LOCK.yaml only.
 
 provenance_rules:
   - user_stated_facts must not be silently upgraded to runtime_observed_facts

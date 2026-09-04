@@ -26,6 +26,20 @@ fields:
     values: [task, project, project_specific, model_specific, skill_specific, reusable_system, taste_scoped, candidate_global, validated_global]
     note: Align with core/MEMORY_POLICY.md promotion lifecycle.
   statement: {type: string}
+  subject_key:
+    type: string
+    required: true
+    description: Structured conflict identity — required for deterministic conflict detection.
+  claim_type:
+    type: enum
+    values: [fact, preference, procedure, constraint]
+  value:
+    type: string
+    description: Structured claim value for same-subject conflict comparison.
+  conflicts_with:
+    type: array
+    items: string
+    description: Explicit conflict references when identified by critic/human.
   source_task_id: {type: string}
   evidence_refs:
     type: array

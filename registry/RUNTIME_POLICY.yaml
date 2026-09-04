@@ -32,6 +32,15 @@ critics:
 
 memory:
   categories: [knowledge, taste, projects, failures, successes, model_compatibility]
+  creation_default_promotion_level: observation
+  direct_creation_forbidden_levels: [candidate-global, validated-global]
+  conflict_detection:
+    method: structured_subject_key
+    same_subject_same_value_not_conflict: true
+    incompatible_values_on_same_subject: MEMORY_CONFLICT_REQUIRES_RESOLUTION
+    explicit_conflicts_with: MEMORY_CONFLICT_REQUIRES_RESOLUTION
+  scope_migration:
+    model_specific_to_global_requires_explicit_evidence: true
   promotion_levels:
     - observation
     - project-rule

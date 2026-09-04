@@ -5,6 +5,8 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
+from runtime.common.registry_loader import load_runtime_policy
+
 PROMOTION_ORDER = (
     "observation",
     "project-rule",
@@ -13,10 +15,53 @@ PROMOTION_ORDER = (
     "deprecated",
 )
 
-PROHIBITED_SHORTCUTS = {
-    ("observation", "validated-global"),
-    ("observation", "candidate-global"),  # must go through project-rule first per policy — actually candidate-global ok from project-rule
-}
+GLOBAL_SCOPES = frozenset({"validated_global", "reusable_system", "candidate_global"})
+
+
+def _now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def create_memory_observation(
+    *,
+    memory_id: str,
+    category: str,
+    scope: str,
+    statement: str,
+    source_task_id: str,
+    evidence_refs: list[str],
+    subject_key: str,
+    value: str,
+    claim_type: str = "fact",
+    confidence: str = "low",
+    model_profile: str | None = None,
+    conflicts_with: list[str] | None = None,
+) -> dict[str, Any]:
+    """Normal runtime creation — always begins at observation promotion level."""
+    if not evidence_refs:
+        raise ValueError("Memory records require evidence_refs")
+    if not subject_key:
+        raise ValueError("Memory records require subject_key for conflict semantics")
+    return {
+        "memory_id": memory_id,
+        "category": category,
+        "scope": scope,
+        "statement": statement,
+        "source_task_id": source_task_id,
+        "evidence_refs": evidence_refs,
+        "subject_key": subject_key,
+        "claim_type": claim_type,
+        "value": value,
+        "conflicts_with": conflicts_with or [],
+        "confidence": confidence,
+        "promotion_level": "observation",
+        "created_at": _now(),
+        "validated_at": None,
+        "supersedes": None,
+        "model_profile": model_profile,
+        "status": "draft",
+        "promotion_history": [],
+    }
 
 
 def create_memory_record(
@@ -30,38 +75,76 @@ def create_memory_record(
     confidence: str = "low",
     promotion_level: str = "observation",
     model_profile: str | None = None,
+    subject_key: str = "",
+    value: str = "",
+    **kwargs: Any,
 ) -> dict[str, Any]:
-    if not evidence_refs:
-        raise ValueError("Memory records require evidence_refs")
-    return {
-        "memory_id": memory_id,
-        "category": category,
-        "scope": scope,
-        "statement": statement,
-        "source_task_id": source_task_id,
-        "evidence_refs": evidence_refs,
-        "confidence": confidence,
-        "promotion_level": promotion_level,
-        "created_at": datetime.now(timezone.utc).isoformat(),
-        "validated_at": None,
-        "supersedes": None,
-        "model_profile": model_profile,
-        "status": "draft",
-    }
+    """Backward-compatible wrapper — rejects non-observation direct creation."""
+    if promotion_level != "observation":
+        raise ValueError(
+            f"Direct creation at promotion_level={promotion_level} forbidden; use create_memory_observation + promote_memory"
+        )
+    return create_memory_observation(
+        memory_id=memory_id,
+        category=category,
+        scope=scope,
+        statement=statement,
+        source_task_id=source_task_id,
+        evidence_refs=evidence_refs,
+        subject_key=subject_key or f"legacy.{memory_id}",
+        value=value or statement[:64],
+        claim_type=kwargs.get("claim_type", "fact"),
+        confidence=confidence,
+        model_profile=model_profile,
+        conflicts_with=kwargs.get("conflicts_with"),
+    )
 
 
-def validate_promotion(current: str, target: str) -> list[str]:
+def validate_promotion(current: str, target: str, *, scope: str | None = None) -> list[str]:
     errors: list[str] = []
-    if (current, target) in PROHIBITED_SHORTCUTS or (current == "observation" and target == "validated-global"):
-        errors.append(f"Prohibited promotion shortcut: {current} → {target}")
+    if current == "observation" and target == "validated-global":
+        errors.append("Prohibited promotion shortcut: observation → validated-global")
     if current not in PROMOTION_ORDER or target not in PROMOTION_ORDER:
         errors.append("Invalid promotion level")
+        return errors
     cur_idx = PROMOTION_ORDER.index(current)
     tgt_idx = PROMOTION_ORDER.index(target)
-    if tgt_idx > cur_idx + 1 and not (current == "project-rule" and target == "candidate-global"):
-        if current == "observation" and target != "project-rule":
-            errors.append(f"Cannot skip promotion stages from {current} to {target}")
+    if tgt_idx != cur_idx + 1 and target != "deprecated":
+        errors.append(f"Cannot skip promotion stages from {current} to {target}")
+    if scope == "model_specific" and target == "validated-global":
+        errors.append("Model-specific memory cannot promote directly to validated-global without scope migration evidence")
     return errors
+
+
+def promote_memory(
+    record: dict[str, Any],
+    target_level: str,
+    supporting_evidence_refs: list[str],
+    validation_context: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Stateful promotion with evidence, history, and scope constraints."""
+    ctx = validation_context or {}
+    current = record.get("promotion_level", "observation")
+    errors = validate_promotion(current, target_level, scope=record.get("scope"))
+    if errors:
+        raise ValueError("; ".join(errors))
+    if not supporting_evidence_refs:
+        raise ValueError("Promotion requires supporting_evidence_refs")
+
+    target_scope = ctx.get("target_scope")
+    if record.get("scope") == "model_specific" and target_scope in GLOBAL_SCOPES:
+        raise ValueError("Model-specific scope cannot silently migrate to global scope")
+
+    promoted = dict(record)
+    promoted["promotion_level"] = target_level
+    promoted["evidence_refs"] = sorted(set(record.get("evidence_refs", [])) | set(supporting_evidence_refs))
+    promoted["promotion_history"] = list(record.get("promotion_history", [])) + [
+        {"from": current, "to": target_level, "at": _now(), "evidence_refs": supporting_evidence_refs}
+    ]
+    if target_level == "validated-global":
+        promoted["validated_at"] = _now()
+        promoted["status"] = "active"
+    return promoted
 
 
 def retrieve_memory(
@@ -81,7 +164,7 @@ def retrieve_memory(
         if promotion_levels and rec.get("promotion_level") not in promotion_levels:
             continue
         if rec.get("scope") == "model_specific" and rec.get("promotion_level") == "validated-global":
-            continue  # model-specific cannot silently become global without validation
+            continue
         why = "task_relevance"
         if project_id and rec.get("scope") == "project":
             why = "project_scope_match"
@@ -98,22 +181,43 @@ def retrieve_memory(
 
 
 def detect_conflicts(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """
+    Conflict by structured subject_key semantics — not promotion-level differences.
+    Same subject + same value at different promotion levels is NOT a conflict.
+    """
     conflicts: list[dict[str, Any]] = []
-    by_topic: dict[str, list[dict[str, Any]]] = {}
-    for rec in records:
-        key = rec.get("statement", "")[:80]
-        by_topic.setdefault(key, []).append(rec)
-    for _key, group in by_topic.items():
-        if len(group) < 2:
-            continue
-        levels = {g.get("promotion_level") for g in group}
-        if len(levels) > 1:
+    active = [r for r in records if r.get("status") not in ("deprecated", "superseded", "rejected")]
+
+    by_subject: dict[str, list[dict[str, Any]]] = {}
+    for rec in active:
+        key = rec.get("subject_key") or ""
+        if key:
+            by_subject.setdefault(key, []).append(rec)
+
+    for subject_key, group in by_subject.items():
+        values = {r.get("value") for r in group if r.get("value") is not None}
+        if len(values) > 1:
             conflicts.append(
                 {
                     "status": "MEMORY_CONFLICT_REQUIRES_RESOLUTION",
-                    "record_ids": [g["memory_id"] for g in group],
+                    "subject_key": subject_key,
+                    "record_ids": [r["memory_id"] for r in group],
+                    "reason": "incompatible values for same subject_key",
                 }
             )
+
+    for rec in active:
+        for other_id in rec.get("conflicts_with", []) or []:
+            if any(o["memory_id"] == other_id for o in active):
+                conflicts.append(
+                    {
+                        "status": "MEMORY_CONFLICT_REQUIRES_RESOLUTION",
+                        "subject_key": rec.get("subject_key"),
+                        "record_ids": sorted({rec["memory_id"], other_id}),
+                        "reason": "explicit conflicts_with reference",
+                    }
+                )
+
     return conflicts
 
 

@@ -18,7 +18,7 @@ from runtime.evidence.register import register_evidence
 from runtime.handoff.validate import build_handoff, validate_handoff
 from runtime.intake.normalize import normalize_intake
 from runtime.intake.validate import validate_intake
-from runtime.memory.records import create_memory_record
+from runtime.memory.records import create_memory_observation, promote_memory
 from runtime.quality.gate import evaluate_gate, validate_producer_independence
 from runtime.routing.engine import route_task, validate_routing_decision
 from runtime.state.execution import (
@@ -27,6 +27,7 @@ from runtime.state.execution import (
     persist_state,
     resume_execution,
 )
+from runtime.state.transitions import can_transition, set_design_gate_state
 
 SMOKE_DIR = REPO / "validation" / "evidence" / "runtime" / "smoke"
 
@@ -64,8 +65,10 @@ def run_smoke() -> dict:
     routing = route_task(intake)
     validate_routing_decision(routing)
     append_event(state, "ROUTING_CREATED", routing["routing_id"])
-    state["active_skill_ids"] = routing["activated_skill_ids"]
+    state["active_skill_ids"] = routing["executable_active_skill_ids"]
+    state["planned_skill_ids"] = routing.get("planned_skill_ids", [])
     state["gate_states"]["design_gate"] = routing.get("design_gate_state", "NOT_APPLICABLE")
+    dg_probe = can_transition(state, "PRODUCTION", routing)
 
     handoff = build_handoff(
         task_id=task_id,
@@ -111,14 +114,15 @@ def run_smoke() -> dict:
     state["gate_states"]["quality_gate"] = gate_result["status"]
     append_event(state, "GATE_APPROVED", gate_result["status"])
 
-    memory = create_memory_record(
+    memory = create_memory_observation(
         memory_id=f"mem-obs-{task_id[:8]}",
         category="projects",
         scope="project",
         statement="Validation module pattern succeeded under bounded constraints.",
         source_task_id=task_id,
         evidence_refs=[evidence["evidence_id"]],
-        promotion_level="observation",
+        subject_key="validation.module_pattern",
+        value="bounded_success",
     )
     state["memory_candidates"].append(memory["memory_id"])
     append_event(state, "MEMORY_CANDIDATE_CREATED", memory["memory_id"])
@@ -143,7 +147,9 @@ def run_smoke() -> dict:
         "task_id": task_id,
         "routing_status": routing["status"],
         "gate_status": gate_result["status"],
-        "activated_skills": routing["activated_skill_ids"],
+        "activated_skills": routing["executable_active_skill_ids"],
+        "planned_skills": routing.get("planned_skill_ids", []),
+        "design_gate_probe": dg_probe,
         "adapter_packet_routing_source": packet["routing"]["source"],
         "correction_status": correction["status"],
         "state_path": str(path.relative_to(REPO)),

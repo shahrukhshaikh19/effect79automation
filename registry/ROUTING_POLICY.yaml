@@ -33,13 +33,11 @@ task_signal_fields:
 
 license_restricted_skills:
   EXT-FE-01:
-    license: LICENSE_REVIEW_REQUIRED
-    commercial_redistribution_status: blocked_pending_license_review
-    activation_requires: license_review_acknowledged
+    source: registry/EXTERNAL_SKILLS_LOCK.yaml
+    note: Runtime reads canonical license state — acknowledgment does not clear blocks
   EXT-FE-02:
-    license: LICENSE_REVIEW_REQUIRED
-    commercial_redistribution_status: blocked_pending_license_review
-    activation_requires: license_review_acknowledged
+    source: registry/EXTERNAL_SKILLS_LOCK.yaml
+    note: Runtime reads canonical license state — acknowledgment does not clear blocks
 
 operational_restricted_skills:
   EXT-IMG3D-01:
@@ -81,6 +79,8 @@ routing_rules:
       requires_3d: false
       requires_visual_output: false
     activate:
+      - {skill_id: EXT-FE-01, reason: frontend builder when frontend required, if: requires_frontend}
+      - {skill_id: EXT-FE-02, reason: frontend testing when frontend required, if: requires_frontend}
       - {skill_id: EXT-A11Y-01, reason: accessibility required when frontend deliverable, if: requires_accessibility}
       - {skill_id: ACOS-13, reason: quality gate required for completion path, if: always_on_completion}
     exclude_domains: [3d, motion, critic_visual_unless_visual, blender, reconstruction]
@@ -166,3 +166,20 @@ design_gate:
     - requires_creative_direction
     - requires_visual_output
   required_before_stages: [PRODUCTION, SPECIALIST_ROUTING]
+
+correction_responsibility:
+  motion:
+    owner_domains: [motion]
+    exclude_roles: [critic, gate, memory]
+  composition:
+    owner_domains: [creative, visual, experience]
+    exclude_roles: [critic, gate, memory]
+  responsive:
+    owner_domains: [responsive]
+    exclude_roles: [critic, gate, memory]
+  3d_fidelity:
+    owner_domains: [3d]
+    exclude_roles: [critic, gate, memory]
+  generic_visual:
+    owner_domains: [creative]
+    exclude_roles: [critic, gate, memory]

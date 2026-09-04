@@ -24,6 +24,16 @@
 | F12 — Smoke test | COMPLETE | `runtime/smoke.py` executable flow |
 | F13 — Audit documentation | COMPLETE | `docs/PHASE_F_RUNTIME_INTEGRATION_AUDIT.md` |
 
+## Phase F certification correction — 2026-09-04
+
+| Task | Status | Evidence |
+|---|---|---|
+| F-C1 — License not bypassable by acknowledgment | COMPLETE | Canonical EXTERNAL_SKILLS_LOCK + BLOCKED_LICENSE_REVIEW_REQUIRED |
+| F-C2 — Policy-driven correction routing | COMPLETE | `correction_responsibility` in ROUTING_POLICY + route.py |
+| F-C3 — Design Gate transition guard | COMPLETE | `can_transition()` + planned/executable skill split |
+| F-C4 — Memory promotion/conflict hardening | COMPLETE | `create_memory_observation` + `promote_memory` + subject_key conflicts |
+| F-C5 — Tests T19–T34 + validator hardening | COMPLETE | 37 tests PASSED |
+
 **FOUNDATION_READY:** not declared (Phase G required)
 
 ---

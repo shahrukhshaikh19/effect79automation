@@ -5,14 +5,16 @@ from __future__ import annotations
 import uuid
 from typing import Any
 
-from runtime.common.constants import LICENSE_RESTRICTED_SKILLS, OPERATIONAL_RESTRICTED_SKILLS
+from runtime.common.constants import OPERATIONAL_RESTRICTED_SKILLS
 from runtime.common.registry_loader import (
     is_skill_known,
+    is_skill_license_blocked,
+    load_external_lock,
     load_routing_policy,
-    skill_path_for_id,
     skill_restrictions,
 )
 from runtime.intake.validate import has_sufficient_routing_input
+from runtime.state.transitions import split_executable_skills
 
 
 def _signal_true(signals: dict[str, Any], key: str) -> bool:
@@ -172,16 +174,16 @@ def route_task(intake: dict[str, Any]) -> dict[str, Any]:
             if not is_skill_known(skill_id):
                 rejected.append({"skill_id": skill_id, "reason": "unknown_skill_id"})
                 continue
-            restrictions = skill_restrictions(skill_id)
-            if skill_id in LICENSE_RESTRICTED_SKILLS:
-                if not signals.get("license_review_acknowledged"):
-                    rejected.append(
-                        {
-                            "skill_id": skill_id,
-                            "reason": "LICENSE_REVIEW_REQUIRED — blocked_pending_license_review",
-                        }
-                    )
-                    continue
+            if is_skill_license_blocked(skill_id):
+                restrictions = skill_restrictions(skill_id)
+                rejected.append(
+                    {
+                        "skill_id": skill_id,
+                        "status": restrictions.get("activation_status", "BLOCKED_LICENSE_REVIEW_REQUIRED"),
+                        "reason": restrictions.get("reason", "authoritative license resolution not present"),
+                    }
+                )
+                continue
             if skill_id in OPERATIONAL_RESTRICTED_SKILLS:
                 if signals.get("reconstruction_path") != "procedural_browser":
                     rejected.append(
@@ -236,30 +238,36 @@ def route_task(intake: dict[str, Any]) -> dict[str, Any]:
         _append_completion_skills(activated, reasons, policy)
 
     activated_ids = sorted(activated.keys())
-    license_blocked = [s for s in LICENSE_RESTRICTED_SKILLS if s not in activated_ids]
+    design_gate = _design_gate_state(signals)
+    planned_ids, executable_ids = split_executable_skills(list(activated.values()), design_gate)
+    license_blocked = [
+        str(e["id"]) for e in load_external_lock() if e.get("id") and is_skill_license_blocked(str(e["id"]))
+    ]
     restricted = [s for s in OPERATIONAL_RESTRICTED_SKILLS if s not in activated_ids]
 
     return {
         "routing_id": routing_id,
         "task_id": task_id,
-        "stage": "SPECIALIST_ROUTING" if activated_ids else "ROUTING",
-        "activated_skill_ids": activated_ids,
+        "stage": "SPECIALIST_ROUTING" if planned_ids else "ROUTING",
+        "planned_skill_ids": planned_ids,
+        "executable_active_skill_ids": executable_ids,
+        "activated_skill_ids": executable_ids,
         "skill_activations": list(activated.values()),
         "rejected_candidate_skill_ids": rejected,
         "required_tool_families": required_tools,
-        "required_critic_ids": [c for c in required_critics if c in activated_ids],
-        "quality_gate_required": "ACOS-13" in activated_ids,
+        "required_critic_ids": [c for c in required_critics if c in planned_ids],
+        "quality_gate_required": "ACOS-13" in planned_ids,
         "decision_reasons": reasons,
         "evidence_refs": list(intake.get("prior_evidence_refs", [])),
         "memory_refs": list(intake.get("prior_memory_refs", [])),
         "capability_constraints": {
             "blocked_tools": blocked_tools,
             "restricted_skills": restricted,
-            "license_blocked_skills": list(license_blocked),
+            "license_blocked_skills": license_blocked,
         },
         "fallbacks": [],
-        "design_gate_state": _design_gate_state(signals),
-        "status": "ROUTED" if activated_ids else "ROUTING_REQUIRES_HUMAN_DECISION",
+        "design_gate_state": design_gate,
+        "status": "ROUTED" if planned_ids else "ROUTING_REQUIRES_HUMAN_DECISION",
     }
 
 

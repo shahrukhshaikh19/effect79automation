@@ -154,18 +154,160 @@ def validate_quality_semantics(errors: list[str]) -> None:
         fail(errors, "Producer self-approval guard missing")
 
 
+def validate_license_enforcement(errors: list[str]) -> None:
+    """F-C1: acknowledgment must not bypass canonical license blocks."""
+    engine_text = load_text(REPO / "runtime" / "routing" / "engine.py")
+    if "license_review_acknowledged" in engine_text:
+        fail(errors, "routing/engine.py must not use license_review_acknowledged as bypass")
+    policy_text = load_text(REPO / "registry" / "ROUTING_POLICY.yaml")
+    if "activation_requires: license_review_acknowledged" in policy_text:
+        fail(errors, "ROUTING_POLICY must not require license_review_acknowledged for activation")
+
+    sys.path.insert(0, str(REPO))
+    try:
+        from runtime.common.registry_loader import is_skill_license_blocked
+        from runtime.intake.normalize import normalize_intake
+        from runtime.routing.engine import route_task
+
+        if not is_skill_license_blocked("EXT-FE-01"):
+            fail(errors, "EXT-FE-01 must be license-blocked per canonical lock")
+        intake = normalize_intake(
+            {
+                "task_id": "val-license",
+                "request": "test",
+                "normalized_goal": "test frontend",
+                "task_signals": {
+                    "deliverable_profile": "standard_application",
+                    "requires_frontend": True,
+                    "license_review_acknowledged": True,
+                },
+                "runtime_capabilities": {"browser": "AVAILABLE"},
+            }
+        )
+        decision = route_task(intake)
+        if "EXT-FE-01" in decision.get("activated_skill_ids", []):
+            fail(errors, "EXT-FE-01 activated despite blocked_pending_license_review")
+    except Exception as exc:
+        fail(errors, f"License enforcement probe failed: {exc}")
+
+
+def validate_correction_routing_policy(errors: list[str]) -> None:
+    """F-C2: correction routing must consume policy, not hard-coded skill IDs."""
+    route_py = REPO / "runtime" / "correction" / "route.py"
+    budget_py = REPO / "runtime" / "correction" / "budget.py"
+    if not route_py.is_file():
+        fail(errors, "Missing runtime/correction/route.py")
+        return
+    budget_text = load_text(budget_py)
+    if '"ACOS-01"' in budget_text or "'ACOS-01'" in budget_text:
+        fail(errors, "correction/budget.py must not hard-code ACOS-01 fallback")
+    policy = yaml.safe_load((REPO / "registry" / "ROUTING_POLICY.yaml").read_text(encoding="utf-8"))
+    if "correction_responsibility" not in policy:
+        fail(errors, "ROUTING_POLICY missing correction_responsibility section")
+
+    sys.path.insert(0, str(REPO))
+    try:
+        from runtime.correction.route import route_defect_to_skill
+
+        unknown = route_defect_to_skill("nonexistent_defect_type_xyz")
+        if unknown.get("status") != "CORRECTION_ROUTING_REQUIRES_RESOLUTION":
+            fail(errors, "Unknown defect must escalate, not silently route")
+        if "ACOS-01" in unknown.get("responsible_skill_ids", []):
+            fail(errors, "Unknown defect must not default to ACOS-01")
+    except Exception as exc:
+        fail(errors, f"Correction routing probe failed: {exc}")
+
+
+def validate_design_gate_guard(errors: list[str]) -> None:
+    """F-C3: Design Gate must be enforced via transition guard."""
+    transitions = REPO / "runtime" / "state" / "transitions.py"
+    if not transitions.is_file():
+        fail(errors, "Missing runtime/state/transitions.py")
+        return
+    text = load_text(transitions)
+    if "can_transition" not in text:
+        fail(errors, "transitions.py must implement can_transition")
+    if "TRANSITION_BLOCKED_DESIGN_GATE" not in text:
+        fail(errors, "Design gate block reason missing")
+
+    sys.path.insert(0, str(REPO))
+    try:
+        from runtime.state.execution import create_execution_state
+        from runtime.state.transitions import can_transition, set_design_gate_state
+
+        state = create_execution_state("probe")
+        set_design_gate_state(state, "PENDING")
+        blocked = can_transition(state, "PRODUCTION")
+        if blocked.get("allowed"):
+            fail(errors, "PRODUCTION must be blocked when Design Gate PENDING")
+        set_design_gate_state(state, "APPROVED")
+        allowed = can_transition(state, "PRODUCTION")
+        if not allowed.get("allowed"):
+            fail(errors, "PRODUCTION must be allowed when Design Gate APPROVED")
+    except Exception as exc:
+        fail(errors, f"Design gate probe failed: {exc}")
+
+
 def validate_memory_semantics(errors: list[str]) -> None:
     mem = REPO / "runtime" / "memory" / "records.py"
     if not mem.is_file():
         fail(errors, "Missing runtime/memory/records.py")
         return
     text = load_text(mem)
-    if "observation" not in text or "validated-global" not in text:
-        fail(errors, "Memory promotion lifecycle not represented")
+    if "create_memory_observation" not in text:
+        fail(errors, "Memory must provide create_memory_observation")
+    if "promote_memory" not in text:
+        fail(errors, "Memory must provide stateful promote_memory")
+    if "subject_key" not in text:
+        fail(errors, "Memory conflict model requires subject_key")
     if "MEMORY_CONFLICT_REQUIRES_RESOLUTION" not in text:
         fail(errors, "Memory conflict status missing")
-    if "memory_overrides_authority" not in text:
-        fail(errors, "Memory authority override guard missing")
+
+    sys.path.insert(0, str(REPO))
+    try:
+        from runtime.memory.records import create_memory_observation, create_memory_record, detect_conflicts, promote_memory
+
+        try:
+            create_memory_record(
+                memory_id="x",
+                category="knowledge",
+                scope="project",
+                statement="s",
+                source_task_id="t",
+                evidence_refs=["e"],
+                promotion_level="validated-global",
+                subject_key="k",
+                value="v",
+            )
+            fail(errors, "Direct validated-global creation must fail")
+        except ValueError:
+            pass
+
+        a = create_memory_observation(
+            memory_id="a",
+            category="knowledge",
+            scope="project",
+            statement="same",
+            source_task_id="t1",
+            evidence_refs=["e1"],
+            subject_key="topic.x",
+            value="alpha",
+        )
+        b = create_memory_observation(
+            memory_id="b",
+            category="knowledge",
+            scope="project",
+            statement="same",
+            source_task_id="t2",
+            evidence_refs=["e2"],
+            subject_key="topic.x",
+            value="alpha",
+        )
+        b = promote_memory(b, "project-rule", ["e3"])
+        if detect_conflicts([a, b]):
+            fail(errors, "Same subject+value at different promotion levels must not conflict")
+    except Exception as exc:
+        fail(errors, f"Memory semantics probe failed: {exc}")
 
 
 def validate_phase_boundaries(errors: list[str]) -> None:
@@ -202,12 +344,9 @@ def validate_tests_exist(errors: list[str]) -> None:
         fail(errors, "Missing validation/tests/runtime/test_scenarios.py")
         return
     text = load_text(tests)
-    for tid in range(1, 19):
-        if f"test_t{tid}" not in text.lower() and f"def t{t}" not in text.lower():
-            # allow test_t1_minimal or test_t01 naming
-            if f"t{t}" not in text.lower() or "T" + str(tid) not in text:
-                if f"T{tid}" not in text and f"t{t}_" not in text.lower():
-                    fail(errors, f"Test scenario T{tid} not found in test_scenarios.py")
+    for tid in range(1, 35):
+        if f"test_t{tid}" not in text.lower() and f"t{tid}_" not in text.lower():
+            fail(errors, f"Test scenario T{tid} not found in test_scenarios.py")
 
 
 def validate_smoke_executable(errors: list[str]) -> None:
@@ -246,6 +385,9 @@ def main() -> int:
     validate_architecture(errors)
     validate_policies(errors)
     validate_routing_ownership(errors)
+    validate_license_enforcement(errors)
+    validate_correction_routing_policy(errors)
+    validate_design_gate_guard(errors)
     validate_quality_semantics(errors)
     validate_memory_semantics(errors)
     validate_domain_neutrality(errors)
