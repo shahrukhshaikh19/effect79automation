@@ -29,6 +29,7 @@ from runtime.host.artifact_contract import (
     load_yaml,
     pixel_evidence,
     validate_critic_artifacts,
+    validate_flagship_evidence,
     validate_flagship_production,
 )
 from runtime.host.audit import audit_session, ensure_roles, mechanical_gate_report
@@ -361,8 +362,11 @@ def cmd_advance(_: argparse.Namespace) -> int:
                 notes.append("Implementation present — capture real browser evidence next")
     elif stage == "EVIDENCE":
         pixels = pixel_evidence(project)
+        beats = validate_flagship_evidence(project, session["intake"].get("task_signals"), session["intake"].get("request") or "")
         if len(pixels) < 2:
             notes.append("Need at least two rendered images under evidence/ — run: python tools/host_driver/run_stage.py capture")
+        elif not beats["ok"]:
+            notes.extend(beats["missing"] + beats["invalid"])
         else:
             state["current_stage"] = "CRITICS"
             notes.append(f"Evidence recorded ({len(pixels)} pixels) — independent critics next")

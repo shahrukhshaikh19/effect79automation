@@ -74,7 +74,8 @@ def has_implementation(project_dir: Path) -> bool:
 
 
 def is_flagship(signals: dict[str, Any] | None) -> bool:
-    return str((signals or {}).get("quality_bar") or "") == "flagship"
+    data = signals or {}
+    return str(data.get("quality_bar") or "") == "flagship" or str(data.get("reconstruction_path") or "") == "blender_authoring"
 
 
 def hero_assets(project_dir: Path) -> list[str]:
@@ -96,8 +97,18 @@ def validate_flagship_production(project_dir: Path, planned_ids: list[str], sign
     assets = hero_assets(project_dir)
     if not assets:
         missing.append("implementation/ hero GLB/GLTF from Blender — lathe/primitive is not a flagship hero")
+    export = project_dir / "direction" / "blender_export.yaml"
+    if not export.is_file() or export.stat().st_size < 40:
+        missing.append("direction/blender_export.yaml")
+    else:
+        data = load_yaml(export)
+        if data.get("blender_used") is not True:
+            invalid.append("direction/blender_export.yaml: blender_used must be true")
+        producer = str(data.get("producer") or "")
+        if producer in {"threejs-core", "gsap-core"} or producer.startswith("threejs"):
+            invalid.append("direction/blender_export.yaml: producer must be a Blender/export skill, not threejs-core")
     for sid, rel in FLAGSHIP_PRODUCTION_FILES.items():
-        if sid not in planned_ids:
+        if sid == "EXT-BLD-12":
             continue
         path = project_dir / rel
         if not path.is_file() or path.stat().st_size < 40:
@@ -106,14 +117,32 @@ def validate_flagship_production(project_dir: Path, planned_ids: list[str], sign
         data = load_yaml(path)
         if not data.get("skill_procedure_executed"):
             invalid.append(f"{rel}: missing skill_procedure_executed")
-        if sid == "EXT-BLD-12" and data.get("blender_used") is not True:
-            invalid.append("direction/blender_export.yaml: blender_used must be true")
     notes = project_dir / "direction" / "production_notes.yaml"
     if notes.is_file():
         data = load_yaml(notes)
         if data.get("blender_used") is False:
             invalid.append("production_notes: flagship cannot skip Blender for convenience")
     return {"missing": missing, "invalid": invalid, "ok": not missing and not invalid}
+
+
+def validate_flagship_evidence(project_dir: Path, signals: dict[str, Any] | None, request: str = "") -> dict[str, Any]:
+    if not is_flagship(signals):
+        return {"ok": True, "missing": [], "invalid": []}
+    text = request.lower()
+    named_beats = sum(word in text for word in ("bench", "charge", "rise", "coil", "catch")) >= 3
+    multi = named_beats or "scroll states" in text or "this order" in text
+    if not multi:
+        return {"ok": True, "missing": [], "invalid": []}
+    states = project_dir / "evidence" / "states"
+    shots = pixel_evidence(project_dir)
+    state_shots = [p for p in shots if "/states/" in p.replace("\\", "/")]
+    if len(state_shots) < 2:
+        return {
+            "ok": False,
+            "missing": ["evidence/states/ — at least two beat captures, not only the first viewport"],
+            "invalid": [],
+        }
+    return {"ok": True, "missing": [], "invalid": []}
 
 
 def evidence_files(project_dir: Path) -> list[str]:

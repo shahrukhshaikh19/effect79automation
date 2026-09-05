@@ -29,6 +29,15 @@ _FLAGSHIP = re.compile(
     r"meaningful real-time|webgl/three\.js)\b",
     re.I,
 )
+_BLENDER_REQUIRED = re.compile(
+    r"\b("
+    r"blender must|must model|export glb|export gltf|hero glb|"
+    r"if blender mcp|do not skip blender|"
+    r"blender to model|model this .{0,80}export"
+    r")\b",
+    re.I,
+)
+_SCROLL_STORY = re.compile(r"\b(scroll is|scroll equals|scroll =|scroll states|this order only)\b", re.I)
 
 
 def classify_signals(prompt: str) -> dict[str, Any]:
@@ -36,15 +45,14 @@ def classify_signals(prompt: str) -> dict[str, Any]:
     wants_3d = bool(_3D.search(text))
     wants_ref = bool(_REF.search(text))
     wants_visual = bool(_VISUAL.search(text)) or wants_3d
-    wants_motion = bool(_MOTION.search(text))
+    wants_motion = bool(_MOTION.search(text)) or bool(_SCROLL_STORY.search(text))
+    authored = bool(_FLAGSHIP.search(text) or _BLENDER_REQUIRED.search(text))
     if wants_ref and wants_3d:
         profile = "reference_reconstruction"
         reconstruction = "procedural_browser"
     elif wants_3d:
         profile = "interactive_3d"
-        reconstruction = "none"
-        if _FLAGSHIP.search(text):
-            reconstruction = "blender_authoring"
+        reconstruction = "blender_authoring" if authored else "none"
     elif wants_visual:
         profile = "visual_experience"
         reconstruction = "none"
@@ -70,7 +78,7 @@ def intake_from_prompt(prompt: str, *, task_id: str | None = None) -> dict[str, 
     if not prompt.strip():
         raise ValueError("Project prompt is empty")
     signals = classify_signals(prompt)
-    goal = prompt.strip().splitlines()[0][:240]
+    goal = _normalized_goal(prompt)
     return normalize_intake(
         {
             "task_id": task_id or f"host-{uuid.uuid4().hex[:12]}",
@@ -89,3 +97,14 @@ def intake_from_prompt(prompt: str, *, task_id: str | None = None) -> dict[str, 
             "runtime_capabilities": host_capabilities(),
         }
     )
+
+
+def _normalized_goal(prompt: str) -> str:
+    for line in prompt.strip().splitlines():
+        text = line.strip()
+        if not text:
+            continue
+        if text.lower().startswith("this is a product request"):
+            continue
+        return text[:240]
+    return prompt.strip().splitlines()[0][:240]

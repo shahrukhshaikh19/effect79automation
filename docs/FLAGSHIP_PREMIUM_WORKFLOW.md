@@ -18,7 +18,7 @@ Then follow `CURRENT_HOST_BRIEF.md` only. Invoke listed skills. Do not slash-pic
 
 ### 1. Intake
 
-A flagship prompt sets:
+A flagship prompt is **authored 3D**, not a marketing adjective. It sets when the request needs Blender/GLB or cinematic/physical-hero 3D — even if the words “premium” / “cinematic” are absent. A locked still brief that says “Blender must model this and export GLB” is flagship.
 
 - `deliverable_profile: interactive_3d`
 - `quality_bar: flagship`

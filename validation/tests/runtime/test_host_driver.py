@@ -15,6 +15,7 @@ from runtime.adapter.host_brief import select_invoke_ids
 from runtime.host.artifact_contract import (
     pixel_evidence,
     validate_critic_independence,
+    validate_flagship_evidence,
     validate_flagship_production,
 )
 from runtime.host.audit import audit_session
@@ -43,6 +44,16 @@ class PromptIntakeTests(unittest.TestCase):
         self.assertEqual(signals["deliverable_profile"], "interactive_3d")
         self.assertEqual(signals["quality_bar"], "standard")
         self.assertEqual(signals["reconstruction_path"], "none")
+
+    def test_locked_blender_brief_is_flagship_without_premium_word(self) -> None:
+        signals = classify_signals(
+            "BUILD ONLY THIS. Product: Cinderwell Still. "
+            "Blender must model this still and export GLB. "
+            "Scroll states, this order only: BENCH CHARGE RISE COIL CATCH."
+        )
+        self.assertEqual(signals["quality_bar"], "flagship")
+        self.assertEqual(signals["reconstruction_path"], "blender_authoring")
+        self.assertTrue(signals["requires_motion"])
 
 
 class BriefStageTests(unittest.TestCase):
@@ -160,6 +171,19 @@ class IndependenceTests(unittest.TestCase):
 
 
 class FlagshipWorkflowTests(unittest.TestCase):
+    def test_locked_blender_brief_routes_craft_pack(self) -> None:
+        intake = intake_from_prompt(
+            "BUILD ONLY THIS. Product: Cinderwell Still. "
+            "Blender must model this still and export GLB. "
+            "Scroll states, this order only: BENCH CHARGE RISE COIL CATCH."
+        )
+        intake["runtime_capabilities"]["blender"] = "AVAILABLE"
+        decision = route_task(intake)
+        activated = set(decision["activated_skill_ids"]) | set(decision.get("planned_skill_ids") or [])
+        self.assertEqual(decision["status"], "ROUTED")
+        for skill_id in ("EXT-3DWEB-02", "EXT-3DWEB-03", "EXT-3DWEB-04", "EXT-BLD-01", "EXT-BLD-12"):
+            self.assertIn(skill_id, activated)
+
     def test_flagship_route_activates_craft_and_blender(self) -> None:
         intake = intake_from_prompt(
             "Build a premium cinematic 3D launch website for an original physical instrument."
@@ -188,6 +212,32 @@ class FlagshipWorkflowTests(unittest.TestCase):
                 root,
                 ["EXT-BLD-12", "EXT-3DWEB-02"],
                 {"quality_bar": "flagship"},
+            )
+            self.assertFalse(result["ok"])
+
+    def test_export_stamp_cannot_be_threejs_core(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "implementation").mkdir()
+            (root / "implementation" / "hero.glb").write_bytes(b"0" * 64)
+            (root / "direction").mkdir()
+            (root / "direction" / "blender_export.yaml").write_text(
+                "skill_procedure_executed: true\nblender_used: true\nproducer: threejs-core\n",
+                encoding="utf-8",
+            )
+            result = validate_flagship_production(root, ["EXT-BLD-12"], {"quality_bar": "flagship"})
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("threejs-core" in item for item in result["invalid"]))
+
+    def test_named_scroll_beats_need_state_shots(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "evidence" / "viewports").mkdir(parents=True)
+            (root / "evidence" / "viewports" / "desktop.png").write_bytes(b"0" * 64)
+            result = validate_flagship_evidence(
+                root,
+                {"quality_bar": "flagship"},
+                "Scroll states, this order only: BENCH CHARGE RISE COIL CATCH.",
             )
             self.assertFalse(result["ok"])
 

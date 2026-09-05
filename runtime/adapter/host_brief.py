@@ -10,6 +10,7 @@ import yaml
 from runtime.adapter.native import describe_skill
 from runtime.adapter.packet import build_adapter_packet
 from runtime.common.registry_loader import skill_name_map
+from runtime.host.artifact_contract import is_flagship
 
 REPO = Path(__file__).resolve().parent.parent.parent
 HOST_DIR = REPO / "runtime" / "host"
@@ -109,7 +110,7 @@ def build_host_brief(
             "After artifacts exist, run: python tools/host_driver/run_stage.py advance",
         ],
     }
-    if str((intake.get("task_signals") or {}).get("quality_bar") or "") == "flagship":
+    if is_flagship(intake.get("task_signals")):
         brief["rules"].extend(
             [
                 "Flagship lock: Blender authors the hero asset. Do not skip it because a primitive is easier.",

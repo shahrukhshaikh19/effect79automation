@@ -31,5 +31,5 @@ Stage order: CREATIVE → Design Gate → PRODUCTION → EVIDENCE → CRITICS �
 - The producer chat cannot APPROVE. A new chat runs `critic-pass --attest-independent`, inspects pixels, writes critics, then the gate.
 - The conductor will override an illegal `APPROVED` to `BLOCKED_INSUFFICIENT_EVIDENCE`.
 - BM-runner YAML is not a skill output.
-- Clear premium 3D prompt: `docs/FLAGSHIP_PREMIUM_WORKFLOW.md`. Blender + craft skills are mandatory. A lathe is not complete.
+- Authored 3D / Blender-required prompt: `docs/FLAGSHIP_PREMIUM_WORKFLOW.md`. The word “premium” is not required. Blender + craft skills are mandatory. A lathe is not complete. First-frame-only evidence is not complete when the brief names scroll beats.
 - If Blender MCP/app is down: tell the user, wait, then `confirm-blender --mcp-live`. Never skip.

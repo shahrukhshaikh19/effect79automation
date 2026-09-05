@@ -16,7 +16,7 @@
 
 See `tools/host_driver/HOST_LOOP.md`.
 
-Flagship cinematic / premium 3D prompts: `docs/FLAGSHIP_PREMIUM_WORKFLOW.md`.
+Flagship authored-3D / Blender-required prompts: `docs/FLAGSHIP_PREMIUM_WORKFLOW.md`. The word “premium” is not required.
 
 ## Honest limit
 
