@@ -1,0 +1,224 @@
+benchmark_id: BM-002
+contract_version: '1.0'
+status: REGISTERED
+scoring_approval: pending_operator_review
+scoring_note: >
+  PROPOSED scoring weights — NOT FROZEN. Operator must explicitly approve weights
+  before freeze. Benchmark score != ACOS Quality Gate status. ACOS certified Quality
+  Gate remains authoritative. Hard rejects cannot be averaged away. Benchmark criteria
+  may add measurability but must not bypass ACOS hard-reject rules or evidence requirements.
+dimensions:
+  functional:
+    applicable: true
+    weight: 7
+    minimum_score: null
+    hard_fail_conditions:
+    - not_a_functional_web_experience
+    - broken_webgl_or_interaction
+    - broken_navigation_or_interaction
+    - obvious_console_runtime_errors
+    evidence_required:
+    - E-002
+    - E-005
+    - E-006
+    evaluator_type: human_and_machine
+  creative:
+    applicable: true
+    weight: 10
+    minimum_score: null
+    hard_fail_conditions:
+    - no_intentional_creative_concept
+    - generic_ai_generated_aesthetic
+    - imitates_recognizable_brand
+    - copies_existing_website
+    - three_d_disconnected_from_page_storytelling
+    evidence_required:
+    - E-001
+    - E-003
+    - E-012
+    evaluator_type: human
+  visual:
+    applicable: true
+    weight: 10
+    minimum_score: null
+    hard_fail_conditions:
+    - placeholder_quality_visual_assets
+    - incoherent_visual_system
+    - visual_quality_below_premium_benchmark_intent
+    evidence_required:
+    - E-001
+    - E-003
+    - E-011
+    evaluator_type: human_and_machine
+  three_d_quality:
+    applicable: true
+    weight: 17
+    minimum_score: null
+    hard_fail_conditions:
+    - three_d_decorative_checkbox_only
+    - primitive_demo_quality_scene_as_premium
+    - rotating_model_viewer_without_meaningful_experience
+    - static_render_embedded_as_experience
+    - simple_object_spin_on_scroll_only
+    - visibly_poor_geometry_or_proportions
+    - visibly_weak_materials
+    - poor_3d_quality_when_meaningful_3d_used
+    evidence_required:
+    - E-011
+    - E-012
+    - E-013
+    evaluator_type: human
+    evaluation_requirements:
+      independent_3d_critique: required
+      critic_selection: normal_acos_routing
+      quality_gate: required
+  cinematic_direction:
+    applicable: true
+    weight: 14
+    minimum_score: null
+    hard_fail_conditions:
+    - flat_unintentional_lighting
+    - incoherent_camera_or_composition
+    - no_intentional_cinematic_camera_work
+    evidence_required:
+    - E-012
+    - E-013
+    - E-007
+    evaluator_type: human
+  motion_quality:
+    applicable: true
+    weight: 11
+    minimum_score: null
+    hard_fail_conditions:
+    - meaningless_decorative_animation
+    - motion_without_narrative_or_interaction_purpose
+    evidence_required:
+    - E-007
+    - E-013
+    evaluator_type: human
+  responsive:
+    applicable: true
+    weight: 11
+    minimum_score: null
+    hard_fail_conditions:
+    - catastrophic_breakage_at_required_viewports
+    - desktop_only_designed_experience
+    - desktop_only_3d_composition
+    - major_mobile_framing_failure
+    evidence_required:
+    - E-001
+    - E-004
+    - E-014
+    evaluator_type: machine
+  performance:
+    applicable: true
+    weight: 9
+    minimum_score: null
+    hard_fail_conditions:
+    - unjustified_severe_performance_degradation
+    - broken_webgl_or_interaction
+    evidence_required:
+    - E-009
+    - E-005
+    evaluator_type: machine
+  accessibility:
+    applicable: true
+    weight: 5
+    minimum_score: null
+    hard_fail_conditions:
+    - reduced_motion_not_considered_where_applicable
+    evidence_required:
+    - E-008
+    evaluator_type: machine
+  engineering:
+    applicable: true
+    weight: 6
+    minimum_score: null
+    hard_fail_conditions:
+    - prototype_quality_shortcuts_in_final_acceptance
+    - insufficient_evidence_for_quality_gate
+    - fabricated_evidence
+    - missing_required_3d_evidence
+    evidence_required:
+    - E-005
+    - E-006
+    - E-010
+    - E-015
+    evaluator_type: machine
+  reference_fidelity:
+    applicable: false
+    weight: 0
+    minimum_score: null
+    hard_fail_conditions: []
+    evidence_required: []
+    evaluator_type: human
+    not_applicable_reason: no_reference_design_supplied
+hard_failures:
+- copies_existing_website
+- recreates_supplied_commercial_design
+- imitates_recognizable_brand
+- generic_saas_landing_template
+- generic_imitation_of_recognizable_premium_websites
+- predictable_gradient_heavy_ai_aesthetics
+- arbitrary_glassmorphism
+- excessive_glow_without_purpose
+- random_floating_cards
+- meaningless_decorative_animation
+- motion_without_narrative_or_interaction_purpose
+- three_d_decorative_checkbox_only
+- primitive_demo_quality_scene_as_premium
+- rotating_model_viewer_without_meaningful_experience
+- static_render_embedded_as_experience
+- simple_object_spin_on_scroll_only
+- visibly_poor_geometry_or_proportions
+- visibly_weak_materials
+- flat_unintentional_lighting
+- incoherent_camera_or_composition
+- no_intentional_cinematic_camera_work
+- broken_webgl_or_interaction
+- three_d_disconnected_from_page_storytelling
+- desktop_only_designed_experience
+- desktop_only_3d_composition
+- major_mobile_framing_failure
+- visual_quality_below_premium_benchmark_intent
+- poor_3d_quality_when_meaningful_3d_used
+- usability_sacrificed_for_effects
+- unjustified_performance_sacrifice
+- placeholder_quality_visual_assets
+- not_a_functional_web_experience
+- obvious_layout_breakage
+- obvious_console_runtime_errors
+- broken_navigation_or_interaction
+- fabricated_evidence
+- missing_required_3d_evidence
+- benchmark_aesthetic_cross_system_memory_promotion_forbidden
+weight_normalization:
+  rule: single_mandatory_3d_profile
+  enforced: true
+  post_execution_weight_mutation: forbidden
+  approval_status: pending_operator_review
+  note: >
+    Weights proposed for operator review. BM-002 mandates meaningful real-time 3D;
+    no no-3D fallback profile. three_d_quality and cinematic_direction carry combined
+    33% weight. Weights fixed at contract freeze only after operator approval.
+  profiles:
+    mandatory_cinematic_3d:
+      condition: meaningful_real_time_3d_required_by_benchmark
+      dimensions:
+        functional: 7
+        creative: 10
+        visual: 10
+        three_d_quality: 17
+        cinematic_direction: 14
+        motion_quality: 11
+        responsive: 11
+        performance: 9
+        accessibility: 5
+        engineering: 6
+      sum: 100
+revision:
+  version: '1.0'
+  parent_version: null
+  reason: initial_registration_pending_operator_approval
+  changed_by: operator
+  changed_at: '2026-09-05T10:30:00Z'

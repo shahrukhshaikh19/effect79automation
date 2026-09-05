@@ -1,0 +1,157 @@
+benchmark_id: BM-002
+contract_version: '1.0'
+status: REGISTERED
+evidence_plan:
+- evidence_id: E-001
+  dimension: responsive
+  type: browser_screenshot
+  required: true
+  capture_stage: post_execution
+  acceptance_use: required_viewport_renders_and_full_page_scene_context
+  viewports:
+  - name: desktop
+    width: 1440
+    height: 900
+  - name: laptop
+    width: 1280
+    height: 800
+  - name: tablet
+    width: 768
+    height: 1024
+  - name: mobile
+    width: 390
+    height: 844
+  capture_modes:
+  - viewport
+  - full_page
+- evidence_id: E-002
+  dimension: functional
+  type: implementation_completion_check
+  required: true
+  capture_stage: post_execution
+  acceptance_use: verify_functional_interactive_3d_web_experience_not_static_mockup
+  requirements:
+  - real_time_webgl_three_d_scene_present
+  - not_static_render_embedded_only
+  - not_model_viewer_only
+- evidence_id: E-003
+  dimension: visual
+  type: visual_consistency_review
+  required: true
+  capture_stage: post_execution
+  acceptance_use: visual_coherence_art_direction_and_3d_dom_integration
+- evidence_id: E-004
+  dimension: responsive
+  type: responsive_behavior_check
+  required: true
+  capture_stage: post_execution
+  acceptance_use: verify_no_catastrophic_breakage_between_evaluation_sizes
+- evidence_id: E-005
+  dimension: engineering
+  type: browser_console_log
+  required: true
+  capture_stage: post_execution
+  acceptance_use: detect_obvious_console_runtime_and_webgl_errors
+  browser: chromium
+- evidence_id: E-006
+  dimension: engineering
+  type: network_request_log
+  required: true
+  capture_stage: post_execution
+  acceptance_use: detect_failed_network_requests_and_asset_load_failures
+  browser: chromium
+- evidence_id: E-007
+  dimension: motion_quality
+  type: interaction_recording
+  required: true
+  capture_stage: post_execution
+  acceptance_use: meaningful_scroll_interaction_camera_and_motion_choreography
+  required_captures:
+  - scroll_driven_scene_progression
+  - key_interaction_states
+  - camera_object_coordination
+- evidence_id: E-008
+  dimension: accessibility
+  type: reduced_motion_behavior_check
+  required: true
+  capture_stage: post_execution
+  acceptance_use: reduced_motion_considered_for_3d_and_dom_motion
+- evidence_id: E-009
+  dimension: performance
+  type: performance_metrics
+  required: true
+  capture_stage: post_execution
+  acceptance_use: relevant_load_runtime_timing_interaction_smoothness_and_degradation
+- evidence_id: E-010
+  dimension: engineering
+  type: quality_gate_provenance
+  required: true
+  capture_stage: post_execution
+  acceptance_use: acos_quality_gate_decision_provenance
+- evidence_id: E-011
+  dimension: three_d_quality
+  type: 3d_quality_review
+  required: true
+  capture_stage: post_execution
+  acceptance_use: independent_3d_quality_evaluation_geometry_materials_lighting
+  evaluation_requirements:
+    independent_3d_critique: required
+    critic_selection: normal_acos_routing
+    quality_gate: required
+- evidence_id: E-012
+  dimension: cinematic_direction
+  type: scene_state_captures
+  required: true
+  capture_stage: post_execution
+  acceptance_use: key_cinematic_scene_states_camera_framing_and_spatial_storytelling
+  minimum_states:
+  - opening_establishing_state
+  - product_reveal_or_focus_state
+  - mid_experience_progression_state
+  - closing_or_cta_state
+- evidence_id: E-013
+  dimension: cinematic_direction
+  type: camera_scene_progression_log
+  required: true
+  capture_stage: post_execution
+  acceptance_use: document_camera_movement_scene_transitions_and_scroll_interaction_mapping
+- evidence_id: E-014
+  dimension: responsive
+  type: responsive_3d_composition_check
+  required: true
+  capture_stage: post_execution
+  acceptance_use: camera_recomposition_object_scale_typography_3d_relationship_per_viewport
+  viewports:
+  - name: desktop
+    width: 1440
+    height: 900
+  - name: laptop
+    width: 1280
+    height: 800
+  - name: tablet
+    width: 768
+    height: 1024
+  - name: mobile
+    width: 390
+    height: 844
+- evidence_id: E-015
+  dimension: engineering
+  type: design_gate_provenance
+  required: true
+  capture_stage: post_execution
+  acceptance_use: acos_design_gate_decision_provenance
+hash_note: 'benchmark_contract_sha256 covers frozen registration fields only. Excludes execution timestamps, runtime results, scores, and evidence outputs.
+
+  '
+contract_hash:
+  algorithm: sha256
+  includes: registration_fields_excluding_hash_and_execution
+  excludes:
+  - contract_hash
+  - benchmark_contract_sha256
+  - execution_state
+  - benchmark_score
+  - benchmark_result
+  - frozen_at
+  - scores
+  - evidence_outputs

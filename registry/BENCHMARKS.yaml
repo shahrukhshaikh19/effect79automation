@@ -68,3 +68,23 @@ benchmarks:
         archive_path: benchmarks/BM-001/execution/runs/bm001-run-4bd803dd4125
       report_path: benchmarks/BM-001/execution/run/EXECUTION_REPORT.yaml
       implementation_path: benchmarks/BM-001/execution/implementation
+  - benchmark_id: BM-002
+    title: Cinematic Interactive 3D Flagship — Fictional Premium Physical Technology Product
+    contract_version: "1.0"
+    status: REGISTERED
+    lifecycle_state: OPERATOR_APPROVAL_PENDING
+    registration_path: benchmarks/BM-002/REGISTRATION.yaml
+    operator_confirmation_status: pending
+    scoring_approval: pending_operator_review
+    frozen_contract_sha256: null
+    frozen_source_commit_sha: null
+    frozen_at: null
+    operator_confirmation:
+      brief_correct: pending
+      references_correct: pending
+      acceptance_contract_correct: pending
+      scoring_weights_correct: pending
+    execution:
+      status: NOT_STARTED
+      benchmark_result: NOT_EXECUTED
+      benchmark_score: null

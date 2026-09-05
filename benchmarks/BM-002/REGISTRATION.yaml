@@ -1,0 +1,922 @@
+benchmark_id: BM-002
+title: Cinematic Interactive 3D Flagship — Fictional Premium Physical Technology Product
+status: REGISTERED
+lifecycle_state: OPERATOR_APPROVAL_PENDING
+created_at: '2026-09-05T10:30:00Z'
+contract_version: '1.0'
+operator_input:
+  source_file: benchmarks/BM-002/ORIGINAL_INPUT.md
+  original_text: '# BM-002 — CINEMATIC 3D FLAGSHIP BENCHMARK — OPERATOR INPUT
+
+
+    ## Purpose
+
+
+    Test ACOS as a **premium cinematic interactive 3D web-production system**, not as a normal landing-page generator.
+
+
+    This benchmark must specifically stress the capabilities for which ACOS was built:
+
+
+    * creative direction
+
+    * art direction
+
+    * experience architecture
+
+    * cinematic 3D direction
+
+    * motion direction
+
+    * Three.js / WebGL production
+
+    * Blender / procedural asset pipeline where justified
+
+    * responsive 3D art direction
+
+    * WebGL performance
+
+    * visual critique
+
+    * creative critique
+
+    * 3D critique
+
+    * evidence-driven correction
+
+    * Quality Gate
+
+
+    ## Operator intent
+
+
+    BM-002 must require an **original fictional premium physical technology/product experience**.
+
+
+    The exact fictional product name, identity, visual language, scene concept and storytelling may be originated by ACOS
+    during execution.
+
+
+    Do NOT imitate an existing brand or website.
+
+
+    ## Mandatory deliverable character
+
+
+    The final BM-002 deliverable must be an actual functional web experience where **meaningful real-time 3D is a core part
+    of the experience**.
+
+
+    3D is NOT optional for BM-002.
+
+
+    The experience must include:
+
+
+    * a real three-dimensional product/object/scene
+
+    * intentional cinematic camera work
+
+    * authored lighting and materials
+
+    * meaningful spatial composition
+
+    * scroll and/or interaction-driven scene progression
+
+    * integration between WebGL/3D and DOM/UI typography
+
+    * multiple meaningful experience sections/states
+
+    * premium motion choreography
+
+    * responsive adaptation of camera/composition
+
+    * production-quality browser implementation
+
+
+    A static render placed inside a webpage does NOT satisfy the benchmark.
+
+
+    A rotating GLB/model viewer alone does NOT satisfy the benchmark.
+
+
+    A simple object spinning on scroll does NOT satisfy the benchmark.
+
+
+    ## 3D requirement
+
+
+    Benchmark semantics must cause ACOS routing to determine:
+
+
+    `requires_3d = true`
+
+
+    through the task requirements themselves.
+
+
+    Do NOT manually hard-code ACOS skill IDs in the benchmark.
+
+
+    The Phase F router remains responsible for actual skill selection.
+
+
+    ## Blender
+
+
+    Blender itself is NOT automatically mandatory.
+
+
+    The chosen production pipeline may use Blender-generated assets, procedural Three.js geometry, imported/generated 3D assets,
+    or another approved production method depending on ACOS creative/technical reasoning.
+
+
+    However, the resulting 3D quality must be production-grade.
+
+
+    If Blender materially improves the required asset quality, routing/tool selection should be able to use it.
+
+
+    Do not avoid Blender merely because a cheaper primitive implementation is easier.
+
+
+    ## Cinematic quality
+
+
+    The benchmark must evaluate actual cinematic craft, including where applicable:
+
+
+    * camera framing
+
+    * camera movement
+
+    * focal hierarchy
+
+    * depth
+
+    * lighting direction
+
+    * highlights/shadows
+
+    * material response
+
+    * scene transitions
+
+    * visual rhythm
+
+    * spatial storytelling
+
+    * product reveal
+
+    * composition between 3D and typography
+
+    * emotional/brand atmosphere
+
+
+    ## Motion
+
+
+    Motion must have narrative or interaction purpose.
+
+
+    Reject meaningless floating, arbitrary parallax, random object rotation, animation added only for decoration, and excessive
+    movement that hurts usability.
+
+
+    Evaluate timing, easing, sequencing, continuity, scroll choreography, interaction feedback, camera/object coordination,
+    and reduced-motion strategy.
+
+
+    ## Responsive 3D art direction
+
+
+    Desktop composition must NOT simply shrink onto mobile.
+
+
+    Required evaluation viewports:
+
+
+    * Desktop: 1440 × 900
+
+    * Laptop: 1280 × 800
+
+    * Tablet: 768 × 1024
+
+    * Mobile: 390 × 844
+
+
+    Evaluate camera recomposition, object scale/position, typography/3D relationship, interaction adaptation, readable framing,
+    scene cropping, and performance/degradation strategy.
+
+
+    ## Performance
+
+
+    High-end visuals must not excuse unusable performance.
+
+
+    The benchmark must define measurable evidence for browser/runtime health, failed requests, WebGL/runtime errors, relevant
+    load/runtime timing, responsive stability, asset/network weight where measurable, interaction smoothness where measurable,
+    and graceful fallback/degradation where necessary.
+
+
+    Do not invent arbitrary performance thresholds unless justified by existing ACOS policy or operator-approved benchmark
+    criteria.
+
+
+    ## Anti-cheap-3D hard failures
+
+
+    The acceptance contract must explicitly prevent false cinematic PASS for cases such as decorative-checkbox 3D, primitive/demo-quality
+    scenes, model-viewer-only experiences, poor geometry/materials/lighting, broken WebGL, disconnected 3D storytelling, desktop-only
+    composition, major mobile framing failure, generic imitation, fabricated evidence, and missing required 3D evidence.
+
+
+    Do not map these to HR IDs arbitrarily; canonical Quality Gate owns HR semantics.
+
+
+    ## Critic expectation
+
+
+    BM-002 must require independent evaluation capabilities for visual quality, creative quality, 3D quality, responsive behavior,
+    motion quality, performance, and accessibility where applicable.
+
+
+    Do NOT hard-code exact ACOS skill IDs. Use role/capability semantics and normal Phase F routing.
+
+
+    ## Evidence
+
+
+    BM-002 evidence contract must require sufficient real execution evidence to judge the result, including viewport renders,
+    3D-specific visual evidence, interaction/scroll states, camera/scene progression, responsive 3D behavior, runtime/console
+    evidence, network failures, performance evidence, reduced-motion behavior, implementation completion, critic findings,
+    Design Gate provenance, and Quality Gate provenance.
+
+
+    If evidence cannot support a quality claim, `BLOCKED_INSUFFICIENT_EVIDENCE` must remain possible.
+
+
+    ## Scoring
+
+
+    Create a proposed BM-002 scoring model for operator review.
+
+
+    3D/cinematic quality must carry meaningful weight.
+
+
+    Quality Gate remains authoritative over numeric score.
+
+
+    Do NOT freeze arbitrary weights without operator approval.
+
+
+    ## Lifecycle
+
+
+    BM-002 = REGISTERED / OPERATOR_APPROVAL_PENDING
+
+
+    Do NOT freeze until operator explicitly approves the derived acceptance contract.
+
+
+    Do NOT execute BM-002 yet.
+
+
+    Do NOT start PF-3.
+
+
+    ## Repository location
+
+
+    All BM-002 registration artifacts must live under:
+
+
+    `C:\Shahrukh\Effect79\effect79automation\benchmarks\BM-002\`
+
+    '
+normalized_brief:
+  objective: Evaluate whether ACOS can produce a premium cinematic interactive 3D web experience for an original fictional
+    premium physical technology/product.
+  deliverable_type: cinematic_interactive_3d_web_experience
+  product:
+    type: fictional_premium_physical_technology_product
+    name: not_supplied
+    positioning: not_supplied
+    visual_concept: to_be_determined_by_acos_creative_process
+    must_not_imitate_existing_commercial_brand: true
+  primary_goal: Test ACOS as a premium cinematic interactive 3D web-production system with production-grade meaningful real-time
+    3D, not as a normal landing-page generator.
+  creative_freedom:
+    visual_concept: true
+    scene_concept: true
+    page_structure: true
+    layout: true
+    typography_direction: true
+    color_system: true
+    interaction_language: true
+    motion_language: true
+    camera_language: true
+    lighting_and_materials: true
+    transitions: true
+    visual_storytelling: true
+    production_pipeline_selection: true
+    routing: normal_acos_routing_only_no_manual_skill_prescription
+  three_d_policy: mandatory_meaningful_real_time_3d_core_to_experience
+  quality_target: production_grade_cinematic_interactive_3d_web_experience_credibly_presentable as premium professional work
+  routing_task_signals:
+    deliverable_profile: interactive_3d
+    requires_3d: true
+    requires_visual_output: true
+    requires_creative_direction: true
+    requires_responsive: true
+    requires_accessibility: true
+    requires_motion: true
+    requires_frontend: true
+    requires_cinematic_3d_direction: true
+    requires_spatial_interaction: true
+  avoid_list:
+  - copy_existing_website
+  - recreate_supplied_commercial_design
+  - imitate_recognizable_premium_brand_or_website
+  - static_render_embedded_as_experience
+  - rotating_model_viewer_only
+  - simple_object_spin_on_scroll_only
+  - decorative_checkbox_3d
+  - primitive_demo_quality_scene_as_premium
+  - meaningless_floating_or_parallax
+  - random_object_rotation
+  - animation_for_decoration_only
+  - desktop_only_3d_composition
+  - sacrifice_usability_for_visual_effects
+  - sacrifice_performance_without_justified_creative_reason
+  - placeholder_quality_visual_assets
+  - fabricated_evidence
+  target_viewports:
+  - name: desktop
+    width: 1440
+    height: 900
+  - name: laptop
+    width: 1280
+    height: 800
+  - name: tablet
+    width: 768
+    height: 1024
+  - name: mobile
+    width: 390
+    height: 844
+  primary_browser: chromium
+  interaction_modalities_required:
+  - scroll_driven_scene_progression
+  - pointer_interaction
+  - real_time_webgl_3d
+  - dom_ui_typography_integration
+  - cinematic_camera_work
+  - premium_motion_choreography
+  reduced_motion_required: true
+  benchmark_independence: bm002_visual_and_aesthetic_decisions_must_not_become_universal_system_style_rules
+references: []
+assets: []
+functional_requirements:
+- id: FR-01
+  description: Actual functional interactive 3D web experience, not a static mockup or static render embed.
+  source:
+    type: operator
+    source_ref: mandatory_deliverable_character
+- id: FR-02
+  description: Meaningful real-time 3D scene/object as core experience — mandatory, not optional.
+  source:
+    type: operator
+    source_ref: 3d_requirement
+- id: FR-03
+  description: Multiple meaningful experience sections/states with scroll and/or interaction-driven scene progression.
+  source:
+    type: operator
+    source_ref: mandatory_deliverable_character
+- id: FR-04
+  description: Integration between WebGL/3D and DOM/UI typography.
+  source:
+    type: operator
+    source_ref: mandatory_deliverable_character
+- id: FR-05
+  description: Responsive adaptation of camera/composition across required viewports — not desktop shrink-only.
+  source:
+    type: operator
+    source_ref: responsive_3d_art_direction
+- id: FR-06
+  description: Usable navigation and interaction without broken WebGL/runtime behavior.
+  source:
+    type: operator
+    source_ref: performance
+- id: FR-07
+  description: Production-quality browser implementation rather than prototype-quality shortcuts.
+  source:
+    type: operator
+    source_ref: mandatory_deliverable_character
+- id: FR-08
+  description: Evidence sufficient for ACOS quality gates to judge the result.
+  source:
+    type: operator
+    source_ref: evidence
+- id: FR-09
+  description: Task signals must cause requires_3d=true through benchmark semantics — no manual skill prescription.
+  source:
+    type: operator
+    source_ref: 3d_requirement
+creative_requirements:
+- id: CR-01
+  description: Original fictional premium physical technology/product concept with intentional creative direction.
+  source:
+    type: operator
+    source_ref: operator_intent
+- id: CR-02
+  description: Intentional cinematic camera work — framing, movement, focal hierarchy, depth.
+  source:
+    type: operator
+    source_ref: cinematic_quality
+- id: CR-03
+  description: Authored lighting, materials, highlights/shadows, and material response.
+  source:
+    type: operator
+    source_ref: cinematic_quality
+- id: CR-04
+  description: Meaningful spatial composition and spatial storytelling including product reveal.
+  source:
+    type: operator
+    source_ref: cinematic_quality
+- id: CR-05
+  description: Premium motion choreography with narrative or interaction purpose.
+  source:
+    type: operator
+    source_ref: motion
+- id: CR-06
+  description: Composition between 3D and typography with emotional/brand atmosphere.
+  source:
+    type: operator
+    source_ref: cinematic_quality
+- id: CR-07
+  description: Fictional product identity must not imitate an existing commercial brand or recognizable premium website.
+  source:
+    type: operator
+    source_ref: operator_intent
+- id: CR-08
+  description: Production pipeline (Blender, procedural Three.js, imported assets, or approved method) chosen by ACOS reasoning
+    — Blender not mandatory but must not be avoided when it materially improves quality.
+  source:
+    type: operator
+    source_ref: blender
+acceptance_contract:
+  benchmark_id: BM-002
+  contract_version: '1.0'
+  status: REGISTERED
+  scoring_approval: pending_operator_review
+  scoring_note: 'PROPOSED scoring weights — NOT FROZEN. Operator must explicitly approve weights before freeze. Benchmark
+    score != ACOS Quality Gate status. ACOS certified Quality Gate remains authoritative. Hard rejects cannot be averaged
+    away. Benchmark criteria may add measurability but must not bypass ACOS hard-reject rules or evidence requirements.
+
+    '
+  dimensions:
+    functional:
+      applicable: true
+      weight: 7
+      minimum_score: null
+      hard_fail_conditions:
+      - not_a_functional_web_experience
+      - broken_webgl_or_interaction
+      - broken_navigation_or_interaction
+      - obvious_console_runtime_errors
+      evidence_required:
+      - E-002
+      - E-005
+      - E-006
+      evaluator_type: human_and_machine
+    creative:
+      applicable: true
+      weight: 10
+      minimum_score: null
+      hard_fail_conditions:
+      - no_intentional_creative_concept
+      - generic_ai_generated_aesthetic
+      - imitates_recognizable_brand
+      - copies_existing_website
+      - three_d_disconnected_from_page_storytelling
+      evidence_required:
+      - E-001
+      - E-003
+      - E-012
+      evaluator_type: human
+    visual:
+      applicable: true
+      weight: 10
+      minimum_score: null
+      hard_fail_conditions:
+      - placeholder_quality_visual_assets
+      - incoherent_visual_system
+      - visual_quality_below_premium_benchmark_intent
+      evidence_required:
+      - E-001
+      - E-003
+      - E-011
+      evaluator_type: human_and_machine
+    three_d_quality:
+      applicable: true
+      weight: 17
+      minimum_score: null
+      hard_fail_conditions:
+      - three_d_decorative_checkbox_only
+      - primitive_demo_quality_scene_as_premium
+      - rotating_model_viewer_without_meaningful_experience
+      - static_render_embedded_as_experience
+      - simple_object_spin_on_scroll_only
+      - visibly_poor_geometry_or_proportions
+      - visibly_weak_materials
+      - poor_3d_quality_when_meaningful_3d_used
+      evidence_required:
+      - E-011
+      - E-012
+      - E-013
+      evaluator_type: human
+      evaluation_requirements:
+        independent_3d_critique: required
+        critic_selection: normal_acos_routing
+        quality_gate: required
+    cinematic_direction:
+      applicable: true
+      weight: 14
+      minimum_score: null
+      hard_fail_conditions:
+      - flat_unintentional_lighting
+      - incoherent_camera_or_composition
+      - no_intentional_cinematic_camera_work
+      evidence_required:
+      - E-012
+      - E-013
+      - E-007
+      evaluator_type: human
+    motion_quality:
+      applicable: true
+      weight: 11
+      minimum_score: null
+      hard_fail_conditions:
+      - meaningless_decorative_animation
+      - motion_without_narrative_or_interaction_purpose
+      evidence_required:
+      - E-007
+      - E-013
+      evaluator_type: human
+    responsive:
+      applicable: true
+      weight: 11
+      minimum_score: null
+      hard_fail_conditions:
+      - catastrophic_breakage_at_required_viewports
+      - desktop_only_designed_experience
+      - desktop_only_3d_composition
+      - major_mobile_framing_failure
+      evidence_required:
+      - E-001
+      - E-004
+      - E-014
+      evaluator_type: machine
+    performance:
+      applicable: true
+      weight: 9
+      minimum_score: null
+      hard_fail_conditions:
+      - unjustified_severe_performance_degradation
+      - broken_webgl_or_interaction
+      evidence_required:
+      - E-009
+      - E-005
+      evaluator_type: machine
+    accessibility:
+      applicable: true
+      weight: 5
+      minimum_score: null
+      hard_fail_conditions:
+      - reduced_motion_not_considered_where_applicable
+      evidence_required:
+      - E-008
+      evaluator_type: machine
+    engineering:
+      applicable: true
+      weight: 6
+      minimum_score: null
+      hard_fail_conditions:
+      - prototype_quality_shortcuts_in_final_acceptance
+      - insufficient_evidence_for_quality_gate
+      - fabricated_evidence
+      - missing_required_3d_evidence
+      evidence_required:
+      - E-005
+      - E-006
+      - E-010
+      - E-015
+      evaluator_type: machine
+    reference_fidelity:
+      applicable: false
+      weight: 0
+      minimum_score: null
+      hard_fail_conditions: []
+      evidence_required: []
+      evaluator_type: human
+      not_applicable_reason: no_reference_design_supplied
+  hard_failures: &id001
+  - copies_existing_website
+  - recreates_supplied_commercial_design
+  - imitates_recognizable_brand
+  - generic_saas_landing_template
+  - generic_imitation_of_recognizable_premium_websites
+  - predictable_gradient_heavy_ai_aesthetics
+  - arbitrary_glassmorphism
+  - excessive_glow_without_purpose
+  - random_floating_cards
+  - meaningless_decorative_animation
+  - motion_without_narrative_or_interaction_purpose
+  - three_d_decorative_checkbox_only
+  - primitive_demo_quality_scene_as_premium
+  - rotating_model_viewer_without_meaningful_experience
+  - static_render_embedded_as_experience
+  - simple_object_spin_on_scroll_only
+  - visibly_poor_geometry_or_proportions
+  - visibly_weak_materials
+  - flat_unintentional_lighting
+  - incoherent_camera_or_composition
+  - no_intentional_cinematic_camera_work
+  - broken_webgl_or_interaction
+  - three_d_disconnected_from_page_storytelling
+  - desktop_only_designed_experience
+  - desktop_only_3d_composition
+  - major_mobile_framing_failure
+  - visual_quality_below_premium_benchmark_intent
+  - poor_3d_quality_when_meaningful_3d_used
+  - usability_sacrificed_for_effects
+  - unjustified_performance_sacrifice
+  - placeholder_quality_visual_assets
+  - not_a_functional_web_experience
+  - obvious_layout_breakage
+  - obvious_console_runtime_errors
+  - broken_navigation_or_interaction
+  - fabricated_evidence
+  - missing_required_3d_evidence
+  - benchmark_aesthetic_cross_system_memory_promotion_forbidden
+  weight_normalization:
+    rule: single_mandatory_3d_profile
+    enforced: true
+    post_execution_weight_mutation: forbidden
+    approval_status: pending_operator_review
+    note: 'Weights proposed for operator review. BM-002 mandates meaningful real-time 3D; no no-3D fallback profile. three_d_quality
+      and cinematic_direction carry combined 33% weight. Weights fixed at contract freeze only after operator approval.
+
+      '
+    profiles:
+      mandatory_cinematic_3d:
+        condition: meaningful_real_time_3d_required_by_benchmark
+        dimensions:
+          functional: 7
+          creative: 10
+          visual: 10
+          three_d_quality: 17
+          cinematic_direction: 14
+          motion_quality: 11
+          responsive: 11
+          performance: 9
+          accessibility: 5
+          engineering: 6
+        sum: 100
+  revision:
+    version: '1.0'
+    parent_version: null
+    reason: initial_registration_pending_operator_approval
+    changed_by: operator
+    changed_at: '2026-09-05T10:30:00Z'
+evidence_plan:
+- evidence_id: E-001
+  dimension: responsive
+  type: browser_screenshot
+  required: true
+  capture_stage: post_execution
+  acceptance_use: required_viewport_renders_and_full_page_scene_context
+  viewports:
+  - name: desktop
+    width: 1440
+    height: 900
+  - name: laptop
+    width: 1280
+    height: 800
+  - name: tablet
+    width: 768
+    height: 1024
+  - name: mobile
+    width: 390
+    height: 844
+  capture_modes:
+  - viewport
+  - full_page
+- evidence_id: E-002
+  dimension: functional
+  type: implementation_completion_check
+  required: true
+  capture_stage: post_execution
+  acceptance_use: verify_functional_interactive_3d_web_experience_not_static_mockup
+  requirements:
+  - real_time_webgl_three_d_scene_present
+  - not_static_render_embedded_only
+  - not_model_viewer_only
+- evidence_id: E-003
+  dimension: visual
+  type: visual_consistency_review
+  required: true
+  capture_stage: post_execution
+  acceptance_use: visual_coherence_art_direction_and_3d_dom_integration
+- evidence_id: E-004
+  dimension: responsive
+  type: responsive_behavior_check
+  required: true
+  capture_stage: post_execution
+  acceptance_use: verify_no_catastrophic_breakage_between_evaluation_sizes
+- evidence_id: E-005
+  dimension: engineering
+  type: browser_console_log
+  required: true
+  capture_stage: post_execution
+  acceptance_use: detect_obvious_console_runtime_and_webgl_errors
+  browser: chromium
+- evidence_id: E-006
+  dimension: engineering
+  type: network_request_log
+  required: true
+  capture_stage: post_execution
+  acceptance_use: detect_failed_network_requests_and_asset_load_failures
+  browser: chromium
+- evidence_id: E-007
+  dimension: motion_quality
+  type: interaction_recording
+  required: true
+  capture_stage: post_execution
+  acceptance_use: meaningful_scroll_interaction_camera_and_motion_choreography
+  required_captures:
+  - scroll_driven_scene_progression
+  - key_interaction_states
+  - camera_object_coordination
+- evidence_id: E-008
+  dimension: accessibility
+  type: reduced_motion_behavior_check
+  required: true
+  capture_stage: post_execution
+  acceptance_use: reduced_motion_considered_for_3d_and_dom_motion
+- evidence_id: E-009
+  dimension: performance
+  type: performance_metrics
+  required: true
+  capture_stage: post_execution
+  acceptance_use: relevant_load_runtime_timing_interaction_smoothness_and_degradation
+- evidence_id: E-010
+  dimension: engineering
+  type: quality_gate_provenance
+  required: true
+  capture_stage: post_execution
+  acceptance_use: acos_quality_gate_decision_provenance
+- evidence_id: E-011
+  dimension: three_d_quality
+  type: 3d_quality_review
+  required: true
+  capture_stage: post_execution
+  acceptance_use: independent_3d_quality_evaluation_geometry_materials_lighting
+  evaluation_requirements:
+    independent_3d_critique: required
+    critic_selection: normal_acos_routing
+    quality_gate: required
+- evidence_id: E-012
+  dimension: cinematic_direction
+  type: scene_state_captures
+  required: true
+  capture_stage: post_execution
+  acceptance_use: key_cinematic_scene_states_camera_framing_and_spatial_storytelling
+  minimum_states:
+  - opening_establishing_state
+  - product_reveal_or_focus_state
+  - mid_experience_progression_state
+  - closing_or_cta_state
+- evidence_id: E-013
+  dimension: cinematic_direction
+  type: camera_scene_progression_log
+  required: true
+  capture_stage: post_execution
+  acceptance_use: document_camera_movement_scene_transitions_and_scroll_interaction_mapping
+- evidence_id: E-014
+  dimension: responsive
+  type: responsive_3d_composition_check
+  required: true
+  capture_stage: post_execution
+  acceptance_use: camera_recomposition_object_scale_typography_3d_relationship_per_viewport
+  viewports:
+  - name: desktop
+    width: 1440
+    height: 900
+  - name: laptop
+    width: 1280
+    height: 800
+  - name: tablet
+    width: 768
+    height: 1024
+  - name: mobile
+    width: 390
+    height: 844
+- evidence_id: E-015
+  dimension: engineering
+  type: design_gate_provenance
+  required: true
+  capture_stage: post_execution
+  acceptance_use: acos_design_gate_decision_provenance
+hard_failures: *id001
+capability_expectations:
+  visual_work: true
+  three_d_possible: true
+  three_d_mandatory: true
+  meaningful_real_time_3d_required: true
+  cinematic_3d_direction: true
+  motion_possible: true
+  motion_expected: true
+  web_experience: true
+  webgl_three_js_production: true
+  blender_pipeline_when_justified: true
+  responsive_3d_art_direction: true
+  spatial_interaction: true
+  independent_visual_critique: true
+  independent_creative_critique: true
+  independent_3d_critique: true
+  reference_reproduction: false
+  critic_selection: normal_acos_routing_only
+tool_requirements:
+  browser_rendering:
+    required: true
+    primary_browser: chromium
+  webgl_runtime:
+    required: true
+    note: Three.js/WebGL production expected for real-time 3D deliverable
+  blender:
+    required: false
+    conditional: when_acos_determines_blender_materially_improves_asset_quality
+    must_not_be_avoided_for_convenience_when_quality_requires_it: true
+  motion_implementation:
+    required: true
+    conditional: when_motion_required_by_creative_concept
+classification:
+  deliverable_family: cinematic_interactive_3d_web_experience
+  interaction_level: high
+  visual_complexity: very_high
+  three_d_expected: true
+  three_d_mandatory: true
+  motion_expected: true
+  reference_dependency: false
+  benchmark_type: cinematic_3d_flagship_creative_production_workflow
+constraint_evaluation:
+- source_ref: operator_input
+  original_request: Do NOT manually hard-code ACOS skill IDs in the benchmark.
+  status: APPROVED_CONSTRAINT
+  reason_code: ROUTING_VIA_NORMAL_ACOS_WORKFLOW
+  reason: Executable contract requires normal routing; capability semantics only; no manual skill activation embedded.
+- source_ref: operator_input
+  original_request: 3D is NOT optional for BM-002.
+  status: APPROVED_CONSTRAINT
+  reason_code: MANDATORY_3D
+  reason: routing_task_signals.requires_3d=true and deliverable_profile=interactive_3d; three_d_quality always applicable.
+- source_ref: operator_input
+  original_request: Blender itself is NOT automatically mandatory.
+  status: APPROVED_CONSTRAINT
+  reason_code: CONDITIONAL_BLENDER
+  reason: Blender available when ACOS determines it materially improves asset quality; must not be avoided for convenience
+    alone.
+- source_ref: operator_input
+  original_request: Do NOT freeze arbitrary weights without operator approval.
+  status: APPROVED_CONSTRAINT
+  reason_code: SCORING_PENDING_OPERATOR_APPROVAL
+  reason: Acceptance contract scoring_approval=pending_operator_review; status REGISTERED not FROZEN.
+- source_ref: operator_input
+  original_request: Do not map hard failures to HR IDs arbitrarily.
+  status: APPROVED_CONSTRAINT
+  reason_code: QUALITY_GATE_OWNS_HR_SEMANTICS
+  reason: Benchmark hard_failures are acceptance concepts; canonical Quality Gate maps to HR/EB at execution.
+operator_confirmation:
+  brief_correct: pending
+  references_correct: pending
+  acceptance_contract_correct: pending
+  scoring_weights_correct: pending
+  confirmed_at: null
+  confirmed_by: null
+  approval_note: Awaiting operator review of derived acceptance contract and proposed scoring weights before freeze.
+execution_state:
+  benchmark_result: NOT_EXECUTED
+  benchmark_score: null
+  quality_gate_result: null
+  meaningful_3d_used: null
+  current_run_id: null
+revision:
+  version: '1.0'
+  parent_version: null
+  reason: initial_registration_pending_operator_approval
+  changed_by: operator
+  changed_at: '2026-09-05T10:30:00Z'
+global_memory_promotion: false
