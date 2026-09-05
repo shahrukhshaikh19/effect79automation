@@ -667,7 +667,7 @@ acceptance_contract:
     post_execution_weight_mutation: forbidden
     approval_status: pending_operator_review
     note: 'Weights proposed for operator review. BM-002 mandates meaningful real-time 3D; no no-3D fallback profile. three_d_quality
-      and cinematic_direction carry combined 33% weight. Weights fixed at contract freeze only after operator approval.
+      and cinematic_direction carry combined 31% weight. Weights fixed at contract freeze only after operator approval.
 
       '
     profiles:
