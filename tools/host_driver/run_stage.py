@@ -39,6 +39,7 @@ from runtime.host.independence import (
     host_context_identity,
     implementation_fingerprint,
 )
+from runtime.host.visual_class import validate_lookdev_evidence, validate_visual_class
 from runtime.host.capabilities import (
     USER_WAIT_MESSAGE,
     blender_readiness,
@@ -129,6 +130,8 @@ def _write_todo(session: dict[str, Any], brief: dict[str, Any], extra: list[str]
                     "- Flagship lock: Blender must author the hero. Export GLB/GLTF under `implementation/`.",
                     "- Write `direction/blender_export.yaml` with `blender_used: true`.",
                     "- Execute materials / lighting / camera skills. A lathe or cube is not complete.",
+                    "- Flagship lock: write at least two lookdev PNGs under evidence/lookdev/ from Blender viewport / browser. YAML is not lookdev.",
+                    "- If a mood reference exists, the render class must match (lit water/sky vs night-silhouette is a fail).",
                     "",
                 ]
             )
@@ -138,6 +141,7 @@ def _write_todo(session: dict[str, Any], brief: dict[str, Any], extra: list[str]
                 "- Do not capture `file://` for ES-module pages.",
                 "- Run: `python tools/host_driver/run_stage.py capture`",
                 "- Confirm at least two PNG/WebP captures under `evidence/`.",
+                "- If visual class fails (crushed/dark vs a lit reference), go back to production lookdev. Do not advance to critics.",
                 "",
             ]
         )
@@ -375,10 +379,14 @@ def cmd_advance(_: argparse.Namespace) -> int:
                 notes.extend([f"missing {m}" for m in flagship["missing"]])
                 notes.extend(flagship["invalid"])
             else:
-                state["current_stage"] = "EVIDENCE"
-                session["roles"] = ensure_roles(session)
-                session["roles"]["producer_implementation_sha256"] = implementation_fingerprint(project)
-                notes.append("Implementation present — capture real browser evidence next")
+                lookdev = validate_lookdev_evidence(project, session["intake"].get("task_signals"))
+                if not lookdev["ok"]:
+                    notes.extend(lookdev["issues"])
+                else:
+                    state["current_stage"] = "EVIDENCE"
+                    session["roles"] = ensure_roles(session)
+                    session["roles"]["producer_implementation_sha256"] = implementation_fingerprint(project)
+                    notes.append("Implementation + lookdev present — capture real browser evidence next")
     elif stage == "EVIDENCE":
         pixels = pixel_evidence(project)
         beats = validate_flagship_evidence(project, session["intake"].get("task_signals"), session["intake"].get("request") or "")
@@ -387,8 +395,14 @@ def cmd_advance(_: argparse.Namespace) -> int:
         elif not beats["ok"]:
             notes.extend(beats["missing"] + beats["invalid"])
         else:
-            state["current_stage"] = "CRITICS"
-            notes.append(f"Evidence recorded ({len(pixels)} pixels) — independent critics next")
+            visual = validate_visual_class(project, session["intake"].get("task_signals"))
+            if not visual["ok"]:
+                state["current_stage"] = "PRODUCTION"
+                notes.append("Visual class failed — back to production. GLB/YAML is not a premium result.")
+                notes.extend(visual["issues"])
+            else:
+                state["current_stage"] = "CRITICS"
+                notes.append(f"Evidence recorded ({len(pixels)} pixels) — independent critics next")
     elif stage == "CRITICS":
         critics = validate_critic_artifacts(project, planned)
         if not critics["ok"]:

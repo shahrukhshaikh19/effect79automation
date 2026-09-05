@@ -11,6 +11,7 @@
 - Design Gate is substantive. File presence cannot APPROVE.
 - Quality Gate cannot SHIP unless pixel evidence exists **and** `independent_host_context` is `DISTINCT`. A CLI `--attest-independent` flag is a claim, not proof.
 - Skill artifacts must repeat the live `SKILL.md` hash and per-step `procedure_evidence`. `skill_procedure_executed: true` is not proof.
+- Flagship lookdev is pixel-checked. A lit mood reference versus a crushed night dump fails and returns to production. This is not GetLayers and does not copy their templates.
 - The conductor never invents APPROVED. It can only block an illegal one.
 
 ## Commands

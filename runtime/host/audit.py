@@ -16,6 +16,7 @@ from runtime.host.artifact_contract import (
     viewport_manifest,
 )
 from runtime.host.design_gate import evaluate_host_design_gate
+from runtime.host.visual_class import validate_visual_class
 
 
 def ensure_roles(session: dict[str, Any]) -> dict[str, Any]:
@@ -53,6 +54,7 @@ def audit_session(session: dict[str, Any], project_dir: Path) -> dict[str, Any]:
         roles=roles,
     )
     runtime_healthy = None if manifest is None else bool(manifest.get("runtime_healthy"))
+    visual = validate_visual_class(project_dir, (session.get("intake") or {}).get("task_signals"))
 
     blockers: list[str] = []
     if not creative["ok"]:
@@ -66,6 +68,8 @@ def audit_session(session: dict[str, Any], project_dir: Path) -> dict[str, Any]:
         blockers.append("need at least two rendered evidence images under evidence/")
     if runtime_healthy is False:
         blockers.append("viewport manifest runtime_healthy is false")
+    if stage in {"CRITICS", "QUALITY_GATE", "SHIP"} and not visual["ok"]:
+        blockers.extend(visual["issues"])
     if stage in {"QUALITY_GATE", "SHIP"} and not critics["ok"]:
         blockers.extend(critics["missing"] + critics["invalid"])
     if stage in {"QUALITY_GATE", "SHIP"} and not independence["ok"]:
@@ -78,6 +82,7 @@ def audit_session(session: dict[str, Any], project_dir: Path) -> dict[str, Any]:
         and runtime_healthy is not False
         and critics["ok"]
         and independence["ok"]
+        and visual["ok"]
     )
 
     return {

@@ -117,6 +117,7 @@ def build_host_brief(
                 "Flagship lock: Blender authors the hero asset. Do not skip it because a primitive is easier.",
                 "Flagship lock: load the exported GLB in Three.js. Lathe/cube/model-viewer is not complete.",
                 "Flagship lock: if Blender MCP/app is down, tell the user, wait, confirm after connect, then start. Never skip.",
+                "Flagship lock: lookdev screenshots under evidence/lookdev/ before leaving production. A night-silhouette versus a lit mood reference is a fail — go back to lookdev.",
                 "Contract: docs/FLAGSHIP_PREMIUM_WORKFLOW.md",
             ]
         )

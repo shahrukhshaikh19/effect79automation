@@ -24,7 +24,31 @@ from runtime.host.design_gate import evaluate_host_design_gate
 from runtime.host.independence import implementation_fingerprint
 from runtime.host.prompt_intake import classify_signals, intake_from_prompt
 from runtime.host.skill_execution import SKILL_CONTRACTS, skill_md_sha256, validate_artifact_execution
+from runtime.host.visual_class import (
+    validate_lookdev_evidence,
+    validate_visual_class,
+    write_solid_png,
+)
 from runtime.routing.engine import route_task
+
+
+def _noise_png(path: Path, width: int, height: int, base: int) -> None:
+    raw = bytearray()
+    for y in range(height):
+        raw.append(0)
+        for x in range(width):
+            v = (base + ((x * 17 + y * 11) % 40)) % 256
+            raw.extend(bytes((v, min(255, v + 8), max(0, v - 6))))
+    import struct
+    import zlib
+
+    compressed = zlib.compress(bytes(raw), 1)
+    ihdr = struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)
+
+    def chunk(tag: bytes, body: bytes) -> bytes:
+        return struct.pack(">I", len(body)) + tag + body + struct.pack(">I", zlib.crc32(tag + body) & 0xFFFFFFFF)
+
+    path.write_bytes(b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", ihdr) + chunk(b"IDAT", compressed) + chunk(b"IEND", b""))
 
 
 class PromptIntakeTests(unittest.TestCase):
@@ -319,6 +343,50 @@ class FlagshipWorkflowTests(unittest.TestCase):
                 "Scroll states, this order only: BENCH CHARGE RISE COIL CATCH.",
             )
             self.assertFalse(result["ok"])
+
+
+class VisualClassTests(unittest.TestCase):
+    def test_lookdev_required_for_flagship(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            result = validate_lookdev_evidence(root, {"quality_bar": "flagship"})
+            self.assertFalse(result["ok"])
+
+    def test_crushed_hero_fails_against_lit_reference(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "references").mkdir()
+            (root / "evidence" / "viewports").mkdir(parents=True)
+            write_solid_png(root / "references" / "mood.png", 48, 48, (180, 170, 200))
+            write_solid_png(root / "evidence" / "viewports" / "desktop.png", 48, 48, (8, 6, 10))
+            result = validate_visual_class(root, {"quality_bar": "flagship"})
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("silhouette" in item or "darker" in item for item in result["issues"]))
+
+    def test_lit_hero_passes_against_lit_reference(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "references").mkdir()
+            (root / "evidence" / "viewports").mkdir(parents=True)
+            write_solid_png(root / "references" / "mood.png", 48, 48, (180, 170, 200))
+            write_solid_png(root / "evidence" / "viewports" / "desktop.png", 48, 48, (160, 150, 180))
+            result = validate_visual_class(root, {"quality_bar": "flagship"})
+            self.assertTrue(result["ok"])
+
+    def test_standard_app_skips_visual_class(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            result = validate_visual_class(Path(tmp), {"quality_bar": "standard"})
+            self.assertTrue(result["ok"])
+
+    def test_two_lookdev_shots_pass_without_reference(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            look = root / "evidence" / "lookdev"
+            look.mkdir(parents=True)
+            _noise_png(look / "a.png", 400, 280, 90)
+            _noise_png(look / "b.png", 400, 280, 100)
+            result = validate_lookdev_evidence(root, {"quality_bar": "flagship"})
+            self.assertTrue(result["ok"])
 
 
 class SkillExecutionProofTests(unittest.TestCase):

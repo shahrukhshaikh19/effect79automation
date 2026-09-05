@@ -83,3 +83,5 @@ clear prompt
 ```
 
 Premium is the bar for this prompt class. The conductor cannot invent beauty, but it can refuse a first-pass primitive as complete.
+
+Lookdev lock: at least two PNGs under `evidence/lookdev/` before production advances. After browser capture, if the hero is a crushed night-silhouette and the mood reference is lit, `advance` returns to PRODUCTION. Files and a GLB are not enough.
