@@ -1,0 +1,38 @@
+artifact_type: creative_direction
+producer_capability: ACOS-01
+routing_id: route-c47c2365a569
+activated_via_routing: false
+timestamp: '2026-09-05T05:39:08.551550+00:00'
+product:
+  name: Solstice Arc
+  category: precision resonance field instrument
+  positioning: Calibrate spatial coherence in environments where conventional sensors
+    fail.
+  concept_thesis: "Cinematic product revelation \u2014 a sculptural brass-core instrument\
+    \ suspended in controlled void, revealed through scroll-driven camera choreography\
+    \ integrated with editorial typography."
+visual_system:
+  palette:
+    void: '#0A0B0F'
+    brass: '#C8924E'
+    signal: '#5EEAD4'
+    ink: '#E8E4DC'
+    shadow: '#14161C'
+  typography:
+    display: Cormorant Garamond
+    ui: IBM Plex Sans
+  anti_patterns_avoided:
+  - model_viewer_only
+  - spinning_primitive_demo
+  - generic_saas_landing
+  - decorative_checkbox_3d
+three_d_decision:
+  meaningful_3d_used: true
+  mandatory_by_benchmark: true
+  rationale: BM-002 requires meaningful real-time WebGL/Three.js as core experience;
+    procedural authored geometry with PBR materials and cinematic camera.
+  blender_used: false
+  blender_rationale: Procedural Three.js lathe geometry and runtime lighting chosen
+    for scroll-synchronized camera and responsive recomposition; Blender not required
+    for this deliverable quality path.
+  production_pipeline: procedural_three_js_webgl

@@ -5,7 +5,9 @@ from __future__ import annotations
 from typing import Any
 
 
-def select_weight_profile(meaningful_3d_used: bool) -> str:
+def select_weight_profile(*, benchmark_id: str = "BM-001", meaningful_3d_used: bool) -> str:
+    if benchmark_id == "BM-002":
+        return "mandatory_cinematic_3d"
     return "meaningful_3d_used" if meaningful_3d_used else "no_meaningful_3d"
 
 
@@ -16,9 +18,10 @@ def score_benchmark(
     critic_report: dict[str, Any],
     evidence_completeness: dict[str, Any],
     meaningful_3d_used: bool,
+    benchmark_id: str = "BM-001",
 ) -> dict[str, Any]:
     profiles = (acceptance.get("weight_normalization") or {}).get("profiles") or {}
-    profile_name = select_weight_profile(meaningful_3d_used)
+    profile_name = select_weight_profile(benchmark_id=benchmark_id, meaningful_3d_used=meaningful_3d_used)
     profile = profiles.get(profile_name, {})
     weights = profile.get("dimensions") or {}
 
@@ -62,14 +65,14 @@ def score_benchmark(
         "motion_quality": "motion_quality",
         "performance": "performance",
         "engineering": "engineering",
+        "three_d_quality": "three_d_quality",
+        "cinematic_direction": "cinematic_direction",
     }
 
     dim_scores: dict[str, float] = {}
     provenance: dict[str, str] = {}
 
     for dim, weight in weights.items():
-        if dim == "three_d_quality":
-            continue
         source_domain = domain_map.get(dim, dim)
         score = critic_dims.get(source_domain)
         if score is None:
@@ -88,8 +91,6 @@ def score_benchmark(
 
     total = 0.0
     for dim, weight in weights.items():
-        if dim == "three_d_quality":
-            continue
         total += (dim_scores[dim] / 10.0) * float(weight)
 
     result = "PASS" if total >= 70.0 else "FAIL"

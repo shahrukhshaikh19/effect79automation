@@ -1,0 +1,120 @@
+run_id: browser-1788586749293
+timestamp: 2026-09-05T05:39:21.907Z
+target: file://C:/Shahrukh/Effect79/effect79automation/benchmarks/BM-002/execution/implementation/index.html
+browser: chromium
+browser_version: 131.0.6778.33
+page_state: loaded
+reduced_motion: false
+readiness_condition: networkidle
+duration_ms: 12614
+runtime_healthy: true
+dpr_integrity: true
+visual_quality_approved: false
+console_log_json: console_log.json
+captures:
+  - viewport: &a1
+      name: desktop
+      width: 1440
+      height: 900
+      requested_device_scale_factor: 1
+      effective_device_scale_factor: 1
+      dpr_integrity: true
+    browser: chromium
+    browser_version: 131.0.6778.33
+    reduced_motion: false
+    readiness_condition: networkidle
+    console_errors: &a2 []
+    page_errors: &a3 []
+    network_failures: &a4 []
+    capture_type: viewport
+    screenshot_path: desktop/viewport.png
+  - viewport: *a1
+    browser: chromium
+    browser_version: 131.0.6778.33
+    reduced_motion: false
+    readiness_condition: networkidle
+    console_errors: *a2
+    page_errors: *a3
+    network_failures: *a4
+    capture_type: full_page
+    screenshot_path: desktop/full_page.png
+  - viewport: &a5
+      name: laptop
+      width: 1280
+      height: 800
+      requested_device_scale_factor: 1
+      effective_device_scale_factor: 1
+      dpr_integrity: true
+    browser: chromium
+    browser_version: 131.0.6778.33
+    reduced_motion: false
+    readiness_condition: networkidle
+    console_errors: &a6 []
+    page_errors: &a7 []
+    network_failures: &a8 []
+    capture_type: viewport
+    screenshot_path: laptop/viewport.png
+  - viewport: *a5
+    browser: chromium
+    browser_version: 131.0.6778.33
+    reduced_motion: false
+    readiness_condition: networkidle
+    console_errors: *a6
+    page_errors: *a7
+    network_failures: *a8
+    capture_type: full_page
+    screenshot_path: laptop/full_page.png
+  - viewport: &a9
+      name: tablet
+      width: 768
+      height: 1024
+      requested_device_scale_factor: 1
+      effective_device_scale_factor: 1
+      dpr_integrity: true
+    browser: chromium
+    browser_version: 131.0.6778.33
+    reduced_motion: false
+    readiness_condition: networkidle
+    console_errors: &a10 []
+    page_errors: &a11 []
+    network_failures: &a12 []
+    capture_type: viewport
+    screenshot_path: tablet/viewport.png
+  - viewport: *a9
+    browser: chromium
+    browser_version: 131.0.6778.33
+    reduced_motion: false
+    readiness_condition: networkidle
+    console_errors: *a10
+    page_errors: *a11
+    network_failures: *a12
+    capture_type: full_page
+    screenshot_path: tablet/full_page.png
+  - viewport: &a13
+      name: mobile
+      width: 390
+      height: 844
+      requested_device_scale_factor: 1
+      effective_device_scale_factor: 1
+      dpr_integrity: true
+    browser: chromium
+    browser_version: 131.0.6778.33
+    reduced_motion: false
+    readiness_condition: networkidle
+    console_errors: &a14 []
+    page_errors: &a15 []
+    network_failures: &a16 []
+    capture_type: viewport
+    screenshot_path: mobile/viewport.png
+  - viewport: *a13
+    browser: chromium
+    browser_version: 131.0.6778.33
+    reduced_motion: false
+    readiness_condition: networkidle
+    console_errors: *a14
+    page_errors: *a15
+    network_failures: *a16
+    capture_type: full_page
+    screenshot_path: mobile/full_page.png
+notes: Evidence capture only — critics interpret; quality gate decides approval.
+  runtime_healthy requires DPR integrity.

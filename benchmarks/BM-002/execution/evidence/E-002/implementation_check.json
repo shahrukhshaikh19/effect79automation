@@ -1,0 +1,12 @@
+{
+  "functional": true,
+  "real_time_webgl_three_d_scene_present": true,
+  "not_static_render_embedded_only": true,
+  "not_model_viewer_only": true,
+  "files": [
+    "index.html",
+    "main.js",
+    "styles.css"
+  ],
+  "interactive_js": true
+}

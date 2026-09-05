@@ -1,0 +1,110 @@
+{
+  "review_type": "camera_scene_progression_log",
+  "evidence_refs": [
+    "evidence/E-007/interaction_log.json"
+  ],
+  "scroll_progress_samples": [
+    {
+      "progress": 0,
+      "state": "opening_establishing_state"
+    },
+    {
+      "progress": 0.25,
+      "state": "opening_establishing_state"
+    },
+    {
+      "progress": 0.5,
+      "state": "product_reveal_or_focus_state"
+    },
+    {
+      "progress": 0.75,
+      "state": "mid_experience_progression_state"
+    },
+    {
+      "progress": 1,
+      "state": "closing_or_cta_state"
+    }
+  ],
+  "camera_keyframes": [
+    {
+      "t": 0,
+      "pos": [
+        0.2,
+        0.5,
+        4.6
+      ],
+      "look": [
+        0,
+        0,
+        0
+      ],
+      "state": "opening_establishing_state"
+    },
+    {
+      "t": 0.25,
+      "pos": [
+        -1.2,
+        0.35,
+        3.4
+      ],
+      "look": [
+        0,
+        -0.1,
+        0
+      ],
+      "state": "opening_establishing_state"
+    },
+    {
+      "t": 0.5,
+      "pos": [
+        0.8,
+        0.15,
+        2.2
+      ],
+      "look": [
+        0,
+        0.05,
+        0
+      ],
+      "state": "product_reveal_or_focus_state"
+    },
+    {
+      "t": 0.75,
+      "pos": [
+        -0.4,
+        0.55,
+        2.8
+      ],
+      "look": [
+        0,
+        0.1,
+        0
+      ],
+      "state": "mid_experience_progression_state"
+    },
+    {
+      "t": 1,
+      "pos": [
+        0,
+        0.75,
+        3.5
+      ],
+      "look": [
+        0,
+        0,
+        0
+      ],
+      "state": "closing_or_cta_state"
+    }
+  ],
+  "interaction_mapping": [
+    {
+      "interaction": "scroll",
+      "maps_to": "camera_progression"
+    },
+    {
+      "interaction": "viewport_resize",
+      "maps_to": "recomposeCameraForViewport"
+    }
+  ]
+}

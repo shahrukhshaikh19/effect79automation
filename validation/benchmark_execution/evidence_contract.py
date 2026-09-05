@@ -1,4 +1,4 @@
-"""Derive and validate required evidence from frozen BM-001 EVIDENCE_PLAN.yaml."""
+"""Derive and validate required evidence from frozen benchmark EVIDENCE_PLAN.yaml."""
 
 from __future__ import annotations
 
@@ -9,21 +9,26 @@ from typing import Any
 import yaml
 
 REPO = Path(__file__).resolve().parents[2]
-EVIDENCE_PLAN_PATH = REPO / "benchmarks" / "BM-001" / "EVIDENCE_PLAN.yaml"
-EVIDENCE_ROOT = REPO / "benchmarks" / "BM-001" / "execution" / "evidence"
+
+DEFAULT_BENCHMARK_ID = "BM-001"
 
 
-def load_evidence_plan() -> list[dict[str, Any]]:
-    data = yaml.safe_load(EVIDENCE_PLAN_PATH.read_text(encoding="utf-8"))
+def _benchmark_root(benchmark_id: str) -> Path:
+    return REPO / "benchmarks" / benchmark_id
+
+
+def load_evidence_plan(*, benchmark_id: str = DEFAULT_BENCHMARK_ID) -> list[dict[str, Any]]:
+    plan_path = _benchmark_root(benchmark_id) / "EVIDENCE_PLAN.yaml"
+    data = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
     plan = data.get("evidence_plan") if isinstance(data, dict) else data
     if not isinstance(plan, list):
-        raise ValueError("Invalid EVIDENCE_PLAN.yaml structure")
+        raise ValueError(f"Invalid EVIDENCE_PLAN.yaml structure for {benchmark_id}")
     return plan
 
 
-def required_evidence_ids(*, meaningful_3d_used: bool) -> list[str]:
+def required_evidence_ids(*, benchmark_id: str = DEFAULT_BENCHMARK_ID, meaningful_3d_used: bool) -> list[str]:
     required: list[str] = []
-    for item in load_evidence_plan():
+    for item in load_evidence_plan(benchmark_id=benchmark_id):
         eid = str(item.get("evidence_id", ""))
         if not eid:
             continue
@@ -38,8 +43,8 @@ def required_evidence_ids(*, meaningful_3d_used: bool) -> list[str]:
     return sorted(set(required))
 
 
-def _artifact_paths(evidence_id: str) -> list[Path]:
-    base = EVIDENCE_ROOT / evidence_id
+def _artifact_paths(evidence_id: str, *, benchmark_id: str) -> list[Path]:
+    base = _benchmark_root(benchmark_id) / "execution" / "evidence" / evidence_id
     mapping: dict[str, list[str]] = {
         "E-001": ["manifest.yaml"],
         "E-002": ["implementation_check.json"],
@@ -50,8 +55,12 @@ def _artifact_paths(evidence_id: str) -> list[Path]:
         "E-007": ["interaction_log.json"],
         "E-008": ["manifest.yaml"],
         "E-009": ["performance_metrics.json"],
-        "E-010": [],  # registered post-gate under run/
-        "E-011": ["conditional_3d_quality_review.json"],
+        "E-010": [],
+        "E-011": ["3d_quality_review.json"],
+        "E-012": ["scene_state_captures.json"],
+        "E-013": ["camera_scene_progression_log.json"],
+        "E-014": ["responsive_3d_composition_check.json"],
+        "E-015": [],
     }
     names = mapping.get(evidence_id, [])
     paths = [base / name for name in names]
@@ -90,12 +99,14 @@ def validate_evidence_artifact(evidence_id: str, path: Path) -> list[str]:
 
 def validate_required_evidence(
     *,
+    benchmark_id: str = DEFAULT_BENCHMARK_ID,
     meaningful_3d_used: bool,
     evidence_records: dict[str, str],
     gate_report_path: Path | None = None,
+    design_gate_path: Path | None = None,
 ) -> dict[str, Any]:
     """Return completeness report; missing/invalid → blocked."""
-    required = required_evidence_ids(meaningful_3d_used=meaningful_3d_used)
+    required = required_evidence_ids(benchmark_id=benchmark_id, meaningful_3d_used=meaningful_3d_used)
     missing: list[str] = []
     invalid: list[str] = []
     validated: list[str] = []
@@ -107,11 +118,22 @@ def validate_required_evidence(
             else:
                 missing.append(eid)
             continue
+        if eid == "E-015":
+            if design_gate_path and design_gate_path.is_file() and design_gate_path.stat().st_size > 0:
+                validated.append(eid)
+            else:
+                missing.append(eid)
+            continue
         if eid not in evidence_records:
             missing.append(eid)
             continue
         artifact_errors: list[str] = []
-        for path in _artifact_paths(eid):
+        paths = _artifact_paths(eid, benchmark_id=benchmark_id)
+        existing = [p for p in paths if p.is_file()]
+        if not existing and paths:
+            missing.append(eid)
+            continue
+        for path in existing:
             artifact_errors.extend(validate_evidence_artifact(eid, path))
         if artifact_errors:
             invalid.extend(artifact_errors)

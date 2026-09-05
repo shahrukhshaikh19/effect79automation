@@ -1,0 +1,74 @@
+[
+  {
+    "type": "warning",
+    "text": "Scripts \"build/three.js\" and \"build/three.min.js\" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation",
+    "timestamp": "2026-09-05T05:39:23.388Z",
+    "viewport": "desktop"
+  },
+  {
+    "type": "warning",
+    "text": "[GroupMarkerNotSet(crbug.com/242999)!:A0002F00BC040000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader flag to opt in to lower security guarantees for trusted content.",
+    "timestamp": "2026-09-05T05:39:23.809Z",
+    "viewport": "desktop"
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x7c0c00116900]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "timestamp": "2026-09-05T05:39:23.809Z",
+    "viewport": "desktop"
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x7c0c00116900]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "timestamp": "2026-09-05T05:39:23.865Z",
+    "viewport": "desktop"
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x7c0c00116900]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "timestamp": "2026-09-05T05:39:23.921Z",
+    "viewport": "desktop"
+  },
+  {
+    "type": "warning",
+    "text": "[.WebGL-0x7c0c00116900]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)",
+    "timestamp": "2026-09-05T05:39:23.967Z",
+    "viewport": "desktop"
+  },
+  {
+    "type": "warning",
+    "text": "Scripts \"build/three.js\" and \"build/three.min.js\" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation",
+    "timestamp": "2026-09-05T05:39:26.746Z",
+    "viewport": "laptop"
+  },
+  {
+    "type": "warning",
+    "text": "[GroupMarkerNotSet(crbug.com/242999)!:A0002F00BC040000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader flag to opt in to lower security guarantees for trusted content.",
+    "timestamp": "2026-09-05T05:39:27.108Z",
+    "viewport": "laptop"
+  },
+  {
+    "type": "warning",
+    "text": "Scripts \"build/three.js\" and \"build/three.min.js\" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation",
+    "timestamp": "2026-09-05T05:39:29.809Z",
+    "viewport": "tablet"
+  },
+  {
+    "type": "warning",
+    "text": "[GroupMarkerNotSet(crbug.com/242999)!:A0002F00BC040000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader flag to opt in to lower security guarantees for trusted content.",
+    "timestamp": "2026-09-05T05:39:30.066Z",
+    "viewport": "tablet"
+  },
+  {
+    "type": "warning",
+    "text": "Scripts \"build/three.js\" and \"build/three.min.js\" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation",
+    "timestamp": "2026-09-05T05:39:32.882Z",
+    "viewport": "mobile"
+  },
+  {
+    "type": "warning",
+    "text": "[GroupMarkerNotSet(crbug.com/242999)!:A0002F00BC040000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader flag to opt in to lower security guarantees for trusted content.",
+    "timestamp": "2026-09-05T05:39:33.112Z",
+    "viewport": "mobile"
+  }
+]

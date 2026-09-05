@@ -1,0 +1,39 @@
+{
+  "review_type": "responsive_3d_composition_check",
+  "evidence_refs": [
+    "evidence/E-001/manifest.yaml"
+  ],
+  "viewports_required": [
+    "desktop",
+    "laptop",
+    "mobile",
+    "tablet"
+  ],
+  "viewports_captured": [
+    "desktop",
+    "laptop",
+    "mobile",
+    "tablet"
+  ],
+  "viewport_camera_profiles": {
+    "desktop": {
+      "subjectX": 0.55,
+      "cameraZOffset": 0
+    },
+    "laptop": {
+      "subjectX": 0.45,
+      "cameraZOffset": 0.15
+    },
+    "tablet": {
+      "subjectX": 0,
+      "cameraZOffset": 0.35
+    },
+    "mobile": {
+      "subjectX": 0,
+      "cameraZOffset": 0.55
+    }
+  },
+  "findings": [],
+  "dimension_score": 10.0,
+  "desktop_only_3d_composition": false
+}

@@ -1,0 +1,141 @@
+run_id: bm002-run-7c81df8639db
+started_at: '2026-09-05T05:39:08.412004+00:00'
+completed_at: '2026-09-05T05:39:48.672836+00:00'
+benchmark_id: BM-002
+contract_version: '1.0'
+contract_hash: a1cd28ca29db47be7d788dfe3ee0e0e2b0b112ee5d2d5068ed437d31a06505d7
+routing_id: route-c47c2365a569
+routing_status: ROUTED
+activated_skills:
+- ACOS-06
+- ACOS-07
+- ACOS-09
+- ACOS-10
+- ACOS-11
+- ACOS-12
+- ACOS-13
+- ACOS-14
+- EXT-3DWEB-01
+- EXT-MOTION-01
+- EXT-R3F-01
+design_gate_result: APPROVED
+production_blocked_before_gate: true
+implementation_path: benchmarks\BM-002\execution\implementation
+meaningful_3d_used: true
+blender_used: false
+required_evidence_ids:
+- E-001
+- E-002
+- E-003
+- E-004
+- E-005
+- E-006
+- E-007
+- E-008
+- E-009
+- E-010
+- E-011
+- E-012
+- E-013
+- E-014
+- E-015
+evidence_captured:
+- E-001
+- E-002
+- E-003
+- E-004
+- E-005
+- E-006
+- E-007
+- E-008
+- E-009
+- E-010
+- E-011
+- E-012
+- E-013
+- E-014
+- E-015
+evidence_completeness: SUFFICIENT
+evidence_missing: []
+evidence_invalid: []
+critic_findings:
+- critic_capability: ACOS-10
+  domain: visual
+  verdict: PASS
+  dimension_score: 10.0
+  evidence_refs:
+  - evidence/E-001/manifest.yaml
+  - evidence/E-003/visual_consistency_review.json
+  findings: []
+  hard_failures: []
+  summary: "Visual review 10.0/10 \u2014 3D/DOM integration assessed from E-003 +\
+    \ viewports."
+- critic_capability: ACOS-11
+  domain: creative
+  verdict: PASS
+  dimension_score: 8.5
+  evidence_refs:
+  - evidence/E-001/manifest.yaml
+  - execution/direction/creative_direction.yaml
+  findings: []
+  hard_failures: []
+  summary: "Creative review 8.5/10 \u2014 Solstice Arc concept and section depth."
+- critic_capability: ACOS-06
+  domain: cinematic_direction
+  verdict: PASS
+  dimension_score: 8.0
+  evidence_refs:
+  - evidence/E-012/scene_state_captures.json
+  - evidence/E-013/camera_scene_progression_log.json
+  findings: []
+  hard_failures: []
+  summary: "Cinematic direction score 8.0/10 \u2014 camera/scene progression from\
+    \ E-012/E-013."
+- critic_capability: ACOS-12
+  domain: three_d_quality
+  verdict: PASS
+  dimension_score: 10.0
+  evidence_refs:
+  - evidence/E-011/3d_quality_review.json
+  findings: []
+  hard_failures: []
+  summary: "3D quality score 10.0/10 \u2014 geometry/materials/lighting from implementation\
+    \ + E-011."
+- critic_capability: EXT-A11Y-01
+  domain: accessibility
+  verdict: PASS
+  dimension_score: 8.0
+  evidence_refs:
+  - evidence/E-008/manifest.yaml
+  findings: []
+  hard_failures: []
+  summary: "Accessibility 8.0/10 \u2014 reduced-motion for 3D/DOM."
+hard_rejects_triggered: []
+corrections_attempted: []
+quality_gate_result: APPROVED
+scoring_profile: mandatory_cinematic_3d
+benchmark_score: 91.4
+benchmark_result: PASS
+dimension_scores:
+  functional: 9.0
+  creative: 8.5
+  visual: 10.0
+  three_d_quality: 10.0
+  cinematic_direction: 8.0
+  motion_quality: 9.0
+  responsive: 10.0
+  performance: 9.0
+  accessibility: 8.0
+  engineering: 9.0
+score_provenance:
+  functional: critic:functional
+  creative: critic:creative
+  visual: critic:visual
+  three_d_quality: critic:three_d_quality
+  cinematic_direction: critic:cinematic_direction
+  motion_quality: critic:motion_quality
+  responsive: critic:responsive
+  performance: critic:performance
+  accessibility: critic:accessibility
+  engineering: critic:engineering
+restrictions: []

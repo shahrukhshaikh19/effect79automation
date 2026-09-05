@@ -1,0 +1,15 @@
+artifact_type: art_direction
+producer_capability: ACOS-04
+routing_id: route-c47c2365a569
+activated_via_routing: false
+timestamp: '2026-09-05T05:39:08.551550+00:00'
+cinematic_direction:
+  producer_capability: ACOS-06
+  activated_via_routing: true
+  camera_language: orbital_dolly_with_focal_hierarchy
+  lighting: key_rim_fill_with_anisotropic_brass_highlights
+  composition: 3d_subject_left_typography_right_desktop; stacked_mobile
+composition: Full-viewport WebGL canvas with editorial DOM overlay; depth layering
+  between void, instrument, and typographic register.
+asset_provenance: "Procedural Three.js geometry authored in main.js \u2014 no external\
+  \ GLB model viewer."

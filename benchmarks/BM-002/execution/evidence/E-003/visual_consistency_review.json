@@ -1,0 +1,11 @@
+{
+  "review_type": "visual_consistency_review",
+  "evidence_refs": [
+    "evidence/E-001/manifest.yaml"
+  ],
+  "findings": [],
+  "dimension_score": 10.0,
+  "composition": "sectioned editorial layout with typographic hero",
+  "typography": "display serif + system UI sans",
+  "visual_coherence": "strong_3d_dom_integration"
+}

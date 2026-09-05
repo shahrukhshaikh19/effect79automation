@@ -1,0 +1,64 @@
+{
+  "task_id": "bm002-ddf2b892a1bd",
+  "routing_id": "route-f3ac2dead84f",
+  "current_stage": "INTAKE",
+  "completed_stages": [],
+  "planned_skill_ids": [
+    "ACOS-06",
+    "ACOS-07",
+    "ACOS-09",
+    "ACOS-10",
+    "ACOS-11",
+    "ACOS-12",
+    "ACOS-13",
+    "ACOS-14",
+    "EXT-3DWEB-01",
+    "EXT-MOTION-01",
+    "EXT-R3F-01"
+  ],
+  "active_skill_ids": [
+    "ACOS-06",
+    "ACOS-07",
+    "ACOS-09",
+    "ACOS-10",
+    "ACOS-11",
+    "ACOS-12",
+    "ACOS-13",
+    "ACOS-14",
+    "EXT-3DWEB-01",
+    "EXT-MOTION-01",
+    "EXT-R3F-01"
+  ],
+  "gate_states": {
+    "design_gate": "APPROVED",
+    "quality_gate": "BLOCKED_INSUFFICIENT_EVIDENCE"
+  },
+  "critic_states": {},
+  "correction_attempts": [],
+  "memory_candidates": [],
+  "evidence_refs": [],
+  "blocked_reasons": [],
+  "events": [
+    {
+      "event_type": "TASK_NORMALIZED",
+      "timestamp": "2026-09-05T05:37:26.384773+00:00",
+      "payload_ref": "bm002-ddf2b892a1bd"
+    },
+    {
+      "event_type": "ROUTING_CREATED",
+      "timestamp": "2026-09-05T05:37:26.476153+00:00",
+      "payload_ref": "route-f3ac2dead84f"
+    },
+    {
+      "event_type": "DESIGN_GATE_APPROVED",
+      "timestamp": "2026-09-05T05:37:26.484321+00:00",
+      "payload_ref": "route-f3ac2dead84f"
+    },
+    {
+      "event_type": "GATE_BLOCKED",
+      "timestamp": "2026-09-05T05:38:09.137973+00:00",
+      "payload_ref": "BLOCKED_INSUFFICIENT_EVIDENCE"
+    }
+  ],
+  "status": "ACTIVE"
+}

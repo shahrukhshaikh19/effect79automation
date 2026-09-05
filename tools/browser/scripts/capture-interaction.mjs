@@ -6,10 +6,11 @@ import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 
 function parseArgs(argv) {
-  const args = { target: null, output: null };
+  const args = { target: null, output: null, mode: "bm001" };
   for (let i = 2; i < argv.length; i++) {
     if (argv[i] === "--target") args.target = argv[++i];
     else if (argv[i] === "--output") args.output = argv[++i];
+    else if (argv[i] === "--mode") args.mode = argv[++i];
   }
   return args;
 }
@@ -44,7 +45,8 @@ async function main() {
   });
 
   const t0 = Date.now();
-  await page.goto(target, { waitUntil: "networkidle", timeout: 30000 });
+  await page.goto(target, { waitUntil: "networkidle", timeout: 60000 });
+  await page.waitForTimeout(1500);
   const navTiming = await page.evaluate(() => {
     const t = performance.timing;
     return {
@@ -53,14 +55,32 @@ async function main() {
     };
   });
 
-  await page.click("nav .nav-toggle", { timeout: 5000 }).catch(() => null);
-  interactions.push({ type: "click", selector: "nav .nav-toggle", timestamp: new Date().toISOString() });
+  if (args.mode === "bm002") {
+    const scrollSteps = [0, 0.25, 0.5, 0.75, 1.0];
+    for (const step of scrollSteps) {
+      await page.evaluate((s) => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        window.scrollTo({ top: max * s, behavior: "instant" });
+      }, step);
+      await page.waitForTimeout(600);
+      interactions.push({ type: "scroll_progress", progress: step, timestamp: new Date().toISOString() });
+    }
+    await page.click("nav .nav-toggle", { timeout: 5000 }).catch(() => null);
+    interactions.push({ type: "click", selector: "nav .nav-toggle", timestamp: new Date().toISOString() });
+    await page.click('a[href="#capabilities"]', { timeout: 5000 }).catch(() => null);
+    interactions.push({ type: "click", selector: 'a[href="#capabilities"]', timestamp: new Date().toISOString() });
+    const sceneLog = await page.evaluate(() => window.__SOLSTICE_SCENE__ || null);
+    fs.writeFileSync(path.join(outputDir, "scene_progression.json"), JSON.stringify(sceneLog || {}, null, 2));
+  } else {
+    await page.click("nav .nav-toggle", { timeout: 5000 }).catch(() => null);
+    interactions.push({ type: "click", selector: "nav .nav-toggle", timestamp: new Date().toISOString() });
 
-  await page.click('a[href="#capabilities"]', { timeout: 5000 }).catch(() => null);
-  interactions.push({ type: "click", selector: 'a[href="#capabilities"]', timestamp: new Date().toISOString() });
+    await page.click('a[href="#capabilities"]', { timeout: 5000 }).catch(() => null);
+    interactions.push({ type: "click", selector: 'a[href="#capabilities"]', timestamp: new Date().toISOString() });
 
-  await page.locator(".cap-item button").first().click({ timeout: 5000 }).catch(() => null);
-  interactions.push({ type: "click", selector: ".cap-item button", timestamp: new Date().toISOString() });
+    await page.locator(".cap-item button").first().click({ timeout: 5000 }).catch(() => null);
+    interactions.push({ type: "click", selector: ".cap-item button", timestamp: new Date().toISOString() });
+  }
 
   await page.waitForTimeout(400);
   interactions.push({ type: "scroll_settle", duration_ms: Date.now() - t0 });

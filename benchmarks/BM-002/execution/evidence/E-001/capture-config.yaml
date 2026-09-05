@@ -1,0 +1,28 @@
+target: ../../benchmarks/BM-002/execution/implementation/index.html
+readiness:
+  wait_until: networkidle
+  timeout_ms: 30000
+  animation_settle_ms: 500
+reduced_motion: false
+capture:
+  full_page: true
+  types:
+  - viewport
+  - full_page
+viewports:
+- name: desktop
+  width: 1440
+  height: 900
+  device_scale_factor: 1
+- name: laptop
+  width: 1280
+  height: 800
+  device_scale_factor: 1
+- name: tablet
+  width: 768
+  height: 1024
+  device_scale_factor: 1
+- name: mobile
+  width: 390
+  height: 844
+  device_scale_factor: 1

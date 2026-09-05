@@ -19,8 +19,12 @@ BENCHMARKS_INFRA_PREFIXES = (
 
 BENCHMARKS_REGISTRATION_PREFIX = "benchmarks/BM-"
 
-# PF-2: canonical BM-001 execution subtree (implementation + evidence + run records)
-BENCHMARKS_EXECUTION_PREFIX = "benchmarks/BM-001/execution/"
+# PF-2: benchmark execution subtrees (implementation + evidence + run records)
+BENCHMARKS_EXECUTION_PREFIXES = (
+    "benchmarks/BM-001/execution/",
+    "benchmarks/BM-002/execution/",
+)
+BENCHMARKS_EXECUTION_PREFIX = BENCHMARKS_EXECUTION_PREFIXES[0]
 
 EXECUTION_ARTIFACT_SUFFIXES = frozenset(
     {".html", ".css", ".js", ".jsx", ".tsx", ".vue", ".glb", ".gltf", ".blend", ".png", ".jpg", ".jpeg", ".webp"}
@@ -32,7 +36,8 @@ def rel_path(path: Path) -> str:
 
 
 def is_pf2_execution_path(path: Path) -> bool:
-    return rel_path(path).startswith(BENCHMARKS_EXECUTION_PREFIX)
+    rel = rel_path(path)
+    return any(rel.startswith(prefix) for prefix in BENCHMARKS_EXECUTION_PREFIXES)
 
 
 def is_allowed_benchmarks_path(path: Path) -> bool:

@@ -1,0 +1,43 @@
+{
+  "interactions": [
+    {
+      "type": "scroll_progress",
+      "progress": 0,
+      "timestamp": "2026-09-05T05:39:39.677Z"
+    },
+    {
+      "type": "scroll_progress",
+      "progress": 0.25,
+      "timestamp": "2026-09-05T05:39:40.288Z"
+    },
+    {
+      "type": "scroll_progress",
+      "progress": 0.5,
+      "timestamp": "2026-09-05T05:39:40.935Z"
+    },
+    {
+      "type": "scroll_progress",
+      "progress": 0.75,
+      "timestamp": "2026-09-05T05:39:41.573Z"
+    },
+    {
+      "type": "scroll_progress",
+      "progress": 1,
+      "timestamp": "2026-09-05T05:39:42.220Z"
+    },
+    {
+      "type": "click",
+      "selector": "nav .nav-toggle",
+      "timestamp": "2026-09-05T05:39:47.226Z"
+    },
+    {
+      "type": "click",
+      "selector": "a[href=\"#capabilities\"]",
+      "timestamp": "2026-09-05T05:39:47.752Z"
+    },
+    {
+      "type": "scroll_settle",
+      "duration_ms": 11957
+    }
+  ]
+}

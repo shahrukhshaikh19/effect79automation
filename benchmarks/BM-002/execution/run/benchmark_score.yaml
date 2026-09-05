@@ -1,0 +1,26 @@
+benchmark_result: PASS
+benchmark_score: 91.4
+profile: mandatory_cinematic_3d
+dimension_scores:
+  functional: 9.0
+  creative: 8.5
+  visual: 10.0
+  three_d_quality: 10.0
+  cinematic_direction: 8.0
+  motion_quality: 9.0
+  responsive: 10.0
+  performance: 9.0
+  accessibility: 8.0
+  engineering: 9.0
+provenance:
+  functional: critic:functional
+  creative: critic:creative
+  visual: critic:visual
+  three_d_quality: critic:three_d_quality
+  cinematic_direction: critic:cinematic_direction
+  motion_quality: critic:motion_quality
+  responsive: critic:responsive
+  performance: critic:performance
+  accessibility: critic:accessibility
+  engineering: critic:engineering
+reason: gate_approved_evidence_backed_scoring

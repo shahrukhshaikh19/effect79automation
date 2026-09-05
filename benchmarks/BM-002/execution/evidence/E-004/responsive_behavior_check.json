@@ -1,0 +1,22 @@
+{
+  "review_type": "responsive_behavior_check",
+  "evidence_refs": [
+    "evidence/E-001/manifest.yaml"
+  ],
+  "viewports_required": [
+    "desktop",
+    "laptop",
+    "mobile",
+    "tablet"
+  ],
+  "viewports_captured": [
+    "desktop",
+    "laptop",
+    "mobile",
+    "tablet"
+  ],
+  "missing_viewports": [],
+  "findings": [],
+  "dimension_score": 10.0,
+  "catastrophic_breakage_detected": false
+}

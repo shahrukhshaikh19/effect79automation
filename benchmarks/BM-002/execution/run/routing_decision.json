@@ -1,0 +1,210 @@
+{
+  "routing_id": "route-c47c2365a569",
+  "task_id": "bm002-39cd5fe58ff8",
+  "stage": "SPECIALIST_ROUTING",
+  "planned_skill_ids": [
+    "ACOS-06",
+    "ACOS-07",
+    "ACOS-09",
+    "ACOS-10",
+    "ACOS-11",
+    "ACOS-12",
+    "ACOS-13",
+    "ACOS-14",
+    "EXT-3DWEB-01",
+    "EXT-MOTION-01",
+    "EXT-R3F-01"
+  ],
+  "executable_active_skill_ids": [
+    "ACOS-10",
+    "ACOS-11",
+    "ACOS-12",
+    "ACOS-13",
+    "ACOS-14"
+  ],
+  "activated_skill_ids": [
+    "ACOS-10",
+    "ACOS-11",
+    "ACOS-12",
+    "ACOS-13",
+    "ACOS-14"
+  ],
+  "skill_activations": [
+    {
+      "skill_id": "ACOS-06",
+      "activation_reason": "cinematic 3D direction for interactive 3D deliverable",
+      "stage": "SPECIALIST_ROUTING",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for ACOS-06",
+      "allowed_tools": [],
+      "evidence_required": [
+        "stage_appropriate_evidence"
+      ],
+      "handoff_target": "next_workflow_stage"
+    },
+    {
+      "skill_id": "EXT-3DWEB-01",
+      "activation_reason": "Three.js core implementation for browser 3D",
+      "stage": "PRODUCTION",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for EXT-3DWEB-01",
+      "allowed_tools": [],
+      "evidence_required": [
+        "stage_appropriate_evidence"
+      ],
+      "handoff_target": "next_workflow_stage"
+    },
+    {
+      "skill_id": "EXT-R3F-01",
+      "activation_reason": "R3F production rules when browser 3D runtime",
+      "stage": "PRODUCTION",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for EXT-R3F-01",
+      "allowed_tools": [],
+      "evidence_required": [
+        "stage_appropriate_evidence"
+      ],
+      "handoff_target": "next_workflow_stage"
+    },
+    {
+      "skill_id": "ACOS-09",
+      "activation_reason": "WebGL performance validation for 3D runtime",
+      "stage": "PRODUCTION",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for ACOS-09",
+      "allowed_tools": [],
+      "evidence_required": [
+        "stage_appropriate_evidence"
+      ],
+      "handoff_target": "next_workflow_stage"
+    },
+    {
+      "skill_id": "ACOS-12",
+      "activation_reason": "independent 3D critic for meaningful 3D output",
+      "stage": "INDEPENDENT_CRITICS",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for ACOS-12",
+      "allowed_tools": [],
+      "evidence_required": [
+        "stage_appropriate_evidence"
+      ],
+      "handoff_target": "next_workflow_stage"
+    },
+    {
+      "skill_id": "ACOS-07",
+      "activation_reason": "motion direction when motion required",
+      "stage": "SPECIALIST_ROUTING",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for ACOS-07",
+      "allowed_tools": [],
+      "evidence_required": [
+        "stage_appropriate_evidence"
+      ],
+      "handoff_target": "next_workflow_stage"
+    },
+    {
+      "skill_id": "EXT-MOTION-01",
+      "activation_reason": "GSAP motion implementation when motion required",
+      "stage": "PRODUCTION",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for EXT-MOTION-01",
+      "allowed_tools": [],
+      "evidence_required": [
+        "stage_appropriate_evidence"
+      ],
+      "handoff_target": "next_workflow_stage"
+    },
+    {
+      "skill_id": "ACOS-10",
+      "activation_reason": "Independent critic required for task signals",
+      "stage": "INDEPENDENT_CRITICS",
+      "required_inputs": [
+        "producer_artifacts",
+        "evidence_refs"
+      ],
+      "expected_output": "critic_report",
+      "allowed_tools": [],
+      "evidence_required": [
+        "critic_report"
+      ],
+      "handoff_target": "QUALITY_GATE"
+    },
+    {
+      "skill_id": "ACOS-11",
+      "activation_reason": "Independent critic required for task signals",
+      "stage": "INDEPENDENT_CRITICS",
+      "required_inputs": [
+        "producer_artifacts",
+        "evidence_refs"
+      ],
+      "expected_output": "critic_report",
+      "allowed_tools": [],
+      "evidence_required": [
+        "critic_report"
+      ],
+      "handoff_target": "QUALITY_GATE"
+    },
+    {
+      "skill_id": "ACOS-13",
+      "activation_reason": "quality gate mandatory for ship/no-ship decision",
+      "stage": "QUALITY_GATE",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for ACOS-13",
+      "allowed_tools": [],
+      "evidence_required": [
+        "gate_report"
+      ],
+      "handoff_target": "OUTPUT"
+    },
+    {
+      "skill_id": "ACOS-14",
+      "activation_reason": "failure-learning for memory candidate creation post-gate",
+      "stage": "MEMORY_CANDIDATES",
+      "required_inputs": [],
+      "expected_output": "Output per skills/ registry for ACOS-14",
+      "allowed_tools": [],
+      "evidence_required": [
+        "learning_record"
+      ],
+      "handoff_target": "MEMORY_CANDIDATES"
+    }
+  ],
+  "rejected_candidate_skill_ids": [],
+  "required_tool_families": [
+    "browser"
+  ],
+  "required_critic_ids": [
+    "ACOS-10",
+    "ACOS-11",
+    "ACOS-12"
+  ],
+  "quality_gate_required": true,
+  "decision_reasons": [
+    "ACOS-06: cinematic 3D direction for interactive 3D deliverable",
+    "EXT-3DWEB-01: Three.js core implementation for browser 3D",
+    "EXT-R3F-01: R3F production rules when browser 3D runtime",
+    "ACOS-09: WebGL performance validation for 3D runtime",
+    "ACOS-12: independent 3D critic for meaningful 3D output",
+    "ACOS-07: motion direction when motion required",
+    "EXT-MOTION-01: GSAP motion implementation when motion required",
+    "ACOS-10: independent critic requirement",
+    "ACOS-11: independent critic requirement",
+    "ACOS-13: quality gate mandatory for ship/no-ship decision",
+    "ACOS-14: failure-learning for memory candidate creation post-gate"
+  ],
+  "evidence_refs": [],
+  "memory_refs": [],
+  "capability_constraints": {
+    "blocked_tools": [],
+    "restricted_skills": [
+      "EXT-IMG3D-01"
+    ],
+    "license_blocked_skills": [
+      "EXT-FE-01",
+      "EXT-FE-02"
+    ]
+  },
+  "fallbacks": [],
+  "design_gate_state": "PENDING",
+  "status": "ROUTED"
+}

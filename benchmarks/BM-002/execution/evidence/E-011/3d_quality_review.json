@@ -1,0 +1,13 @@
+{
+  "review_type": "3d_quality_review",
+  "evidence_refs": [
+    "evidence/E-002/implementation_check.json",
+    "evidence/E-001/manifest.yaml"
+  ],
+  "findings": [],
+  "dimension_score": 10.0,
+  "geometry": "procedural_lathe_instrument",
+  "materials": "pbr_metalness_roughness_brass",
+  "lighting": "directional_plus_rim",
+  "hard_failures": []
+}

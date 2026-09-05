@@ -1,0 +1,27 @@
+artifact_type: experience_direction
+producer_capability: ACOS-05
+routing_id: route-c47c2365a569
+activated_via_routing: false
+timestamp: '2026-09-05T05:39:08.551550+00:00'
+information_architecture:
+- establishing_void
+- instrument_thesis
+- resonance_reveal
+- field_capabilities
+- technical_specifications
+- calibration_experience
+- acquisition
+interaction_language:
+  primary: scroll_driven_scene_progression
+  secondary:
+  - nav_scroll_spy
+  - pointer_parallax_subtle
+  - mobile_menu
+  motion: camera_ease_choreography_with_dom_fade
+  reduced_motion_fallback: static_compositions_per_section
+  scene_states:
+  - opening_establishing_state
+  - product_reveal_or_focus_state
+  - mid_experience_progression_state
+  - closing_or_cta_state
+responsive_strategy: per_viewport_camera_recomposition_and_typography_scale_not_desktop_shrink

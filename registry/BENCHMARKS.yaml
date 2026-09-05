@@ -86,6 +86,14 @@ benchmarks:
         frozen_at: "2026-09-05T05:05:00Z"
         revision_reason: operator_approved_acceptance_contract_freeze
     execution:
-      status: NOT_STARTED
-      benchmark_result: NOT_EXECUTED
-      benchmark_score: null
+      status: COMPLETED
+      certified_result: PASS
+      current_run_id: bm002-run-7c81df8639db
+      routing_id: route-c47c2365a569
+      benchmark_result: PASS
+      benchmark_score: 91.4
+      quality_gate_result: APPROVED
+      meaningful_3d_used: true
+      blender_used: false
+      report_path: benchmarks/BM-002/execution/run/EXECUTION_REPORT.yaml
+      implementation_path: benchmarks/BM-002/execution/implementation
