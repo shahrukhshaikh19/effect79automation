@@ -1,12 +1,10 @@
 benchmark_id: BM-002
 contract_version: '1.0'
-status: REGISTERED
-scoring_approval: pending_operator_review
-scoring_note: >
-  PROPOSED scoring weights — NOT FROZEN. Operator must explicitly approve weights
-  before freeze. Benchmark score != ACOS Quality Gate status. ACOS certified Quality
-  Gate remains authoritative. Hard rejects cannot be averaged away. Benchmark criteria
-  may add measurability but must not bypass ACOS hard-reject rules or evidence requirements.
+status: FROZEN
+scoring_approval: operator_approved
+scoring_note: FROZEN at operator approval. Benchmark score != ACOS Quality Gate status. ACOS certified Quality Gate remains
+  authoritative. Hard rejects cannot be averaged away. Benchmark criteria may add measurability but must not bypass ACOS hard-reject
+  rules or evidence requirements.
 dimensions:
   functional:
     applicable: true
@@ -196,11 +194,9 @@ weight_normalization:
   rule: single_mandatory_3d_profile
   enforced: true
   post_execution_weight_mutation: forbidden
-  approval_status: pending_operator_review
-  note: >
-    Weights proposed for operator review. BM-002 mandates meaningful real-time 3D;
-    no no-3D fallback profile. three_d_quality and cinematic_direction carry combined
-    31% weight. Weights fixed at contract freeze only after operator approval.
+  approval_status: operator_approved
+  note: Operator-approved frozen weights. BM-002 mandates meaningful real-time 3D; no no-3D fallback profile. three_d_quality
+    and cinematic_direction carry combined 31% weight.
   profiles:
     mandatory_cinematic_3d:
       condition: meaningful_real_time_3d_required_by_benchmark
@@ -219,6 +215,6 @@ weight_normalization:
 revision:
   version: '1.0'
   parent_version: null
-  reason: initial_registration_pending_operator_approval
+  reason: operator_approved_acceptance_contract_freeze
   changed_by: operator
-  changed_at: '2026-09-05T10:30:00Z'
+  changed_at: '2026-09-05T05:05:00Z'

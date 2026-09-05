@@ -1,6 +1,6 @@
 benchmark_id: BM-002
 contract_version: '1.0'
-status: REGISTERED
+status: FROZEN
 evidence_plan:
 - evidence_id: E-001
   dimension: responsive
@@ -140,7 +140,8 @@ evidence_plan:
   required: true
   capture_stage: post_execution
   acceptance_use: acos_design_gate_decision_provenance
-hash_note: 'benchmark_contract_sha256 covers frozen registration fields only. Excludes execution timestamps, runtime results, scores, and evidence outputs.
+hash_note: 'benchmark_contract_sha256 covers frozen registration fields only. Excludes execution timestamps, runtime results,
+  scores, and evidence outputs.
 
   '
 contract_hash:

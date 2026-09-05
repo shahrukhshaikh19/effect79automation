@@ -1,7 +1,6 @@
 benchmark_id: BM-002
 title: Cinematic Interactive 3D Flagship — Fictional Premium Physical Technology Product
-status: REGISTERED
-lifecycle_state: OPERATOR_APPROVAL_PENDING
+status: FROZEN
 created_at: '2026-09-05T10:30:00Z'
 contract_version: '1.0'
 operator_input:
@@ -469,13 +468,11 @@ creative_requirements:
 acceptance_contract:
   benchmark_id: BM-002
   contract_version: '1.0'
-  status: REGISTERED
-  scoring_approval: pending_operator_review
-  scoring_note: 'PROPOSED scoring weights — NOT FROZEN. Operator must explicitly approve weights before freeze. Benchmark
-    score != ACOS Quality Gate status. ACOS certified Quality Gate remains authoritative. Hard rejects cannot be averaged
-    away. Benchmark criteria may add measurability but must not bypass ACOS hard-reject rules or evidence requirements.
-
-    '
+  status: FROZEN
+  scoring_approval: operator_approved
+  scoring_note: FROZEN at operator approval. Benchmark score != ACOS Quality Gate status. ACOS certified Quality Gate remains
+    authoritative. Hard rejects cannot be averaged away. Benchmark criteria may add measurability but must not bypass ACOS
+    hard-reject rules or evidence requirements.
   dimensions:
     functional:
       applicable: true
@@ -622,7 +619,7 @@ acceptance_contract:
       evidence_required: []
       evaluator_type: human
       not_applicable_reason: no_reference_design_supplied
-  hard_failures: &id001
+  hard_failures:
   - copies_existing_website
   - recreates_supplied_commercial_design
   - imitates_recognizable_brand
@@ -665,11 +662,9 @@ acceptance_contract:
     rule: single_mandatory_3d_profile
     enforced: true
     post_execution_weight_mutation: forbidden
-    approval_status: pending_operator_review
-    note: 'Weights proposed for operator review. BM-002 mandates meaningful real-time 3D; no no-3D fallback profile. three_d_quality
-      and cinematic_direction carry combined 31% weight. Weights fixed at contract freeze only after operator approval.
-
-      '
+    approval_status: operator_approved
+    note: Operator-approved frozen weights. BM-002 mandates meaningful real-time 3D; no no-3D fallback profile. three_d_quality
+      and cinematic_direction carry combined 31% weight.
     profiles:
       mandatory_cinematic_3d:
         condition: meaningful_real_time_3d_required_by_benchmark
@@ -688,9 +683,9 @@ acceptance_contract:
   revision:
     version: '1.0'
     parent_version: null
-    reason: initial_registration_pending_operator_approval
+    reason: operator_approved_acceptance_contract_freeze
     changed_by: operator
-    changed_at: '2026-09-05T10:30:00Z'
+    changed_at: '2026-09-05T05:05:00Z'
 evidence_plan:
 - evidence_id: E-001
   dimension: responsive
@@ -830,7 +825,45 @@ evidence_plan:
   required: true
   capture_stage: post_execution
   acceptance_use: acos_design_gate_decision_provenance
-hard_failures: *id001
+hard_failures:
+- copies_existing_website
+- recreates_supplied_commercial_design
+- imitates_recognizable_brand
+- generic_saas_landing_template
+- generic_imitation_of_recognizable_premium_websites
+- predictable_gradient_heavy_ai_aesthetics
+- arbitrary_glassmorphism
+- excessive_glow_without_purpose
+- random_floating_cards
+- meaningless_decorative_animation
+- motion_without_narrative_or_interaction_purpose
+- three_d_decorative_checkbox_only
+- primitive_demo_quality_scene_as_premium
+- rotating_model_viewer_without_meaningful_experience
+- static_render_embedded_as_experience
+- simple_object_spin_on_scroll_only
+- visibly_poor_geometry_or_proportions
+- visibly_weak_materials
+- flat_unintentional_lighting
+- incoherent_camera_or_composition
+- no_intentional_cinematic_camera_work
+- broken_webgl_or_interaction
+- three_d_disconnected_from_page_storytelling
+- desktop_only_designed_experience
+- desktop_only_3d_composition
+- major_mobile_framing_failure
+- visual_quality_below_premium_benchmark_intent
+- poor_3d_quality_when_meaningful_3d_used
+- usability_sacrificed_for_effects
+- unjustified_performance_sacrifice
+- placeholder_quality_visual_assets
+- not_a_functional_web_experience
+- obvious_layout_breakage
+- obvious_console_runtime_errors
+- broken_navigation_or_interaction
+- fabricated_evidence
+- missing_required_3d_evidence
+- benchmark_aesthetic_cross_system_memory_promotion_forbidden
 capability_expectations:
   visual_work: true
   three_d_possible: true
@@ -892,21 +925,23 @@ constraint_evaluation:
 - source_ref: operator_input
   original_request: Do NOT freeze arbitrary weights without operator approval.
   status: APPROVED_CONSTRAINT
-  reason_code: SCORING_PENDING_OPERATOR_APPROVAL
-  reason: Acceptance contract scoring_approval=pending_operator_review; status REGISTERED not FROZEN.
+  reason_code: SCORING_OPERATOR_APPROVED
+  reason: Operator approved proposed scoring weights; contract frozen at v1.0.
 - source_ref: operator_input
   original_request: Do not map hard failures to HR IDs arbitrarily.
   status: APPROVED_CONSTRAINT
   reason_code: QUALITY_GATE_OWNS_HR_SEMANTICS
   reason: Benchmark hard_failures are acceptance concepts; canonical Quality Gate maps to HR/EB at execution.
 operator_confirmation:
-  brief_correct: pending
-  references_correct: pending
-  acceptance_contract_correct: pending
-  scoring_weights_correct: pending
-  confirmed_at: null
-  confirmed_by: null
-  approval_note: Awaiting operator review of derived acceptance contract and proposed scoring weights before freeze.
+  brief_correct: confirmed
+  references_correct: confirmed
+  acceptance_contract_correct: confirmed
+  scoring_weights_correct: confirmed
+  confirmed_at: '2026-09-05T05:05:00Z'
+  confirmed_by: operator
+  approval_note: Operator explicitly approved BM-002 v1.0 acceptance contract, proposed scoring model (three_d_quality 17,
+    cinematic_direction 14, combined 31%), mandatory cinematic 3D requirements, hard-failure contract, E-001..E-015 evidence
+    plan, requires_3d task semantics, normal Phase F routing, and conditional Blender/tool-selection policy.
 execution_state:
   benchmark_result: NOT_EXECUTED
   benchmark_score: null
@@ -916,7 +951,8 @@ execution_state:
 revision:
   version: '1.0'
   parent_version: null
-  reason: initial_registration_pending_operator_approval
+  reason: operator_approved_acceptance_contract_freeze
   changed_by: operator
-  changed_at: '2026-09-05T10:30:00Z'
+  changed_at: '2026-09-05T05:05:00Z'
 global_memory_promotion: false
+benchmark_contract_sha256: a1cd28ca29db47be7d788dfe3ee0e0e2b0b112ee5d2d5068ed437d31a06505d7
