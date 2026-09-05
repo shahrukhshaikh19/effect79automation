@@ -48,6 +48,26 @@ class PromptIntakeTests(unittest.TestCase):
         self.assertEqual(signals["quality_bar"], "standard")
         self.assertEqual(signals["reconstruction_path"], "none")
 
+    def test_explicit_image_rebuild_still_routes_reconstruction(self) -> None:
+        signals = classify_signals(
+            "Rebuild this image in Three.js with img2three. Match this image exactly."
+        )
+        self.assertEqual(signals["deliverable_profile"], "reference_reconstruction")
+        self.assertEqual(signals["reconstruction_path"], "procedural_browser")
+
+    def test_mood_reference_does_not_become_img2threejs(self) -> None:
+        signals = classify_signals(
+            "Cinematic WebGL / Three.js landing page. The hero is a live 3D scene. "
+            "Reference image is mood and composition only — do not reconstruct pixel-for-pixel. "
+            "Blender must author the hero landscape and export GLB. "
+            "Water: hover and drag ripples. Foliage sways as if wind is blowing."
+        )
+        self.assertEqual(signals["deliverable_profile"], "interactive_3d")
+        self.assertEqual(signals["quality_bar"], "flagship")
+        self.assertEqual(signals["reconstruction_path"], "blender_authoring")
+        self.assertTrue(signals["requires_reference_analysis"])
+        self.assertTrue(signals["requires_motion"])
+
     def test_locked_blender_brief_is_flagship_without_premium_word(self) -> None:
         signals = classify_signals(
             "BUILD ONLY THIS. Product: Cinderwell Still. "

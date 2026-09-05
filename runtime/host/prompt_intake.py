@@ -21,7 +21,15 @@ _VISUAL = re.compile(
     r"\b(website|landing|launch site|brand|visual|cinematic|hero|typography|art direction|experience)\b",
     re.I,
 )
-_REF = re.compile(r"\b(reference image|reconstruct|img2three|match this image)\b", re.I)
+_REF_MOOD = re.compile(
+    r"\b(reference image|reference still|mood reference|composition only)\b",
+    re.I,
+)
+_RECONSTRUCT = re.compile(
+    r"\b(img2three|match this image|reconstruct this|rebuild this image)\b",
+    re.I,
+)
+_NO_RECONSTRUCT = re.compile(r"\b(do not reconstruct|don't reconstruct|not reconstruct)\b", re.I)
 _A11Y = re.compile(r"\b(a11y|accessibility|wcag|screen reader)\b", re.I)
 _FLAGSHIP = re.compile(
     r"\b(premium|cinematic|flagship|physical (tech(?:nology)?|product|instrument)|"
@@ -38,16 +46,21 @@ _BLENDER_REQUIRED = re.compile(
     re.I,
 )
 _SCROLL_STORY = re.compile(r"\b(scroll is|scroll equals|scroll =|scroll states|this order only)\b", re.I)
+_LIVE_SCENE = re.compile(r"\b(ripple|foliage|wind is blowing|hover and drag|live 3d)\b", re.I)
 
 
 def classify_signals(prompt: str) -> dict[str, Any]:
     text = prompt.strip()
     wants_3d = bool(_3D.search(text))
-    wants_ref = bool(_REF.search(text))
+    wants_reconstruct = bool(_RECONSTRUCT.search(text)) and not _NO_RECONSTRUCT.search(text)
+    wants_ref = wants_reconstruct or bool(_REF_MOOD.search(text))
     wants_visual = bool(_VISUAL.search(text)) or wants_3d
-    wants_motion = bool(_MOTION.search(text)) or bool(_SCROLL_STORY.search(text))
+    wants_motion = bool(_MOTION.search(text)) or bool(_SCROLL_STORY.search(text)) or bool(_LIVE_SCENE.search(text))
     authored = bool(_FLAGSHIP.search(text) or _BLENDER_REQUIRED.search(text))
-    if wants_ref and wants_3d:
+    if wants_3d and authored:
+        profile = "interactive_3d"
+        reconstruction = "blender_authoring"
+    elif wants_reconstruct and wants_3d:
         profile = "reference_reconstruction"
         reconstruction = "procedural_browser"
     elif wants_3d:
