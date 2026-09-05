@@ -11,6 +11,7 @@ from runtime.adapter.native import describe_skill
 from runtime.adapter.packet import build_adapter_packet
 from runtime.common.registry_loader import skill_name_map
 from runtime.host.artifact_contract import is_flagship
+from runtime.host.skill_execution import binding_for
 
 REPO = Path(__file__).resolve().parent.parent.parent
 HOST_DIR = REPO / "runtime" / "host"
@@ -23,10 +24,10 @@ CRITIC_STAGES = {"INDEPENDENT_CRITICS"}
 GATE_STAGES = {"QUALITY_GATE", "MEMORY_CANDIDATES"}
 
 
-def _rows(skill_ids: list[str], activations: dict[str, dict[str, Any]]) -> list[dict[str, str]]:
+def _rows(skill_ids: list[str], activations: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
     rows = []
     for skill_id in skill_ids:
-        row = describe_skill(skill_id)
+        row = {**describe_skill(skill_id), **binding_for(skill_id)}
         row["activation_reason"] = activations.get(skill_id, {}).get("activation_reason", "")
         row["stage"] = activations.get(skill_id, {}).get("stage", "")
         rows.append(row)
@@ -106,7 +107,7 @@ def build_host_brief(
             "Do not Agent-Decide or slash-activate the rest of the discovered catalog.",
             "Critics and quality gate are a later stage — do not run them during creative or production.",
             "If design_gate_state is not APPROVED, do not implement frontend/Three.js/GSAP/Blender.",
-            "Write artifacts under project_dir. Set skill_procedure_executed: true and producer to the skill name.",
+            "Write artifacts under project_dir. Copy skill_id + skill_md_sha256 from invoke_now. Fill procedure_evidence for every required_procedure key. A boolean or producer name is not proof.",
             "After artifacts exist, run: python tools/host_driver/run_stage.py advance",
         ],
     }
@@ -146,8 +147,11 @@ def render_host_brief_md(brief: dict[str, Any]) -> str:
         lines.append("")
     for row in invoke_now:
         lines.append(
-            f"- `{row.get('invoke')}` (`{row.get('skill_id')}`) — {row.get('skill_path')} — {row.get('activation_reason')}"
+            f"- `{row.get('invoke')}` (`{row.get('skill_id')}`) — {row.get('skill_path')} — sha256 `{row.get('skill_md_sha256') or 'unbound'}` — {row.get('activation_reason')}"
         )
+        required = row.get("required_procedure") or []
+        if required:
+            lines.append(f"  procedure_evidence required: {', '.join(required)}")
     lines.extend(["", "## Locked this stage", ""])
     locked = brief.get("planned_locked_until_current_stage") or []
     if not locked:

@@ -15,12 +15,15 @@ from runtime.adapter.host_brief import select_invoke_ids
 from runtime.host.artifact_contract import (
     pixel_evidence,
     validate_critic_independence,
+    validate_creative_artifacts,
     validate_flagship_evidence,
     validate_flagship_production,
 )
 from runtime.host.audit import audit_session
 from runtime.host.design_gate import evaluate_host_design_gate
+from runtime.host.independence import implementation_fingerprint
 from runtime.host.prompt_intake import classify_signals, intake_from_prompt
+from runtime.host.skill_execution import SKILL_CONTRACTS, skill_md_sha256, validate_artifact_execution
 from runtime.routing.engine import route_task
 
 
@@ -146,8 +149,58 @@ class IndependenceTests(unittest.TestCase):
                 root, ["ACOS-10"], critic_pass_id=None, attested=False
             )
             self.assertFalse(result["ok"])
+            self.assertEqual(result["independent_host_context"], "UNVERIFIED")
 
-    def test_audit_blocks_ship_without_attestation(self) -> None:
+    def test_boolean_attestation_does_not_prove_independence(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "implementation").mkdir()
+            result = validate_critic_independence(
+                root,
+                ["ACOS-10"],
+                critic_pass_id="pass-1",
+                attested=True,
+                roles={
+                    "producer_host_context_id": None,
+                    "critic_host_context_id": None,
+                    "independent_host_context": "UNVERIFIED",
+                    "independence_claim": "operator_attested",
+                    "critic_pass_id": "pass-1",
+                },
+            )
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("UNVERIFIED" in item for item in result["issues"]))
+
+    def test_distinct_host_context_can_pass(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "implementation").mkdir()
+            (root / "implementation" / "index.html").write_text("<html></html>", encoding="utf-8")
+            critics = root / "critics"
+            critics.mkdir()
+            (critics / "visual_critic.yaml").write_text(
+                "inspected_rendered_output: true\n"
+                "critic_pass_id: pass-1\n"
+                "findings:\n  - {id: V-01, observation: x}\n",
+                encoding="utf-8",
+            )
+            frozen = implementation_fingerprint(root)
+            result = validate_critic_independence(
+                root,
+                ["ACOS-10"],
+                critic_pass_id="pass-1",
+                attested=False,
+                roles={
+                    "producer_host_context_id": "producer-chat",
+                    "critic_host_context_id": "critic-chat",
+                    "independent_host_context": "DISTINCT",
+                    "critic_pass_id": "pass-1",
+                    "critic_frozen_implementation_sha256": frozen,
+                },
+            )
+            self.assertTrue(result["ok"])
+
+    def test_audit_blocks_ship_without_distinct_context(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root / "implementation").mkdir()
@@ -163,11 +216,17 @@ class IndependenceTests(unittest.TestCase):
                     "planned_skill_ids": ["ACOS-10"],
                     "gate_states": {"design_gate": "APPROVED", "quality_gate": "NOT_EVALUATED"},
                 },
-                "roles": {"producer_session_id": "p1", "critic_pass_id": None, "independent_attestation": False},
+                "roles": {
+                    "producer_session_id": "p1",
+                    "critic_pass_id": "pass-1",
+                    "independent_attestation": True,
+                    "independence_claim": "operator_attested",
+                    "independent_host_context": "UNVERIFIED",
+                },
             }
             audit = audit_session(session, root)
             self.assertFalse(audit["ship_allowed"])
-            self.assertTrue(any("attest" in b or "critic_pass" in b for b in audit["blockers"]))
+            self.assertTrue(any("UNVERIFIED" in b or "DISTINCT" in b for b in audit["blockers"]))
 
 
 class FlagshipWorkflowTests(unittest.TestCase):
@@ -239,6 +298,56 @@ class FlagshipWorkflowTests(unittest.TestCase):
                 {"quality_bar": "flagship"},
                 "Scroll states, this order only: BENCH CHARGE RISE COIL CATCH.",
             )
+            self.assertFalse(result["ok"])
+
+
+class SkillExecutionProofTests(unittest.TestCase):
+    def test_boolean_flag_is_not_execution_proof(self) -> None:
+        issues = validate_artifact_execution(
+            {"skill_procedure_executed": True, "producer": "acos-creative-director"},
+            "ACOS-01",
+        )
+        self.assertTrue(issues)
+
+    def test_producer_name_is_not_execution_proof(self) -> None:
+        issues = validate_artifact_execution({"producer": "acos-creative-director"}, "ACOS-01")
+        self.assertTrue(issues)
+
+    def test_hash_mismatch_fails(self) -> None:
+        issues = validate_artifact_execution(
+            {
+                "skill_id": "ACOS-01",
+                "skill_md_sha256": "0" * 64,
+                "procedure_evidence": {
+                    step: f"Executed canonical SKILL.md {step} with unique note {index:02d}."
+                    for index, step in enumerate(SKILL_CONTRACTS["ACOS-01"]["procedure"])
+                },
+            },
+            "ACOS-01",
+        )
+        self.assertTrue(any("does not match live SKILL.md" in item for item in issues))
+
+    def test_live_hash_and_procedure_evidence_pass_binding(self) -> None:
+        data = {
+            "skill_id": "ACOS-01",
+            "skill_md_sha256": skill_md_sha256("ACOS-01"),
+            "procedure_evidence": {
+                step: f"Executed canonical SKILL.md {step} with unique note {index:02d}."
+                for index, step in enumerate(SKILL_CONTRACTS["ACOS-01"]["procedure"])
+            },
+        }
+        self.assertEqual(validate_artifact_execution(data, "ACOS-01"), [])
+
+    def test_creative_validator_rejects_self_attested_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "direction").mkdir()
+            (root / "direction" / "creative_direction.yaml").write_text(
+                "skill_procedure_executed: true\nproducer: acos-creative-director\n"
+                "central_creative_thesis: a long enough thesis that would have passed the old boolean check.\n",
+                encoding="utf-8",
+            )
+            result = validate_creative_artifacts(root, ["ACOS-01"])
             self.assertFalse(result["ok"])
 
 

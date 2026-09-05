@@ -11,7 +11,7 @@ python tools/host_driver/run_stage.py check
 python tools/host_driver/run_stage.py advance
 python tools/host_driver/run_stage.py serve
 python tools/host_driver/run_stage.py capture
-python tools/host_driver/run_stage.py critic-pass --attest-independent
+python tools/host_driver/run_stage.py critic-pass
 ```
 
 `init --target claude` and `init --target codex` write the same loop for those hosts.
@@ -28,7 +28,8 @@ Stage order: CREATIVE → Design Gate → PRODUCTION → EVIDENCE → CRITICS �
 
 - Production stays locked until Design Gate **APPROVED**.
 - Evidence must be rendered pixels (PNG/WebP), captured over HTTP. `file://` is invalid for ES modules. YAML/scripts are not evidence.
-- The producer chat cannot APPROVE. A new chat runs `critic-pass --attest-independent`, inspects pixels, writes critics, then the gate.
+- The producer chat cannot APPROVE. A new chat with a distinct `ACOS_HOST_CONTEXT_ID` runs `critic-pass`, inspects pixels, writes critics, then the gate. `--attest-independent` is a claim only. `independent_host_context` must be `DISTINCT` or APPROVE stays locked.
+- Artifacts must bind `skill_md_sha256` + `procedure_evidence` to the routed SKILL.md. A boolean or producer name is not execution proof.
 - The conductor will override an illegal `APPROVED` to `BLOCKED_INSUFFICIENT_EVIDENCE`.
 - BM-runner YAML is not a skill output.
 - Authored 3D / Blender-required prompt: `docs/FLAGSHIP_PREMIUM_WORKFLOW.md`. The word “premium” is not required. Blender + craft skills are mandatory. A lathe is not complete. First-frame-only evidence is not complete when the brief names scroll beats.

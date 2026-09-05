@@ -33,6 +33,12 @@ from runtime.host.artifact_contract import (
     validate_flagship_production,
 )
 from runtime.host.audit import audit_session, ensure_roles, mechanical_gate_report
+from runtime.host.exposure import ensure_native_skill_exposure
+from runtime.host.independence import (
+    classify_host_context,
+    host_context_identity,
+    implementation_fingerprint,
+)
 from runtime.host.capabilities import (
     USER_WAIT_MESSAGE,
     blender_readiness,
@@ -103,7 +109,8 @@ def _write_todo(session: dict[str, Any], brief: dict[str, Any], extra: list[str]
                 "- `direction/anti_generic_review.yaml` (if ACOS-03 planned)",
                 "- `direction/art_direction.yaml` (if ACOS-04 planned)",
                 "- `direction/experience_direction.yaml` (if ACOS-05 planned)",
-                "- Each file must set `skill_procedure_executed: true` and `producer: <skill-name>`",
+                "- Each file must copy `skill_id` + `skill_md_sha256` from the brief and fill `procedure_evidence`.",
+                "- `skill_procedure_executed: true` or a producer name is not proof.",
                 "",
             ]
         )
@@ -149,7 +156,8 @@ def _write_todo(session: dict[str, Any], brief: dict[str, Any], extra: list[str]
                 "- Run `/acos-quality-gate` as a gate, not a creator.",
                 "- Write `gate/quality_gate.yaml` with APPROVED | REJECTED | BLOCKED_INSUFFICIENT_EVIDENCE.",
                 "- This chat cannot APPROVE if it produced the implementation.",
-                "- Independent pass: new chat runs `python tools/host_driver/run_stage.py critic-pass --attest-independent`",
+                "- Independent pass: new chat with a distinct ACOS_HOST_CONTEXT_ID, then `python tools/host_driver/run_stage.py critic-pass`",
+                "- `--attest-independent` is a claim only. SHIP requires independent_host_context: DISTINCT.",
                 "",
             ]
         )
@@ -233,15 +241,28 @@ def _start_routed_session(intake: dict[str, Any], routing: dict[str, Any], targe
         "intake": intake,
         "routing": routing,
         "state": state,
-        "roles": {
-            "producer_session_id": f"{intake['task_id']}-{uuid.uuid4().hex[:8]}",
-            "critic_pass_id": None,
-            "independent_attestation": False,
-        },
+        "roles": _new_roles(intake["task_id"]),
+    }
+
+
+def _new_roles(task_id: str) -> dict[str, Any]:
+    context = host_context_identity()
+    return {
+        "producer_session_id": f"{task_id}-{uuid.uuid4().hex[:8]}",
+        "producer_host_context_id": context["id"],
+        "producer_host_context_source": context["source"],
+        "critic_pass_id": None,
+        "critic_host_context_id": None,
+        "independent_attestation": False,
+        "independence_claim": "none",
+        "independent_host_context": "UNVERIFIED",
+        "critic_frozen_implementation_sha256": None,
     }
 
 
 def cmd_init(args: argparse.Namespace) -> int:
+    exposure = ensure_native_skill_exposure()
+    print(f"native_skills: synced={exposure['sync']} validated={exposure['validated']}")
     if args.prompt:
         intake = intake_from_prompt(args.prompt)
     elif args.intake:
@@ -264,11 +285,7 @@ def cmd_init(args: argparse.Namespace) -> int:
             "intake": intake,
             "routing": _placeholder_routing(intake["task_id"]),
             "state": state,
-            "roles": {
-                "producer_session_id": f"{intake['task_id']}-{uuid.uuid4().hex[:8]}",
-                "critic_pass_id": None,
-                "independent_attestation": False,
-            },
+            "roles": _new_roles(intake["task_id"]),
         }
         _save(session)
         print(f"task: {intake['task_id']}")
@@ -359,6 +376,8 @@ def cmd_advance(_: argparse.Namespace) -> int:
                 notes.extend(flagship["invalid"])
             else:
                 state["current_stage"] = "EVIDENCE"
+                session["roles"] = ensure_roles(session)
+                session["roles"]["producer_implementation_sha256"] = implementation_fingerprint(project)
                 notes.append("Implementation present — capture real browser evidence next")
     elif stage == "EVIDENCE":
         pixels = pixel_evidence(project)
@@ -460,8 +479,17 @@ def cmd_critic_pass(args: argparse.Namespace) -> int:
 
     roles = ensure_roles(session)
     pass_id = uuid.uuid4().hex
+    critic_context = host_context_identity()
     roles["critic_pass_id"] = pass_id
-    roles["independent_attestation"] = bool(args.attest_independent)
+    roles["critic_host_context_id"] = critic_context["id"]
+    roles["critic_host_context_source"] = critic_context["source"]
+    roles["independence_claim"] = "operator_attested" if args.attest_independent else "none"
+    roles["independent_attestation"] = False
+    roles["independent_host_context"] = classify_host_context(
+        roles.get("producer_host_context_id"),
+        critic_context["id"],
+    )
+    roles["critic_frozen_implementation_sha256"] = implementation_fingerprint(project)
     roles["critic_pass_opened_at"] = datetime.now(timezone.utc).isoformat()
 
     superseded = project / "critics" / "_superseded" / pass_id
@@ -495,16 +523,21 @@ def cmd_critic_pass(args: argparse.Namespace) -> int:
         {
             "critic_pass_id": pass_id,
             "attested_independent": bool(args.attest_independent),
+            "independence_claim": roles["independence_claim"],
+            "independent_host_context": roles["independent_host_context"],
             "superseded_critics": moved,
             "stage": "CRITICS",
-            "warning": None
-            if args.attest_independent
-            else "APPROVE stays locked until a new chat runs this with --attest-independent",
+            "warning": (
+                None
+                if roles["independent_host_context"] == "DISTINCT"
+                else "APPROVE stays locked: independent_host_context is not DISTINCT. "
+                "A boolean flag is not proof. Use a new chat with a different ACOS_HOST_CONTEXT_ID."
+            ),
         },
         sort_keys=False,
     ))
-    if args.attest_independent:
-        print("Attestation recorded. This chat must not edit implementation/. Inspect pixels only.")
+    if roles["independent_host_context"] == "DISTINCT":
+        print("Distinct host context recorded. This chat must not edit implementation/. Inspect pixels only.")
     return 0
 
 
@@ -575,7 +608,7 @@ def main() -> int:
     critic.add_argument(
         "--attest-independent",
         action="store_true",
-        help="Required for SHIP. Only a chat that did not produce the implementation may set this.",
+        help="Operator claim only. Does not prove a different host chat. SHIP requires DISTINCT host context.",
     )
     critic.set_defaults(func=cmd_critic_pass)
 

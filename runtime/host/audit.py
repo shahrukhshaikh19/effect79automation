@@ -24,6 +24,10 @@ def ensure_roles(session: dict[str, Any]) -> dict[str, Any]:
     roles.setdefault("producer_session_id", task_id)
     roles.setdefault("critic_pass_id", None)
     roles.setdefault("independent_attestation", False)
+    roles.setdefault("independence_claim", "none")
+    roles.setdefault("independent_host_context", "UNVERIFIED")
+    roles.setdefault("producer_host_context_id", None)
+    roles.setdefault("critic_host_context_id", None)
     return roles
 
 
@@ -44,7 +48,9 @@ def audit_session(session: dict[str, Any], project_dir: Path) -> dict[str, Any]:
         project_dir,
         planned,
         critic_pass_id=roles.get("critic_pass_id"),
-        attested=bool(roles.get("independent_attestation")),
+        attested=str(roles.get("independence_claim") or "") == "operator_attested"
+        or bool(roles.get("independent_attestation")),
+        roles=roles,
     )
     runtime_healthy = None if manifest is None else bool(manifest.get("runtime_healthy"))
 
@@ -119,7 +125,10 @@ def _next_command(
     if stage == "CRITICS":
         return "python tools/host_driver/run_stage.py advance"
     if stage == "QUALITY_GATE" and not independence["ok"]:
-        return "new chat only: python tools/host_driver/run_stage.py critic-pass --attest-independent"
+        return (
+            "new chat with a distinct ACOS_HOST_CONTEXT_ID: "
+            "python tools/host_driver/run_stage.py critic-pass"
+        )
     if stage == "QUALITY_GATE" and ship_allowed:
         return "python tools/host_driver/run_stage.py advance"
     if stage == "QUALITY_GATE":
@@ -133,10 +142,10 @@ def mechanical_gate_report(audit: dict[str, Any]) -> dict[str, Any]:
     return {
         "gate_report": {
             "status": "BLOCKED_INSUFFICIENT_EVIDENCE",
-            "producer": "acos-quality-gate",
-            "skill_procedure_executed": True,
+            "producer": "host_mechanical_audit",
             "source": "host_mechanical_audit",
-            "independence": "attested" if audit.get("independence", {}).get("ok") else "insufficient",
+            "note": "Conductor block only. This is not skill execution proof.",
+            "independence": audit.get("independence", {}).get("independent_host_context") or "UNVERIFIED",
             "decisions": {
                 "evidence_blocker_triggered": True,
                 "evidence_blocker_ids": ["EB-01"],
