@@ -34,4 +34,5 @@ Stage order: CREATIVE → Design Gate → PRODUCTION → EVIDENCE → CRITICS �
 - BM-runner YAML is not a skill output.
 - Authored 3D / Blender-required prompt: `docs/FLAGSHIP_PREMIUM_WORKFLOW.md`. The word “premium” is not required. Blender + craft skills are mandatory. A lathe is not complete. First-frame-only evidence is not complete when the brief names scroll beats.
 - Flagship cannot leave production without `evidence/lookdev/` screenshots. After capture, a crushed/night-silhouette versus a lit mood reference sends the stage back to production. GLB + YAML is not a premium result.
+- Flagship craft is checked: director / modeler / prop-artist / materials / lookdev receipts, plus `hard-surface` for a physical product. A primitive-named or sphere/plane GLB, an unchecked modeling checkbox, or a macro lookdev crop fails production.
 - If Blender MCP/app is down: tell the user, wait, then `confirm-blender --mcp-live`. Never skip.

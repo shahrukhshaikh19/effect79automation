@@ -130,7 +130,10 @@ def _write_todo(session: dict[str, Any], brief: dict[str, Any], extra: list[str]
                     "- Flagship lock: Blender must author the hero. Export GLB/GLTF under `implementation/`.",
                     "- Write `direction/blender_export.yaml` with `blender_used: true`.",
                     "- Execute materials / lighting / camera skills. A lathe or cube is not complete.",
+                    "- Flagship lock: write director / modeler / prop-artist / materials / lookdev artifacts with live hashes. Export YAML is not enough.",
                     "- Flagship lock: write at least two lookdev PNGs under evidence/lookdev/ from Blender viewport / browser. YAML is not lookdev.",
+                    "- One lookdev shot must be a full hero or full scene. A surface macro is a fail.",
+                    "- Do not export a sphere/cylinder/torus/plane kitbash as the hero. Physical products need /hard-surface.",
                     "- If a mood reference exists, the render class must match (lit water/sky vs night-silhouette is a fail).",
                     "",
                 ]

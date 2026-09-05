@@ -118,6 +118,9 @@ def build_host_brief(
                 "Flagship lock: load the exported GLB in Three.js. Lathe/cube/model-viewer is not complete.",
                 "Flagship lock: if Blender MCP/app is down, tell the user, wait, confirm after connect, then start. Never skip.",
                 "Flagship lock: lookdev screenshots under evidence/lookdev/ before leaving production. A night-silhouette versus a lit mood reference is a fail — go back to lookdev.",
+                "Flagship lock: director/modeler/prop/materials/lookdev artifacts + receipts are required. Export YAML alone is not craft.",
+                "Flagship lock: a sphere/cylinder/plane dump, unchecked modeling checkbox, or macro lookdev crop is a production fail.",
+                "Flagship lock: physical products also require /hard-surface. Do not skip it.",
                 "Contract: docs/FLAGSHIP_PREMIUM_WORKFLOW.md",
             ]
         )

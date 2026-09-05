@@ -85,3 +85,5 @@ clear prompt
 Premium is the bar for this prompt class. The conductor cannot invent beauty, but it can refuse a first-pass primitive as complete.
 
 Lookdev lock: at least two PNGs under `evidence/lookdev/` before production advances. After browser capture, if the hero is a crushed night-silhouette and the mood reference is lit, `advance` returns to PRODUCTION. Files and a GLB are not enough.
+
+Craft lock: export YAML is not skill execution. Director, modeler, prop-artist, materials, and lookdev must have artifacts + receipts. Physical products also require hard-surface. A sphere/cylinder/plane dump, an unchecked modeling checkbox, or a macro lookdev crop fails production.

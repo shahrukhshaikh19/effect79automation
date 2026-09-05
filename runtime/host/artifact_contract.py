@@ -8,6 +8,11 @@ from typing import Any
 import yaml
 
 from runtime.host.independence import classify_host_context, implementation_fingerprint
+from runtime.host.craft_lock import (
+    validate_brief_honesty,
+    validate_craft_artifacts,
+    validate_hero_primitives,
+)
 from runtime.host.skill_execution import (
     validate_artifact_execution,
     validate_contracted_artifacts,
@@ -127,6 +132,12 @@ def validate_flagship_production(project_dir: Path, planned_ids: list[str], sign
         data = load_yaml(notes)
         if data.get("blender_used") is False:
             invalid.append("production_notes: flagship cannot skip Blender for convenience")
+    craft = validate_craft_artifacts(project_dir, signals, planned_ids)
+    missing.extend(craft["missing"])
+    invalid.extend(craft["invalid"])
+    invalid.extend(validate_brief_honesty(project_dir))
+    if assets:
+        invalid.extend(validate_hero_primitives(project_dir))
     return {"missing": missing, "invalid": invalid, "ok": not missing and not invalid}
 
 

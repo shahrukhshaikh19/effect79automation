@@ -71,9 +71,33 @@ SKILL_CONTRACTS: dict[str, dict[str, Any]] = {
         "artifact": "direction/threejs_camera.yaml",
         "procedure": ["authored_framing", "lens_intent"],
     },
+    "EXT-BLD-01": {
+        "artifact": "direction/blender_production.yaml",
+        "procedure": ["analyze", "plan", "brief"],
+    },
+    "EXT-BLD-02": {
+        "artifact": "direction/blender_modeler.yaml",
+        "procedure": ["blockout", "authored_forms", "cleanup"],
+    },
+    "EXT-BLD-03": {
+        "artifact": "direction/prop_artist.yaml",
+        "procedure": ["primary_volumes", "product_parts", "not_primitive_hero"],
+    },
+    "EXT-BLD-05": {
+        "artifact": "direction/blender_materials.yaml",
+        "procedure": ["material_masters", "assigned_to_parts"],
+    },
+    "EXT-BLD-06": {
+        "artifact": "direction/blender_lookdev.yaml",
+        "procedure": ["lit_read", "full_object_shot"],
+    },
     "EXT-BLD-12": {
         "artifact": "direction/blender_export.yaml",
         "procedure": ["blender_modeled", "glb_exported", "loader_handoff"],
+    },
+    "EXT-BLD-13": {
+        "artifact": "direction/hard_surface.yaml",
+        "procedure": ["primary_forms", "boolean_bevel", "manufacturing_seams"],
     },
 }
 

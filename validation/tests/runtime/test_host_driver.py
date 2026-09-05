@@ -22,6 +22,7 @@ from runtime.host.artifact_contract import (
 from runtime.host.audit import audit_session
 from runtime.host.design_gate import evaluate_host_design_gate
 from runtime.host.independence import implementation_fingerprint
+from runtime.host.craft_lock import inspect_hero_asset
 from runtime.host.prompt_intake import classify_signals, intake_from_prompt
 from runtime.host.skill_execution import SKILL_CONTRACTS, skill_md_sha256, validate_artifact_execution
 from runtime.host.visual_class import (
@@ -30,6 +31,11 @@ from runtime.host.visual_class import (
     write_solid_png,
 )
 from runtime.routing.engine import route_task
+import json
+import math
+import struct
+import yaml
+import zlib
 
 
 def _noise_png(path: Path, width: int, height: int, base: int) -> None:
@@ -49,6 +55,122 @@ def _noise_png(path: Path, width: int, height: int, base: int) -> None:
         return struct.pack(">I", len(body)) + tag + body + struct.pack(">I", zlib.crc32(tag + body) & 0xFFFFFFFF)
 
     path.write_bytes(b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", ihdr) + chunk(b"IDAT", compressed) + chunk(b"IEND", b""))
+
+
+def _framed_png(path: Path, width: int, height: int) -> None:
+    raw = bytearray()
+    mx, my = width // 5, height // 5
+    for y in range(height):
+        raw.append(0)
+        for x in range(width):
+            if x < mx or y < my or x >= width - mx or y >= height - my:
+                raw.extend(b"\x08\x06\x0a")
+            else:
+                raw.extend(bytes((170, 150, 130)))
+    compressed = zlib.compress(bytes(raw), 1)
+    ihdr = struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)
+
+    def chunk(tag: bytes, body: bytes) -> bytes:
+        return struct.pack(">I", len(body)) + tag + body + struct.pack(">I", zlib.crc32(tag + body) & 0xFFFFFFFF)
+
+    path.write_bytes(b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", ihdr) + chunk(b"IDAT", compressed) + chunk(b"IEND", b""))
+
+
+def _craft_body(skill_id: str) -> str:
+    evidence = {
+        step: f"Executed {skill_id} {step} with unique production note {index:02d}."
+        for index, step in enumerate(SKILL_CONTRACTS[skill_id]["procedure"])
+    }
+    return yaml.dump(
+        {
+            "skill_id": skill_id,
+            "skill_md_sha256": skill_md_sha256(skill_id),
+            "blender_used": True,
+            "procedure_evidence": evidence,
+        },
+        sort_keys=False,
+    )
+
+
+def _write_glb(path: Path, meshes: list[tuple[str, list[tuple[float, float, float]]]]) -> None:
+    blob = bytearray()
+    views = []
+    accessors = []
+    gl_meshes = []
+    nodes = []
+    for index, (name, pts) in enumerate(meshes):
+        raw = b"".join(struct.pack("<fff", *pt) for pt in pts)
+        while len(blob) % 4:
+            blob.append(0)
+        offset = len(blob)
+        blob.extend(raw)
+        xs = [pt[0] for pt in pts]
+        ys = [pt[1] for pt in pts]
+        zs = [pt[2] for pt in pts]
+        views.append({"buffer": 0, "byteOffset": offset, "byteLength": len(raw)})
+        accessors.append(
+            {
+                "bufferView": index,
+                "componentType": 5126,
+                "count": len(pts),
+                "type": "VEC3",
+                "min": [min(xs), min(ys), min(zs)],
+                "max": [max(xs), max(ys), max(zs)],
+            }
+        )
+        gl_meshes.append({"name": name, "primitives": [{"attributes": {"POSITION": index}}]})
+        nodes.append({"name": name, "mesh": index})
+    while len(blob) % 4:
+        blob.append(0)
+    gltf = {
+        "asset": {"version": "2.0"},
+        "scene": 0,
+        "scenes": [{"nodes": list(range(len(nodes)))}],
+        "nodes": nodes,
+        "meshes": gl_meshes,
+        "accessors": accessors,
+        "bufferViews": views,
+        "buffers": [{"byteLength": len(blob)}],
+    }
+    json_bytes = json.dumps(gltf, separators=(",", ":")).encode("utf-8")
+    while len(json_bytes) % 4:
+        json_bytes += b" "
+    json_chunk = struct.pack("<I", len(json_bytes)) + b"JSON" + json_bytes
+    bin_chunk = struct.pack("<I", len(blob)) + b"BIN\x00" + bytes(blob)
+    header = b"glTF" + struct.pack("<II", 2, 12 + len(json_chunk) + len(bin_chunk))
+    path.write_bytes(header + json_chunk + bin_chunk)
+
+
+def _irregular_mesh() -> list[tuple[float, float, float]]:
+    return [
+        (0.0, 0.0, 0.0),
+        (1.2, 0.1, 0.0),
+        (0.4, 0.8, 0.2),
+        (0.9, 0.3, 0.7),
+        (-0.2, 0.5, 0.4),
+        (0.3, -0.4, 0.6),
+        (0.6, 0.2, -0.3),
+        (1.1, 0.9, 0.1),
+        (0.15, 0.55, 0.85),
+        (-0.4, 0.2, 0.3),
+        (0.7, -0.1, 0.5),
+        (0.05, 0.95, -0.2),
+        (0.8, 0.4, 0.15),
+        (-0.1, 0.7, 0.6),
+        (0.45, 0.05, 0.9),
+        (1.0, 0.6, 0.35),
+    ]
+
+
+def _sphere_mesh(count: int = 80) -> list[tuple[float, float, float]]:
+    pts: list[tuple[float, float, float]] = []
+    phi = math.pi * (3.0 - 5.0**0.5)
+    for i in range(count):
+        y = 1.0 - (i / (count - 1)) * 2.0
+        radius = math.sqrt(max(0.0, 1.0 - y * y))
+        theta = phi * i
+        pts.append((math.cos(theta) * radius, y, math.sin(theta) * radius))
+    return pts
 
 
 class PromptIntakeTests(unittest.TestCase):
@@ -295,8 +417,30 @@ class FlagshipWorkflowTests(unittest.TestCase):
         decision = route_task(intake)
         activated = set(decision["activated_skill_ids"]) | set(decision.get("planned_skill_ids") or [])
         self.assertEqual(decision["status"], "ROUTED")
-        for skill_id in ("EXT-3DWEB-02", "EXT-3DWEB-03", "EXT-3DWEB-04", "EXT-BLD-01", "EXT-BLD-12"):
+        for skill_id in ("EXT-3DWEB-02", "EXT-3DWEB-03", "EXT-3DWEB-04", "EXT-BLD-01", "EXT-BLD-12", "EXT-BLD-13"):
             self.assertIn(skill_id, activated)
+
+    def test_headphone_routes_hard_surface(self) -> None:
+        intake = intake_from_prompt(
+            "Create a flagship cinematic 3D launch website for a premium over-ear headphone. "
+            "Blender must model this and export GLB."
+        )
+        intake["runtime_capabilities"]["blender"] = "AVAILABLE"
+        decision = route_task(intake)
+        activated = set(decision["activated_skill_ids"]) | set(decision.get("planned_skill_ids") or [])
+        self.assertIn("EXT-BLD-13", activated)
+        self.assertTrue(intake["task_signals"]["requires_physical_product"])
+
+    def test_landscape_does_not_route_hard_surface(self) -> None:
+        intake = intake_from_prompt(
+            "Cinematic WebGL landscape. Blender must author the hero landscape and export GLB. "
+            "Reference image is mood only — do not reconstruct."
+        )
+        intake["runtime_capabilities"]["blender"] = "AVAILABLE"
+        decision = route_task(intake)
+        activated = set(decision["activated_skill_ids"]) | set(decision.get("planned_skill_ids") or [])
+        self.assertNotIn("EXT-BLD-13", activated)
+        self.assertFalse(intake["task_signals"]["requires_physical_product"])
 
     def test_flagship_blocks_without_blender(self) -> None:
         intake = intake_from_prompt(
@@ -387,6 +531,110 @@ class VisualClassTests(unittest.TestCase):
             _noise_png(look / "b.png", 400, 280, 100)
             result = validate_lookdev_evidence(root, {"quality_bar": "flagship"})
             self.assertTrue(result["ok"])
+
+    def test_macro_lookdev_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            look = root / "evidence" / "lookdev"
+            look.mkdir(parents=True)
+            _noise_png(look / "a.png", 640, 400, 150)
+            # overwrite with almost-flat scans so the file stays >4KB
+            raw = bytearray()
+            for y in range(400):
+                raw.append(0)
+                for x in range(640):
+                    v = 150 + (x % 3)
+                    raw.extend(bytes((v, v - 2, v - 4)))
+            compressed = zlib.compress(bytes(raw), 1)
+            ihdr = struct.pack(">IIBBBBB", 640, 400, 8, 2, 0, 0, 0)
+
+            def chunk(tag: bytes, body: bytes) -> bytes:
+                return struct.pack(">I", len(body)) + tag + body + struct.pack(">I", zlib.crc32(tag + body) & 0xFFFFFFFF)
+
+            payload = b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", ihdr) + chunk(b"IDAT", compressed) + chunk(b"IEND", b"")
+            (look / "a.png").write_bytes(payload)
+            (look / "b.png").write_bytes(payload)
+            result = validate_lookdev_evidence(root, {"quality_bar": "flagship"})
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("macro" in item or "crop" in item for item in result["issues"]))
+
+    def test_physical_lookdev_needs_full_object_frame(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            look = root / "evidence" / "lookdev"
+            look.mkdir(parents=True)
+            _noise_png(look / "a.png", 400, 280, 90)
+            _noise_png(look / "b.png", 400, 280, 100)
+            result = validate_lookdev_evidence(
+                root, {"quality_bar": "flagship", "requires_physical_product": True}
+            )
+            self.assertFalse(result["ok"])
+            _framed_png(look / "a.png", 400, 280)
+            _framed_png(look / "b.png", 400, 280)
+            result = validate_lookdev_evidence(
+                root, {"quality_bar": "flagship", "requires_physical_product": True}
+            )
+            self.assertTrue(result["ok"])
+
+
+class CraftLockTests(unittest.TestCase):
+    def test_missing_modeler_artifact_fails_even_with_glb(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "implementation").mkdir()
+            (root / "direction").mkdir()
+            _write_glb(root / "implementation" / "hero.glb", [("SM_Body", _irregular_mesh())])
+            (root / "direction" / "blender_export.yaml").write_text(
+                _craft_body("EXT-BLD-12"), encoding="utf-8"
+            )
+            result = validate_flagship_production(root, ["EXT-BLD-12"], {"quality_bar": "flagship"})
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("blender_modeler.yaml" in item for item in result["missing"]))
+
+    def test_unchecked_brief_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "implementation").mkdir()
+            (root / "direction").mkdir()
+            _write_glb(
+                root / "implementation" / "hero.glb",
+                [("SM_Cup", _irregular_mesh()), ("SM_Yoke", _irregular_mesh())],
+            )
+            for sid, rel in (
+                ("EXT-BLD-01", "blender_production.yaml"),
+                ("EXT-BLD-02", "blender_modeler.yaml"),
+                ("EXT-BLD-03", "prop_artist.yaml"),
+                ("EXT-BLD-05", "blender_materials.yaml"),
+                ("EXT-BLD-06", "blender_lookdev.yaml"),
+                ("EXT-3DWEB-02", "threejs_materials.yaml"),
+                ("EXT-3DWEB-03", "threejs_lighting.yaml"),
+                ("EXT-3DWEB-04", "threejs_camera.yaml"),
+                ("EXT-BLD-12", "blender_export.yaml"),
+            ):
+                (root / "direction" / rel).write_text(_craft_body(sid), encoding="utf-8")
+            (root / "direction" / "blender_production_brief.md").write_text(
+                "## Pipeline\n- [x] Planning\n- [ ] Blockout & Silhouette\n- [ ] Modeling\n",
+                encoding="utf-8",
+            )
+            result = validate_flagship_production(root, ["EXT-BLD-12"], {"quality_bar": "flagship"})
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("unchecked" in item for item in result["invalid"]))
+
+    def test_primitive_named_glb_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "dump.glb"
+            _write_glb(path, [("Sphere", _irregular_mesh()), ("Cylinder", _irregular_mesh())])
+            result = inspect_hero_asset(path)
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("primitive" in item for item in result["issues"]))
+
+    def test_two_sphere_meshes_fail(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "cups.glb"
+            _write_glb(path, [("SM_Cup_L", _sphere_mesh()), ("SM_Cup_R", _sphere_mesh())])
+            result = inspect_hero_asset(path)
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("sphere" in item.lower() for item in result["issues"]))
 
 
 class SkillExecutionProofTests(unittest.TestCase):

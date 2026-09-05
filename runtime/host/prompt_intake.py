@@ -47,6 +47,14 @@ _BLENDER_REQUIRED = re.compile(
 )
 _SCROLL_STORY = re.compile(r"\b(scroll is|scroll equals|scroll =|scroll states|this order only)\b", re.I)
 _LIVE_SCENE = re.compile(r"\b(ripple|foliage|wind is blowing|hover and drag|live 3d)\b", re.I)
+_PHYSICAL_PRODUCT = re.compile(
+    r"\b("
+    r"headphone|headset|earcup|over-ear|in-ear|yoke|"
+    r"physical (product|instrument|device|object)|"
+    r"hero product|anodized|watch|camera body|keyboard"
+    r")\b",
+    re.I,
+)
 
 
 def classify_signals(prompt: str) -> dict[str, Any]:
@@ -82,6 +90,7 @@ def classify_signals(prompt: str) -> dict[str, Any]:
         "requires_accessibility": bool(_A11Y.search(text)) or wants_visual,
         "requires_frontend": True,
         "requires_reference_analysis": wants_ref,
+        "requires_physical_product": bool(_PHYSICAL_PRODUCT.search(text)),
         "reconstruction_path": reconstruction,
         "quality_bar": "flagship" if wants_3d and reconstruction == "blender_authoring" else "standard",
     }

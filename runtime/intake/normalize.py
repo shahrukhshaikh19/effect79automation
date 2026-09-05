@@ -21,6 +21,7 @@ def normalize_intake(intake: dict[str, Any]) -> dict[str, Any]:
         "requires_accessibility",
         "requires_frontend",
         "requires_reference_analysis",
+        "requires_physical_product",
     ):
         signals.setdefault(flag, False)
     signals.setdefault("reconstruction_path", "none")

@@ -94,11 +94,44 @@ def png_stats(path: Path) -> dict[str, float] | None:
         return None
     mean = sum(lumas) / len(lumas)
     var = sum((v - mean) ** 2 for v in lumas) / len(lumas)
+    edge_means: list[float] = []
+    for strip in (
+        rows[0],
+        rows[-1],
+    ):
+        vals = []
+        for x in range(0, width, max(1, width // 32)):
+            o = x * bpp
+            vals.append((0.2126 * strip[o] + 0.7152 * strip[o + 1] + 0.0722 * strip[o + 2]) / 255.0)
+        if vals:
+            edge_means.append(sum(vals) / len(vals))
+    left_vals: list[float] = []
+    right_vals: list[float] = []
+    for y in range(0, height, max(1, height // 32)):
+        row = rows[y]
+        left_vals.append((0.2126 * row[0] + 0.7152 * row[1] + 0.0722 * row[2]) / 255.0)
+        ro = (width - 1) * bpp
+        right_vals.append((0.2126 * row[ro] + 0.7152 * row[ro + 1] + 0.0722 * row[ro + 2]) / 255.0)
+    if left_vals:
+        edge_means.append(sum(left_vals) / len(left_vals))
+    if right_vals:
+        edge_means.append(sum(right_vals) / len(right_vals))
+    inner = lumas[len(lumas) // 4 : 3 * len(lumas) // 4] or lumas
+    center_mean = sum(inner) / len(inner)
+    edge_bg = 0
+    for edge in edge_means:
+        if edge < 0.14 or abs(edge - center_mean) > 0.18:
+            edge_bg += 1
+    coverage = sum(1 for v in lumas if v > 0.12) / len(lumas)
     return {
         "mean_luma": mean,
         "contrast": var**0.5,
         "crushed_black": crushed / len(lumas),
         "samples": float(len(lumas)),
+        "width": float(width),
+        "height": float(height),
+        "edge_bg_count": float(edge_bg),
+        "coverage": coverage,
     }
 
 
@@ -152,6 +185,16 @@ def _hero_shots(project_dir: Path) -> list[Path]:
     return shots
 
 
+def is_readable_lookdev_frame(stats: dict[str, float], signals: dict[str, Any] | None) -> bool:
+    """Reject wall-to-wall surface macros. Physical products also need a full-object studio frame."""
+    bleed = stats["edge_bg_count"] < 1 and stats["coverage"] > 0.85 and stats["contrast"] < 0.03
+    if bleed:
+        return False
+    if (signals or {}).get("requires_physical_product"):
+        return stats["edge_bg_count"] >= 2 and 0.15 <= stats["coverage"] <= 0.82
+    return True
+
+
 def _class_issues(hero: dict[str, float], ref: dict[str, float] | None) -> list[str]:
     issues: list[str] = []
     if hero["mean_luma"] < 0.05 and hero["contrast"] < 0.04:
@@ -186,11 +229,19 @@ def validate_lookdev_evidence(project_dir: Path, signals: dict[str, Any] | None)
     refs = [s for s in refs if s]
     ref = max(refs, key=lambda s: s["mean_luma"]) if refs else None
     issues: list[str] = []
+    readable = False
     for shot in shots[:4]:
         stats = png_stats(shot)
         if not stats:
             continue
         issues.extend(_class_issues(stats, ref))
+        if is_readable_lookdev_frame(stats, signals):
+            readable = True
+    if not readable:
+        issues.append(
+            "lookdev is a cropped/macro dump — need one full hero or full scene frame, "
+            "not a close-up of a single surface"
+        )
     return {"ok": not issues, "issues": issues}
 
 

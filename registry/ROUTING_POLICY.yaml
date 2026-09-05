@@ -81,6 +81,7 @@ skill_domains:
   EXT-BLD-08: {domains: [3d, blender], cost_tier: high, stage: SPECIALIST_ROUTING}
   EXT-BLD-11: {domains: [3d, blender], cost_tier: medium, stage: SPECIALIST_ROUTING}
   EXT-BLD-12: {domains: [3d, blender], cost_tier: high, stage: SPECIALIST_ROUTING}
+  EXT-BLD-13: {domains: [3d, blender], cost_tier: high, stage: SPECIALIST_ROUTING}
 
 routing_rules:
   - id: insufficient_input_guard
@@ -150,6 +151,7 @@ routing_rules:
       - {skill_id: EXT-BLD-08, reason: flagship Blender lighting for lookdev, not a beauty-dish default}
       - {skill_id: EXT-BLD-11, reason: flagship asset budgets before browser import}
       - {skill_id: EXT-BLD-12, reason: flagship GLB export is the production handoff}
+      - {skill_id: EXT-BLD-13, reason: flagship hard-surface for a physical product hero, if: requires_physical_product}
 
   - id: reference_reconstruction_route
     when:
