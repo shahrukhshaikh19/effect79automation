@@ -79,18 +79,27 @@ def determine_gate_status(
     artifact_analysis: dict[str, Any],
     runtime_healthy: bool,
     console_error_count: int,
+    critic_integrity: dict[str, Any] | None = None,
 ) -> tuple[str, list[dict[str, Any]], dict[str, Any]]:
-    """Precedence: evidence → HR → critic failures → approve."""
+    """Precedence: evidence → critic integrity → HR → critic failures → approve."""
     decisions: dict[str, Any] = {
         "hard_reject_triggered": False,
         "evidence_blocker_triggered": False,
         "hard_reject_ids": [],
         "evidence_blocker_ids": [],
+        "critic_integrity_violations": [],
     }
 
     if not evidence_completeness.get("sufficient"):
         decisions["evidence_blocker_triggered"] = True
         decisions["evidence_blocker_ids"] = list(EVIDENCE_BLOCKER_IDS)
+        hard_rejects = [{"id": hr, "triggered": False} for hr in HARD_REJECT_IDS]
+        return "BLOCKED_INSUFFICIENT_EVIDENCE", hard_rejects, decisions
+
+    if critic_integrity and not critic_integrity.get("integrity_ok"):
+        decisions["evidence_blocker_triggered"] = True
+        decisions["evidence_blocker_ids"] = list(EVIDENCE_BLOCKER_IDS)
+        decisions["critic_integrity_violations"] = critic_integrity.get("violations") or []
         hard_rejects = [{"id": hr, "triggered": False} for hr in HARD_REJECT_IDS]
         return "BLOCKED_INSUFFICIENT_EVIDENCE", hard_rejects, decisions
 

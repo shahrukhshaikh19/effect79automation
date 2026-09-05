@@ -1,0 +1,68 @@
+report_type: certification_integrity_investigation
+benchmark_id: BM-002
+contract_version: '1.0'
+investigated_run_id: bm002-run-7c81df8639db
+investigated_execution_commit_sha: 9165410946d73d2f183b13131388a535ae1a3d09
+operator_verdict: REJECTED
+investigation_at: '2026-09-05T05:45:00+00:00'
+prior_certified_result:
+  quality_gate_result: APPROVED
+  benchmark_result: PASS
+  benchmark_score: 91.4
+invalidation_decision: INVALIDATED
+invalidation_reason: certification_integrity_false_pass_operator_rejected
+summary: >
+  BM-002 run bm002-run-7c81df8639db recorded APPROVED / PASS 91.4, but critics never
+  inspected rendered browser output. Visual and 3D dimension scores were produced by the
+  same producer execution pipeline via static source-code heuristics. Scene-state and
+  camera evidence were self-reported by implementation JavaScript. Quality Gate approved
+  because evidence files existed and heuristic critics returned empty findings with
+  inflated scores. Operator inspection confirms output is far below the frozen flagship
+  cinematic 3D quality bar.
+confirmed_false_pass_mechanisms:
+  - id: producer_derived_critic_evidence
+    detail: E-003 and E-011 generated in bm002_evidence.produce_derived_evidence from analyze_implementation static regex, not ACOS-10/ACOS-12 independent review
+  - id: critics_relay_producer_scores
+    detail: bm002_critics._visual_critic and _3d_critic pass through producer dimension_score without rendered inspection
+  - id: screenshots_not_interpreted
+    detail: E-001/E-008 PNG captures exist but no code reads or judges them; visual_quality_approved hardcoded false in capture-evidence.mjs
+  - id: self_reported_scene_telemetry
+    detail: E-012/E-013 derived from window.__SOLSTICE_SCENE__ authored in main.js, not independently verified progression
+  - id: static_3d_premium_inflation
+    detail: build_3d_quality_review floors score at 7.0 when three.js+canvas detected, adds +0.5 markers → 10.0 without geometry/material render review
+  - id: visual_premium_inflation
+    detail: build_visual_review_bm002 adds +1.0 for three.js presence; empty findings → 10.0
+  - id: cinematic_default_pass
+    detail: _cinematic_critic starts at 8.0 when self-reported states present; no rendered composition review
+  - id: design_gate_file_presence_only
+    detail: evaluate_design_gate approves when three YAML files exist; no quality or feasibility challenge
+  - id: evidence_completeness_conflated_with_quality
+    detail: Gate precedence checks artifact existence; sufficient evidence ≠ sufficient quality proof
+  - id: correction_loop_inert
+    detail: Empty critic findings → no correction loop; mediocre output proceeds to APPROVED
+  - id: visual_quality_approved_ignored
+    detail: manifest.visual_quality_approved=false never consumed by gate or critics; high visual scores unaffected
+  - id: premium_scores_without_substance
+    detail: 10/10 visual and 3D scores with zero findings and no positive_evidence or comparative justification
+skill_contract_violations:
+  - skill: ACOS-10
+    contract: skills/acos/acos-visual-critic/SKILL.md
+    violation: Visual critic evaluated static analysis not rendered/browser evidence
+  - skill: ACOS-12
+    contract: skills/acos/acos-3d-critic/SKILL.md
+    violation: 3D critic approved from source heuristics without runtime/render 3D evidence review
+  - skill: ACOS-06
+    contract: skills/acos/acos-cinematic-3d-director/SKILL.md
+    violation: Cinematic score from self-reported keyframes, not captured frame composition review
+historical_preservation:
+  execution_report_path: benchmarks/BM-002/execution/run/EXECUTION_REPORT.yaml
+  gate_report_path: benchmarks/BM-002/execution/run/gate_report.yaml
+  note: Original run artifacts preserved unchanged; registry marks certified result INVALIDATED
+system_corrections_required:
+  - validation/benchmark_execution/critic_integrity.py
+  - validation/benchmark_execution/bm002_critics.py
+  - validation/benchmark_execution/bm002_evidence.py
+  - validation/benchmark_execution/gate_evaluation.py
+  - validation/benchmark_execution/bm002_direction.py
+  - validation/benchmark_execution/run_bm002.py
+  - validation/tests/benchmark/test_bm002_certification_integrity.py

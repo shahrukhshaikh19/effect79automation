@@ -121,9 +121,24 @@ def evaluate_design_gate(direction_dir: Path, routing: dict[str, Any]) -> dict[s
             "missing_artifacts": missing,
             "routing_id": routing.get("routing_id"),
         }
+
+    import yaml
+
+    creative_path = direction_dir / "creative_direction.yaml"
+    creative = yaml.safe_load(creative_path.read_text(encoding="utf-8")) or {}
+    three_d = creative.get("three_d_decision") or {}
+    quality_risks: list[str] = []
+    if three_d.get("blender_used") is False and three_d.get("production_pipeline") == "procedural_three_js_webgl":
+        quality_risks.append("procedural_three_js_without_blender_challenge_recorded")
+    if not (creative.get("product") or {}).get("concept_thesis"):
+        quality_risks.append("missing_concept_thesis")
+
     return {
         "status": "APPROVED",
         "routing_id": routing.get("routing_id"),
         "decision_provenance": "direction_artifacts_present_post_routing",
         "required_before_production": True,
+        "quality_risks": quality_risks,
+        "substantive_review_performed": False,
+        "note": "File-presence gate only — does not certify flagship visual/3D quality feasibility",
     }

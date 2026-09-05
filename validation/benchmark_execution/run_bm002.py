@@ -36,6 +36,7 @@ from validation.benchmark_execution.evidence_contract import (
     required_evidence_ids,
     validate_required_evidence,
 )
+from validation.benchmark_execution.critic_integrity import assess_critic_integrity
 from validation.benchmark_execution.gate_evaluation import (
     build_gate_report,
     determine_gate_status,
@@ -169,12 +170,20 @@ def run_execution(*, skip_browser: bool = False) -> dict[str, Any]:
         meaningful_3d_used=meaningful_3d_used,
     )
 
+    critic_integrity = assess_critic_integrity(
+        critic_report=critic_report,
+        evidence_bundle=evidence_bundle,
+        viewport_manifest=evidence_bundle.get("E-001_manifest") or {},
+        benchmark_id=BM_ID,
+    )
+
     gate_status, hard_rejects, decisions = determine_gate_status(
         evidence_completeness=evidence_completeness_pre,
         critic_report=critic_report,
         artifact_analysis=analysis,
         runtime_healthy=evidence_bundle.get("runtime_healthy", False),
         console_error_count=evidence_bundle.get("console_error_count", 0),
+        critic_integrity=critic_integrity,
     )
 
     gate_report = build_gate_report(

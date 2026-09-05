@@ -86,14 +86,23 @@ benchmarks:
         frozen_at: "2026-09-05T05:05:00Z"
         revision_reason: operator_approved_acceptance_contract_freeze
     execution:
-      status: COMPLETED
-      certified_result: PASS
+      status: INVALIDATED
+      certified_result: INVALIDATED
       current_run_id: bm002-run-7c81df8639db
       routing_id: route-c47c2365a569
-      benchmark_result: PASS
-      benchmark_score: 91.4
-      quality_gate_result: APPROVED
+      benchmark_result: INVALIDATED
+      benchmark_score: null
+      quality_gate_result: INVALIDATED
       meaningful_3d_used: true
       blender_used: false
+      invalidation_reason: certification_integrity_false_pass_operator_rejected
+      invalidation_report_path: benchmarks/BM-002/execution/run/CERTIFICATION_INTEGRITY_REPORT.yaml
+      prior_certified_run:
+        run_id: bm002-run-7c81df8639db
+        execution_commit_sha: 9165410946d73d2f183b13131388a535ae1a3d09
+        benchmark_result: PASS
+        benchmark_score: 91.4
+        quality_gate_result: APPROVED
+        invalidation_reason: certification_integrity_false_pass_operator_rejected
       report_path: benchmarks/BM-002/execution/run/EXECUTION_REPORT.yaml
       implementation_path: benchmarks/BM-002/execution/implementation

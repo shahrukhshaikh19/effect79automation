@@ -106,6 +106,9 @@ def produce_derived_evidence(
     e003_dir = EVIDENCE_ROOT / "E-003"
     e003_dir.mkdir(parents=True, exist_ok=True)
     visual = build_visual_review_bm002(analysis, evidence_refs=["evidence/E-001/manifest.yaml"])
+    visual["producer_authored"] = True
+    visual["independent_critic_review"] = False
+    visual["review_basis"] = "static_source_analysis"
     (e003_dir / "visual_consistency_review.json").write_text(json.dumps(visual, indent=2), encoding="utf-8")
     bundle["E-003"] = visual
 
@@ -140,10 +143,18 @@ def produce_derived_evidence(
     bundle["E-002"] = impl_check
 
     scene_log = interaction_result.get("scene_log") or {}
+    if scene_log:
+        scene_log = dict(scene_log)
+        scene_log["self_reported"] = True
+        scene_log["source"] = "implementation_global"
+        scene_log["independent_capture_verified"] = False
 
     e011_dir = EVIDENCE_ROOT / "E-011"
     e011_dir.mkdir(parents=True, exist_ok=True)
     review_3d = build_3d_quality_review(analysis, evidence_refs=["evidence/E-002/implementation_check.json", "evidence/E-001/manifest.yaml"])
+    review_3d["producer_authored"] = True
+    review_3d["independent_critic_review"] = False
+    review_3d["review_basis"] = "static_source_analysis"
     (e011_dir / "3d_quality_review.json").write_text(json.dumps(review_3d, indent=2), encoding="utf-8")
     bundle["E-011"] = review_3d
 
@@ -177,6 +188,7 @@ def produce_derived_evidence(
     bundle["E-009"] = perf
     bundle["E-007"] = interaction_result.get("interaction") or {}
     bundle["scene_log"] = scene_log
+    bundle["E-001_manifest"] = manifest
     bundle["runtime_healthy"] = runtime_healthy
     bundle["console_error_count"] = console_errors
     bundle["network_failure_count"] = len(network_failures)
