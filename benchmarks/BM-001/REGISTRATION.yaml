@@ -529,8 +529,8 @@ execution_state:
   quality_gate_result: REJECTED
   meaningful_3d_used: false
   scoring_profile: no_meaningful_3d
-  current_run_id: bm001-run-6c1991e2728f
-  re_evaluated_at: '2026-09-05T04:29:04Z'
+  current_run_id: bm001-run-df480e178918
+  re_evaluated_at: '2026-09-05T04:33:55Z'
   prior_certified_run:
     run_id: bm001-run-4bd803dd4125
     benchmark_result: PASS

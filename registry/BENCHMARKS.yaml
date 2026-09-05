@@ -54,7 +54,7 @@ benchmarks:
     execution:
       status: RE_EVALUATED
       certified_result: INVALIDATED
-      current_run_id: bm001-run-6c1991e2728f
+      current_run_id: bm001-run-df480e178918
       benchmark_result: FAIL
       benchmark_score: null
       quality_gate_result: REJECTED
