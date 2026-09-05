@@ -19,6 +19,7 @@ if str(REPO) not in sys.path:
 from runtime.evidence.register import register_evidence
 from runtime.intake.validate import validate_intake
 from runtime.quality.gate import validate_producer_independence
+from runtime.adapter.host_brief import build_host_brief, write_host_brief
 from runtime.routing.engine import route_task, validate_routing_decision
 from runtime.state.execution import append_event, create_execution_state, persist_state
 from runtime.state.transitions import bind_routing_to_execution, can_transition, set_design_gate_state, unlock_planned_skills
@@ -122,6 +123,8 @@ def run_execution(*, skip_browser: bool = False) -> dict[str, Any]:
         append_event(state, "DESIGN_GATE_APPROVED", routing["routing_id"])
     else:
         set_design_gate_state(state, design_gate["status"])
+
+    write_host_brief(build_host_brief(intake, routing, execution_state=state, adapter_target="cursor"))
 
     missing_impl = verify_implementation()
     if missing_impl and design_gate["status"] == "APPROVED":

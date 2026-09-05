@@ -1,0 +1,159 @@
+generated_by: tools/skill_exposure/sync_native_skills.py
+canonical_root: skills/
+copy_policy: links_only_never_copy_bodies
+skill_count: 50
+platforms:
+  cursor: .cursor/skills/
+  claude: .claude/skills/
+  codex: .agents/skills/
+skills:
+  - name: acos-3d-critic
+    canonical: skills/acos/acos-3d-critic
+    skill_md_sha256: 9f2e4ea4363553b84b733c11bdf96c77a146172750989688bffc0933f446f11a
+  - name: acos-anti-generic-design
+    canonical: skills/acos/acos-anti-generic-design
+    skill_md_sha256: 4ef52aaf7344a5df99e3aa02741e1962fec170d16168401fbbd8b03f99ad319b
+  - name: acos-art-director
+    canonical: skills/acos/acos-art-director
+    skill_md_sha256: f64acef97faba5fd24a14125f5d3e4f47b74e3f1f0b8ad2be700f05d1e1644ff
+  - name: acos-cinematic-3d-director
+    canonical: skills/acos/acos-cinematic-3d-director
+    skill_md_sha256: 006e8c550ffadb674775db753a02d6f2d05649da4c9eaece296945cce7ca944a
+  - name: acos-creative-critic
+    canonical: skills/acos/acos-creative-critic
+    skill_md_sha256: 59b295a9fdd810d58337b82b00295ceccc396ae351c3cb581fa2a955c35d6989
+  - name: acos-creative-director
+    canonical: skills/acos/acos-creative-director
+    skill_md_sha256: 78a9144fe815d3c4090550f042f7b7833e2fa096dc5be81ea73fb04f44a0b28c
+  - name: acos-experience-architect
+    canonical: skills/acos/acos-experience-architect
+    skill_md_sha256: 897edb564fc0c34996397e211f56e66b4a730c96adfbc7528b2910f24561063e
+  - name: acos-failure-learning
+    canonical: skills/acos/acos-failure-learning
+    skill_md_sha256: eda2ae176143e91f0efee8a350eb6fc85a63e3bb7c7ad70c9c2090f5a5ad1fb3
+  - name: acos-motion-director
+    canonical: skills/acos/acos-motion-director
+    skill_md_sha256: 40dd4a550bbcb4ce8cddf0b3b5c7887d9e50c059e9fb3747d60ef67ba28bf57e
+  - name: acos-quality-gate
+    canonical: skills/acos/acos-quality-gate
+    skill_md_sha256: b6705523fdf831be5142df242715fed3650f0e959f740c140482491b8f4b9ac8
+  - name: acos-reference-analysis
+    canonical: skills/acos/acos-reference-analysis
+    skill_md_sha256: e52abff0ca705cd9ff319b44ce56c8024850e8760b615c27eb538a58c762eb28
+  - name: acos-responsive-art-direction
+    canonical: skills/acos/acos-responsive-art-direction
+    skill_md_sha256: 80f094858e31614bc5482e8b47aaa6d7248cbb7e7fd61cb2b0cba3bb6734529e
+  - name: acos-visual-critic
+    canonical: skills/acos/acos-visual-critic
+    skill_md_sha256: bbc4e7b1fc603eda8e01090b9601b826954fd65bc6b6699b9733af577cf2bb4a
+  - name: acos-webgl-performance
+    canonical: skills/acos/acos-webgl-performance
+    skill_md_sha256: 21e2cd7bd5735985dd7ba5e758789b24b5273930ca8f73615133710dfb6c11ec
+  - name: anthropic-design-critique
+    canonical: skills/external/frontend/anthropic-design-critique
+    skill_md_sha256: 4b51de88442cd8a0b7ca5c8c7583b28c65277c09466df2ab23457d57bf03aa23
+  - name: asset-optimization
+    canonical: skills/external/blender/asset-optimization
+    skill_md_sha256: dca6bf35aacc2395e8ce5d333be7235e19354dbda19682dad657efb263e5df0c
+  - name: blender-director
+    canonical: skills/external/blender/blender-director
+    skill_md_sha256: 46a0c1cf5020dc46dc073691ca85a40e86af8aafc7e51057b2a965c068a05fe2
+  - name: blender-modeler
+    canonical: skills/external/blender/blender-modeler
+    skill_md_sha256: 96e5cd79f5f518f5ca2c93d4f128b4cf59af78a3207edcc021e070aa03aa4ad7
+  - name: camera-cinematography
+    canonical: skills/external/blender/camera-cinematography
+    skill_md_sha256: 7d743ca9732942c95e545a82a204d9a4dff9312bb1ced8698911382dcb364dd8
+  - name: compositing
+    canonical: skills/external/blender/compositing
+    skill_md_sha256: 20a0e8ecea5e57a3af0b43bbc288b217744f994931a2779e7977794f25bbccf3
+  - name: export-pipeline
+    canonical: skills/external/blender/export-pipeline
+    skill_md_sha256: 5430d0d60b6458856618f9bdeca387d1bf09bdbcbecb02084af5460cb6afa03d
+  - name: geometry-nodes
+    canonical: skills/external/blender/geometry-nodes
+    skill_md_sha256: 713b224ee6e218af53d2727f698e61272d01b3038778f2cc2c9f1aa24c1f2c76
+  - name: gsap-core
+    canonical: skills/external/gsap/gsap-core
+    skill_md_sha256: de938eefd9a5bc6335216a17783788cd21408923ead290cda5871b7d61db66b8
+  - name: gsap-performance
+    canonical: skills/external/gsap/gsap-performance
+    skill_md_sha256: 2dd51f19a7fcabe1c06caee9e61554485696d05003396c528237aba970a959ce
+  - name: gsap-react
+    canonical: skills/external/gsap/gsap-react
+    skill_md_sha256: fd1ce4fa883a256e6578f13a4271b494a18dffaaa6111ab64ca1bc97d4dd8b21
+  - name: gsap-scrolltrigger
+    canonical: skills/external/gsap/gsap-scrolltrigger
+    skill_md_sha256: e6612777bcce1617d3b9e061b2f671fb0f36379684d0c61f7a1baa06d7f7a989
+  - name: gsap-timeline
+    canonical: skills/external/gsap/gsap-timeline
+    skill_md_sha256: fbe7a2b9e66e66d2c956f650583d48385498b677ba1292f1dce9d1ffb1a77ea0
+  - name: hard-surface
+    canonical: skills/external/blender/hard-surface
+    skill_md_sha256: bfef5179a606fcea73ae6b88860f7e99c3b079601ad9823d583f9757669929e1
+  - name: img2threejs
+    canonical: skills/external/img2threejs
+    skill_md_sha256: c5c1b5affeb1d37c0b4d7def93188c4b7a6446d1211d70c85667059d4dec0fe6
+  - name: lighting
+    canonical: skills/external/blender/lighting
+    skill_md_sha256: 31963d3326c704a34be1ecdae8564f2e9b32e0b999573be362c11806f5601d93
+  - name: lookdev
+    canonical: skills/external/blender/lookdev
+    skill_md_sha256: 1afedfcd75805db0b46dd604c2f9b78fabb31fef59c3755dc56a6614a993aac2
+  - name: materials
+    canonical: skills/external/blender/materials
+    skill_md_sha256: 3f9d37fe0585c64bbd123f4e45fff7807909d28237a29917afa0de4eaff005dd
+  - name: openai-frontend-app-builder
+    canonical: skills/external/frontend/openai-frontend-app-builder
+    skill_md_sha256: 62b27eb930de74432fba337ba5028419711e443dab8ecd0bef3e672683b6bb3a
+  - name: openai-frontend-testing-debugging
+    canonical: skills/external/frontend/openai-frontend-testing-debugging
+    skill_md_sha256: 150c376701a76b4f09f731f0844099a3b0eab1c60e042a2af0f9db9affb2540c
+  - name: prop-artist
+    canonical: skills/external/blender/prop-artist
+    skill_md_sha256: 53fe5b2f6a1af811bb1c66f7cdecc5560486b3bd69411542d0aff15598078c58
+  - name: qa-review
+    canonical: skills/external/blender/qa-review
+    skill_md_sha256: 8ad6cafc2accb4b39d81954c5fedfa5d7f1136523f0ca0de9c729644a29482ca
+  - name: react-three-fiber-production-rules
+    canonical: skills/external/threejs/references/react-three-fiber-production-rules
+    skill_md_sha256: 1274dd7bb4bd4409129d27d0b38ad38accd1dd67025e60105847f7c4b7a036c4
+  - name: rendering
+    canonical: skills/external/blender/rendering
+    skill_md_sha256: a7fe5f15bd1274adcb9d4cc93142f47aa8bf6a81cc6d25b48e3e4ecb264ace71
+  - name: threejs-animation
+    canonical: skills/external/threejs/threejs-animation
+    skill_md_sha256: 407466e10db14469c2246ceeb579cf6bcc2a48d06157f25032051c1cacc9aee6
+  - name: threejs-camera
+    canonical: skills/external/threejs/threejs-camera
+    skill_md_sha256: a471f4baf7b1c309fa4c852ad6ec6f2ec36816f04b5e91db9d12bb9df9d78cfd
+  - name: threejs-core
+    canonical: skills/external/threejs/threejs-core
+    skill_md_sha256: b7795750d6dd34b33975541bd3e14e18fe1fd9b6af088a4fea55c19e23f3a909
+  - name: threejs-lighting
+    canonical: skills/external/threejs/threejs-lighting
+    skill_md_sha256: eacc269210652424691cac6dd3e4c39a8543379c67443322d7bc27a88db525de
+  - name: threejs-loaders
+    canonical: skills/external/threejs/threejs-loaders
+    skill_md_sha256: 01038e46d05943c7018d44f029ef2d3b4cc906376fb3c7ab61370072d2cfbcac
+  - name: threejs-materials
+    canonical: skills/external/threejs/threejs-materials
+    skill_md_sha256: 19b8dc7edc6c95a34c1cd4e3249792e2b929a7b817d8075c04e0d197d0b38af8
+  - name: threejs-performance
+    canonical: skills/external/threejs/threejs-performance
+    skill_md_sha256: dae179d2db585f42b9ee572d0f2a18d14fbdde9a597cc9b21ae8dba6fc1cce00
+  - name: threejs-postprocessing
+    canonical: skills/external/threejs/threejs-postprocessing
+    skill_md_sha256: 9afe9ab36386c31416cdc09d963430613c16ca723417558fdd953c7c9ffb54e8
+  - name: threejs-react
+    canonical: skills/external/threejs/threejs-react
+    skill_md_sha256: 4b05cfc892d07ff291b785de2bac13eb4d09110291357962718d1f116b982d14
+  - name: threejs-shaders
+    canonical: skills/external/threejs/threejs-shaders
+    skill_md_sha256: 50b2ef242a68fae7dd5b535a4f71a114ff023d5b3491bd6d395b90f415ca1cab
+  - name: uv-workflow
+    canonical: skills/external/blender/uv-workflow
+    skill_md_sha256: 498e2c193fdf91e16664477b07e601187516fa3a294373ad9e6603b66ed80587
+  - name: web-accessibility
+    canonical: skills/external/frontend/web-accessibility
+    skill_md_sha256: bb321ba14db6a5abf92e6e8ac5103b8b50f7b5b055c514b794decb2f87597cc8

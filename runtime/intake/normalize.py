@@ -24,6 +24,7 @@ def normalize_intake(intake: dict[str, Any]) -> dict[str, Any]:
     ):
         signals.setdefault(flag, False)
     signals.setdefault("reconstruction_path", "none")
+    signals.setdefault("quality_bar", "standard")
     signals.setdefault("license_review_acknowledged", False)
     normalized.setdefault("runtime_capabilities", {})
     normalized.setdefault("prohibited_assumptions", [])

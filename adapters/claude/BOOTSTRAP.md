@@ -10,8 +10,11 @@
 2. Read shared `AGENTS.md` (canonical, not Claude-owned).
 3. Load relevant `core/*` policies per task scope.
 4. Discover skills via `registry/SKILLS.yaml` — do not hard-code skill lists in this file.
-5. Apply progressive loading per `SKILL_LOADING.md`.
-6. Map tools per `TOOL_MAPPING.yaml` with truthful runtime status.
+5. Native Claude Code skills are linked from `.claude/skills/` — regenerate with `tools/skill_exposure/sync_native_skills.py` if missing.
+6. Product requests: `python tools/host_driver/run_stage.py init --prompt "<request>" --target claude` then follow the brief, `advance`, and `capture` on EVIDENCE. Loop: `tools/host_driver/HOST_LOOP.md`.
+7. If `runtime/host/CURRENT_HOST_BRIEF.md` exists, invoke only listed skills. Do not select from the full catalog.
+8. Apply progressive loading per `SKILL_LOADING.md`.
+9. Map tools per `TOOL_MAPPING.yaml` with truthful runtime status.
 
 ## ACOS logical authority vs host technical hierarchy
 
@@ -64,5 +67,5 @@ Do not embed EXT-FE-01 / EXT-FE-02 content — `LICENSE_REVIEW_REQUIRED`, redist
 
 ## Phase F boundary
 
-This adapter may consume `activated_skill_ids` from a future routing layer.  
+This adapter consumes Phase F routing via `runtime/host/CURRENT_HOST_BRIEF.md` (native skill names + gate lock).  
 It does **not** implement routing, memory runtime, or orchestration.

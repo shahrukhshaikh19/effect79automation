@@ -54,6 +54,32 @@ tools/blender-mcp/.cache/
 validation/evidence/*
 !validation/evidence/.gitkeep
 
+# Generated native skill links (canonical bodies stay in skills/)
+.cursor/skills/
+.claude/skills/
+.agents/skills/
+
+# Generated host activation packet / session
+runtime/host/CURRENT_HOST_BRIEF.md
+runtime/host/CURRENT_HOST_BRIEF.yaml
+runtime/host/CURRENT_HOST_TODO.md
+runtime/host/CURRENT_SESSION.json
+runtime/host/CURRENT_INTAKE.json
+runtime/host/CURRENT_ROUTING.json
+runtime/host/CURRENT_SERVE.json
+runtime/host/BLENDER_MCP.json
+runtime/host/state/
+runtime/host/projects/
+
+# Local working notes — not product source
+/ACOS_END_GOAL_WORKFLOW.md
+/BM-001.md
+/PF-*.md
+/phase-*.md
+/corrections.md
+/small-corrections.md
+/validation/generate_workflow_diagram.py
+
 # Local import/cache (Phase B transient)
 .tmp-import/
 

@@ -97,6 +97,12 @@ def _check_tool_requirements(
             if state in ("BLOCKED", "UNAVAILABLE"):
                 blocked.append(family)
                 status = "ROUTING_BLOCKED_CAPABILITY"
+        if signals.get("quality_bar") == "flagship":
+            required.append("blender")
+            state = capabilities.get("blender", "UNKNOWN")
+            if state != "AVAILABLE":
+                blocked.append("blender")
+                status = "ROUTING_BLOCKED_CAPABILITY"
     return required, blocked, status
 
 

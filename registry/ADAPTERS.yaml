@@ -34,6 +34,14 @@ shared_contract:
     external_skill_count: 36
     proprietary_skill_count: 14
     rule: skill availability != skill activation
+    native_exposure:
+      canonical_root: skills/
+      sync_script: tools/skill_exposure/sync_native_skills.py
+      validate_script: validation/validate_native_skill_exposure.py
+      cursor: .cursor/skills/
+      claude: .claude/skills/
+      codex: .agents/skills/
+      copy_policy: links_only_never_copy_bodies
   context_strategy:
     sequence:
       - minimum bootstrap
@@ -92,8 +100,8 @@ adapters:
     skill_loading_strategy: shared_contract.skill_loading
     tool_mapping_strategy: canonical_family_to_host_tool_with_runtime_status
     unsupported_or_platform_specific_behavior:
-      - Native Claude Agent Skills discovery when host provides it
       - Claude MCP tool naming differs from canonical TOOL-* IDs
+      - Native skills require .claude/skills/ links from sync_native_skills.py
     fallback_behavior: Load canonical files explicitly; bounded skill batches
     prohibited_duplication: shared_contract.prohibited_duplication
     validation: validation/validate_adapters.py
@@ -129,6 +137,7 @@ adapters:
     unsupported_or_platform_specific_behavior:
       - Cursor rules/MCP namespace naming
       - IDE workspace shell integration
+      - Native skills require .cursor/skills/ links from sync_native_skills.py
     fallback_behavior: Reference canonical authority; minimal rules only
     prohibited_duplication: shared_contract.prohibited_duplication
     validation: validation/validate_adapters.py
@@ -163,6 +172,7 @@ adapters:
     tool_mapping_strategy: canonical_family_to_host_tool_with_runtime_status
     unsupported_or_platform_specific_behavior:
       - Codex CLI tool surface naming
+      - Native skills require .agents/skills/ links from sync_native_skills.py
     fallback_behavior: Shared AGENTS.md remains canonical; Codex consumes, does not own
     prohibited_duplication: shared_contract.prohibited_duplication
     validation: validation/validate_adapters.py

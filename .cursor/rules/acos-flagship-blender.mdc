@@ -1,0 +1,16 @@
+---
+description: Flagship 3D prompts wait for Blender MCP — never skip
+alwaysApply: true
+---
+
+# Flagship Blender MCP lock
+
+When the user gives a clear premium / cinematic / physical-product 3D prompt:
+
+1. Run `python tools/host_driver/run_stage.py init --prompt "<request>"`.
+2. If stage is `WAITING_BLENDER` or Blender MCP/app is down, **tell the user immediately**:
+   Blender MCP/app band hai. Main skip nahi karunga. Blender kholo, MCP connect karo. Connect hone ke baad confirm karo — tabhi start hoga.
+3. Do **not** start creative or production. Do **not** model a lathe, cube, or primitive instead.
+4. After the user says they connected, ping Blender MCP (`get_addon_status`). If it fails, say it is still down and wait.
+5. If the ping succeeds, run `python tools/host_driver/run_stage.py confirm-blender --mcp-live`, tell the user confirm ho gaya, then follow the brief.
+6. Contract: `docs/FLAGSHIP_PREMIUM_WORKFLOW.md`

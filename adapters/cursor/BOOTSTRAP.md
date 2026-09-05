@@ -10,7 +10,10 @@
 2. Follow references to `ACOS_FINAL_CANONICAL_v1.2.md` and `AGENTS.md`.
 3. Load `core/*` and registries per task — `registry/SKILLS.yaml`, `registry/TOOLS.yaml`.
 4. Progressive skill loading: `SKILL_LOADING.md`.
-5. Tool mapping: `TOOL_MAPPING.yaml`.
+5. Native Cursor skills are linked from `.cursor/skills/` — regenerate with `tools/skill_exposure/sync_native_skills.py` if missing.
+6. Product requests: `python tools/host_driver/run_stage.py init --prompt "<request>"` then follow `CURRENT_HOST_BRIEF.md`, `advance`, and `capture` on EVIDENCE. Loop: `tools/host_driver/HOST_LOOP.md`. Flagship 3D waits for Blender MCP — tell the user if it is down, never skip, confirm after connect.
+7. If `runtime/host/CURRENT_HOST_BRIEF.md` exists, invoke only listed skills. Do not Agent-Decide the catalog.
+8. Tool mapping: `TOOL_MAPPING.yaml`.
 
 ## Authority
 

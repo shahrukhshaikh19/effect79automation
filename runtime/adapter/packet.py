@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from runtime.adapter.native import native_invoke, native_skill_name
 from runtime.common.registry_loader import skill_path_for_id
 from runtime.state.transitions import authoritative_design_gate
 
@@ -35,6 +36,8 @@ def build_adapter_packet(
         activated_skills.append(
             {
                 "skill_id": skill_id,
+                "native_skill_name": native_skill_name(skill_id),
+                "invoke": native_invoke(skill_id),
                 "skill_path": skill_path_for_id(skill_id),
                 "load_level": "L2",
                 "activation_reason": activations.get(skill_id, {}).get("activation_reason", ""),

@@ -29,6 +29,8 @@ fields:
     type: array
     items:
       skill_id: string
+      native_skill_name: string
+      invoke: string
       skill_path: string
       load_level: enum [L2]
       activation_reason: string

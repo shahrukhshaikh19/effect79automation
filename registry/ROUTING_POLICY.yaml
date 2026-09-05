@@ -30,6 +30,8 @@ task_signal_fields:
   requires_reference_analysis: boolean
   reconstruction_path:
     values: [procedural_browser, blender_authoring, none]
+  quality_bar:
+    values: [standard, flagship]
 
 license_restricted_skills:
   EXT-FE-01:
@@ -62,11 +64,23 @@ skill_domains:
   EXT-A11Y-01: {domains: [accessibility, frontend], cost_tier: low, stage: PRODUCTION}
   EXT-DES-01: {domains: [design], cost_tier: low, stage: DESIGN_EXPERIENCE}
   EXT-3DWEB-01: {domains: [3d, frontend], cost_tier: medium, stage: PRODUCTION}
+  EXT-3DWEB-02: {domains: [3d, frontend], cost_tier: medium, stage: PRODUCTION}
+  EXT-3DWEB-03: {domains: [3d, frontend], cost_tier: medium, stage: PRODUCTION}
+  EXT-3DWEB-04: {domains: [3d, frontend], cost_tier: medium, stage: PRODUCTION}
+  EXT-3DWEB-06: {domains: [3d, frontend], cost_tier: medium, stage: PRODUCTION}
   EXT-3DWEB-08: {domains: [3d, performance], cost_tier: medium, stage: PRODUCTION}
   EXT-R3F-01: {domains: [3d, frontend], cost_tier: medium, stage: PRODUCTION}
   EXT-MOTION-01: {domains: [motion], cost_tier: medium, stage: PRODUCTION}
+  EXT-MOTION-03: {domains: [motion], cost_tier: medium, stage: PRODUCTION}
   EXT-IMG3D-01: {domains: [3d, reconstruction], cost_tier: high, stage: SPECIALIST_ROUTING}
   EXT-BLD-01: {domains: [3d, blender], cost_tier: high, stage: SPECIALIST_ROUTING}
+  EXT-BLD-02: {domains: [3d, blender], cost_tier: high, stage: SPECIALIST_ROUTING}
+  EXT-BLD-03: {domains: [3d, blender], cost_tier: high, stage: SPECIALIST_ROUTING}
+  EXT-BLD-05: {domains: [3d, blender], cost_tier: high, stage: SPECIALIST_ROUTING}
+  EXT-BLD-06: {domains: [3d, blender], cost_tier: high, stage: SPECIALIST_ROUTING}
+  EXT-BLD-08: {domains: [3d, blender], cost_tier: high, stage: SPECIALIST_ROUTING}
+  EXT-BLD-11: {domains: [3d, blender], cost_tier: medium, stage: SPECIALIST_ROUTING}
+  EXT-BLD-12: {domains: [3d, blender], cost_tier: high, stage: SPECIALIST_ROUTING}
 
 routing_rules:
   - id: insufficient_input_guard
@@ -105,6 +119,11 @@ routing_rules:
       requires_3d: true
       deliverable_profile: interactive_3d
     activate:
+      - {skill_id: ACOS-01, reason: creative direction when an interactive 3D experience still needs a thesis, if: requires_creative_direction}
+      - {skill_id: ACOS-03, reason: anti-generic guard when creative direction is in scope, if: requires_creative_direction}
+      - {skill_id: ACOS-04, reason: art direction for visual 3D experience, if: requires_visual_output}
+      - {skill_id: ACOS-05, reason: experience architecture for interactive 3D journey, if: requires_visual_output}
+      - {skill_id: ACOS-08, reason: responsive art direction when required, if: requires_responsive}
       - {skill_id: ACOS-06, reason: cinematic 3D direction for interactive 3D deliverable}
       - {skill_id: EXT-3DWEB-01, reason: Three.js core implementation for browser 3D}
       - {skill_id: EXT-R3F-01, reason: R3F production rules when browser 3D runtime}
@@ -112,6 +131,25 @@ routing_rules:
       - {skill_id: ACOS-12, reason: independent 3D critic for meaningful 3D output}
       - {skill_id: ACOS-07, reason: motion direction when motion required, if: requires_motion}
       - {skill_id: EXT-MOTION-01, reason: GSAP motion implementation when motion required, if: requires_motion}
+
+  - id: flagship_interactive_3d_craft
+    when:
+      deliverable_profile: interactive_3d
+      quality_bar: flagship
+    activate:
+      - {skill_id: EXT-3DWEB-02, reason: flagship Three.js materials — core renderer is not a material system}
+      - {skill_id: EXT-3DWEB-03, reason: flagship Three.js lighting — dim default lights are not lookdev}
+      - {skill_id: EXT-3DWEB-04, reason: flagship Three.js camera — cinematic framing is authored}
+      - {skill_id: EXT-3DWEB-06, reason: flagship loader for the Blender-exported hero GLB}
+      - {skill_id: EXT-MOTION-03, reason: flagship scroll-driven scene progression, if: requires_motion}
+      - {skill_id: EXT-BLD-01, reason: flagship Blender direction — convenience primitives are forbidden}
+      - {skill_id: EXT-BLD-02, reason: flagship Blender modeling for the hero object}
+      - {skill_id: EXT-BLD-03, reason: flagship physical-product / prop authorship}
+      - {skill_id: EXT-BLD-05, reason: flagship Blender materials before export}
+      - {skill_id: EXT-BLD-06, reason: flagship lookdev until the object reads as the directed material}
+      - {skill_id: EXT-BLD-08, reason: flagship Blender lighting for lookdev, not a beauty-dish default}
+      - {skill_id: EXT-BLD-11, reason: flagship asset budgets before browser import}
+      - {skill_id: EXT-BLD-12, reason: flagship GLB export is the production handoff}
 
   - id: reference_reconstruction_route
     when:

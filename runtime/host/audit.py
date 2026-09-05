@@ -1,0 +1,150 @@
+"""Mechanical host-pipeline audit. This is not visual QA and cannot SHIP alone."""
+
+from __future__ import annotations
+
+from pathlib import Path
+from typing import Any
+
+from runtime.host.artifact_contract import (
+    CRITIC_FILES,
+    has_implementation,
+    load_yaml,
+    pixel_evidence,
+    validate_creative_artifacts,
+    validate_critic_artifacts,
+    validate_critic_independence,
+    viewport_manifest,
+)
+from runtime.host.design_gate import evaluate_host_design_gate
+
+
+def ensure_roles(session: dict[str, Any]) -> dict[str, Any]:
+    roles = session.setdefault("roles", {})
+    task_id = str((session.get("intake") or {}).get("task_id") or "")
+    roles.setdefault("producer_session_id", task_id)
+    roles.setdefault("critic_pass_id", None)
+    roles.setdefault("independent_attestation", False)
+    return roles
+
+
+def audit_session(session: dict[str, Any], project_dir: Path) -> dict[str, Any]:
+    ensure_roles(session)
+    state = session.get("state") or {}
+    routing = session.get("routing") or {}
+    planned = list(state.get("planned_skill_ids") or routing.get("planned_skill_ids") or [])
+    stage = str(state.get("current_stage") or "")
+    design = evaluate_host_design_gate(project_dir, planned, routing.get("routing_id"))
+    creative = validate_creative_artifacts(project_dir, planned)
+    impl = has_implementation(project_dir)
+    pixels = pixel_evidence(project_dir)
+    manifest = viewport_manifest(project_dir)
+    critics = validate_critic_artifacts(project_dir, planned)
+    roles = session["roles"]
+    independence = validate_critic_independence(
+        project_dir,
+        planned,
+        critic_pass_id=roles.get("critic_pass_id"),
+        attested=bool(roles.get("independent_attestation")),
+    )
+    runtime_healthy = None if manifest is None else bool(manifest.get("runtime_healthy"))
+
+    blockers: list[str] = []
+    if not creative["ok"]:
+        blockers.extend([f"missing {m}" for m in creative["missing"]])
+        blockers.extend(creative["invalid"])
+    if design["status"] != "APPROVED" and stage not in {"INTAKE", "CREATIVE", "DESIGN_GATE"}:
+        blockers.append(f"design_gate is {design['status']}")
+    if stage in {"PRODUCTION", "EVIDENCE", "CRITICS", "QUALITY_GATE", "SHIP"} and not impl:
+        blockers.append("implementation missing")
+    if stage in {"CRITICS", "QUALITY_GATE", "SHIP"} and len(pixels) < 2:
+        blockers.append("need at least two rendered evidence images under evidence/")
+    if runtime_healthy is False:
+        blockers.append("viewport manifest runtime_healthy is false")
+    if stage in {"QUALITY_GATE", "SHIP"} and not critics["ok"]:
+        blockers.extend(critics["missing"] + critics["invalid"])
+    if stage in {"QUALITY_GATE", "SHIP"} and not independence["ok"]:
+        blockers.extend(independence["issues"])
+
+    ship_allowed = (
+        design["status"] == "APPROVED"
+        and impl
+        and len(pixels) >= 2
+        and runtime_healthy is not False
+        and critics["ok"]
+        and independence["ok"]
+    )
+
+    return {
+        "task_id": (session.get("intake") or {}).get("task_id"),
+        "stage": stage,
+        "design_gate": design["status"],
+        "quality_gate": (state.get("gate_states") or {}).get("quality_gate"),
+        "implementation": impl,
+        "pixel_evidence": pixels,
+        "pixel_count": len(pixels),
+        "runtime_healthy": runtime_healthy,
+        "critics_present": critics["ok"],
+        "independence": independence,
+        "ship_allowed": ship_allowed,
+        "blockers": blockers,
+        "next_command": _next_command(stage, impl, pixels, critics, independence, ship_allowed),
+        "critic_files": [rel for sid, rel in CRITIC_FILES.items() if sid in planned],
+    }
+
+
+def _next_command(
+    stage: str,
+    impl: bool,
+    pixels: list[str],
+    critics: dict[str, Any],
+    independence: dict[str, Any],
+    ship_allowed: bool,
+) -> str:
+    if stage == "SHIP":
+        return "none — session is SHIP"
+    if stage == "WAITING_BLENDER":
+        return "tell the user Blender MCP/app is down; after they connect: python tools/host_driver/run_stage.py confirm-blender --mcp-live"
+    if stage in {"INTAKE", "CREATIVE", "DESIGN_GATE"}:
+        return "write direction artifacts, then: python tools/host_driver/run_stage.py advance"
+    if stage == "PRODUCTION" and not impl:
+        return "build implementation/, then: python tools/host_driver/run_stage.py advance"
+    if stage == "PRODUCTION":
+        return "python tools/host_driver/run_stage.py advance"
+    if stage == "EVIDENCE" and len(pixels) < 2:
+        return "python tools/host_driver/run_stage.py capture"
+    if stage == "EVIDENCE":
+        return "python tools/host_driver/run_stage.py advance"
+    if stage == "CRITICS" and not critics["ok"]:
+        return "write critics/*.yaml from rendered pixels, then: python tools/host_driver/run_stage.py advance"
+    if stage == "CRITICS":
+        return "python tools/host_driver/run_stage.py advance"
+    if stage == "QUALITY_GATE" and not independence["ok"]:
+        return "new chat only: python tools/host_driver/run_stage.py critic-pass --attest-independent"
+    if stage == "QUALITY_GATE" and ship_allowed:
+        return "python tools/host_driver/run_stage.py advance"
+    if stage == "QUALITY_GATE":
+        return "write gate/quality_gate.yaml, then: python tools/host_driver/run_stage.py advance"
+    return "python tools/host_driver/run_stage.py status"
+
+
+def mechanical_gate_report(audit: dict[str, Any]) -> dict[str, Any]:
+    """Conductor may only emit BLOCKED. APPROVED must come from the quality-gate skill."""
+    reasons = list(audit.get("blockers") or ["required evidence or independence missing"])
+    return {
+        "gate_report": {
+            "status": "BLOCKED_INSUFFICIENT_EVIDENCE",
+            "producer": "acos-quality-gate",
+            "skill_procedure_executed": True,
+            "source": "host_mechanical_audit",
+            "independence": "attested" if audit.get("independence", {}).get("ok") else "insufficient",
+            "decisions": {
+                "evidence_blocker_triggered": True,
+                "evidence_blocker_ids": ["EB-01"],
+                "hard_reject_triggered": False,
+                "hard_reject_ids": [],
+            },
+            "evidence_blockers": [{"id": "EB-01", "triggered": True, "reason": reason} for reason in reasons],
+            "hard_rejects": [],
+            "evidence": list(audit.get("pixel_evidence") or []) + list(audit.get("critic_files") or []),
+        }
+    }

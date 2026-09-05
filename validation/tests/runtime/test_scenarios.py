@@ -237,6 +237,9 @@ class RuntimeScenarioTests(unittest.TestCase):
         packet = build_adapter_packet(intake, routing)
         self.assertEqual(packet["routing"]["source"], "phase_f_router")
         self.assertEqual(packet["routing"]["activated_skill_ids"], routing["activated_skill_ids"])
+        for skill in packet.get("activated_skills") or []:
+            self.assertTrue(skill.get("native_skill_name"), f"missing native name for {skill.get('skill_id')}")
+            self.assertTrue(str(skill.get("invoke", "")).startswith("/"))
 
     # T16 — Resume from persisted state
     def test_t16_resume_execution(self) -> None:

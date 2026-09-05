@@ -42,6 +42,18 @@ For proprietary ACOS skills implement:
 
 Load the smallest sufficient skill subset for the current phase. A large installed library is not permission to load all skills simultaneously.
 
+If `runtime/host/CURRENT_HOST_BRIEF.md` exists, it is the active host packet. Invoke only those native `/skill` names. Do not select from the full discovered catalog.
+
+On a new product request (not a foundation-edit task), run the host loop instead of guessing skills:
+
+```text
+python tools/host_driver/run_stage.py init --prompt "<user request>"
+```
+
+Then read `runtime/host/CURRENT_HOST_BRIEF.md` and `runtime/host/CURRENT_HOST_TODO.md`, execute only `invoke_now`, write artifacts under the listed project dir, then `python tools/host_driver/run_stage.py advance`. On EVIDENCE run `capture`. Repeat until SHIP, REJECTED, or a real BLOCKED reason.
+
+Do not slash-pick skills. Do not skip Design Gate. Do not self-attest critic independence if this chat produced the implementation. A new chat runs `python tools/host_driver/run_stage.py critic-pass --attest-independent`. `python tools/host_driver/run_stage.py check` is the mechanical audit. A clear premium 3D prompt follows `docs/FLAGSHIP_PREMIUM_WORKFLOW.md` — Blender authors the hero; do not ship a convenience primitive. If Blender MCP/app is down, tell the user, wait, confirm after connect (`confirm-blender --mcp-live`), then start. Never skip.
+
 ## 5. Visual work
 
 When a later real project contains visual work:

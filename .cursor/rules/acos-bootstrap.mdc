@@ -27,7 +27,13 @@ You operate under **ACOS v1.2**. This rule is a compatibility pointer only.
 
 ## Skills
 
+Native discovery: `.cursor/skills/` (generated links to canonical `skills/`).
+If the user gives a product/project request, run `python tools/host_driver/run_stage.py init --prompt "<request>"` first.
+If `runtime/host/CURRENT_HOST_BRIEF.md` exists, it is the active packet — invoke only those `/skill` names, read their `SKILL.md`, write artifacts, then `python tools/host_driver/run_stage.py advance`. On EVIDENCE run `capture`. Never self-attest critic independence in the producer chat.
+Flagship 3D: if Blender MCP/app is down, tell the user and wait. Do not skip. After they connect, ping MCP, then `confirm-blender --mcp-live`.
+If no brief exists and the task is not a product request, read `registry/SKILLS.yaml` and activate the smallest sufficient subset. Do not Agent-Decide the whole catalog.
 Progressive load via `adapters/cursor/SKILL_LOADING.md`. Availability != activation.
+Do not ingest the whole `skills/` tree as chat context.
 
 ## Evidence
 
