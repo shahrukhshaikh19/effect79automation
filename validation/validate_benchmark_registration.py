@@ -85,6 +85,7 @@ PF2_OWNED_CHANGE_PREFIXES = (
     "validation/validate_benchmark_execution.py",
     "validation/tests/benchmark/test_execution_adversarial.py",
     "docs/PF2_BENCHMARK_EXECUTION_AUDIT.md",
+    "tools/browser/scripts/capture-interaction.mjs",
 )
 
 FOUNDATION_COMPATIBILITY_PREFIXES = (

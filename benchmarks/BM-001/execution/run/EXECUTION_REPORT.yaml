@@ -1,10 +1,12 @@
-run_id: bm001-run-4bd803dd4125
-started_at: '2026-09-04T20:44:07.677743+00:00'
-completed_at: '2026-09-04T20:44:32.839787+00:00'
+run_id: bm001-run-6c1991e2728f
+started_at: '2026-09-05T04:28:41.093814+00:00'
+completed_at: '2026-09-05T04:29:04.459847+00:00'
 benchmark_id: BM-001
 contract_version: '1.1'
 contract_hash: b2cb2dbaea31e07331fe1c94df1271e3c167f9a64461e2dc25410d13696cadf3
-routing_id: route-c6369bb8f726
+certification_correction: true
+supersedes_run: bm001-run-4bd803dd4125
+routing_id: route-336f2a478b4e
 routing_status: ROUTED
 activated_skills:
 - ACOS-01
@@ -21,30 +23,86 @@ design_gate_result: APPROVED
 production_blocked_before_gate: true
 implementation_path: benchmarks\BM-001\execution\implementation
 meaningful_3d_used: false
-evidence_captured:
+required_evidence_ids:
 - E-001
 - E-002
+- E-003
+- E-004
 - E-005
+- E-006
 - E-007
 - E-008
 - E-009
 - E-010
+evidence_captured:
+- E-001
+- E-002
+- E-003
+- E-004
+- E-005
+- E-006
+- E-007
+- E-008
+- E-009
+- E-010
+evidence_completeness: BLOCKED_INSUFFICIENT_EVIDENCE
+evidence_missing: []
+evidence_invalid:
+- 'E-005: empty JSON payload in console_log.json'
 critic_findings:
 - critic_capability: ACOS-10
   domain: visual
-  verdict: PASS
-  notes: Viewport evidence and runtime health support visual review.
+  verdict: FAIL
+  dimension_score: 6.0
+  evidence_refs: &id001
+  - evidence/E-001/manifest.yaml
+  - evidence/E-003/visual_consistency_review.json
+  findings:
+  - check: art_direction
+    severity: critical
+    detail: Glassmorphism/backdrop blur detected
+    evidence_refs:
+    - evidence/E-001/manifest.yaml
+    - implementation/styles.css
+    critic_capability: ACOS-10
+  - check: visual_quality_bar
+    severity: major
+    detail: Visual dimension score 6.0 below premium benchmark bar
+    evidence_refs: *id001
+    critic_capability: ACOS-10
+  hard_failures:
+  - arbitrary_glassmorphism
+  summary: "Visual review score 6.0/10 \u2014 composition/typography/coherence assessed\
+    \ from E-003 + viewport evidence; glassmorphism=yes."
 - critic_capability: ACOS-11
   domain: creative
   verdict: PASS
-  notes: Distinct fictional product concept with intentional art direction.
+  dimension_score: 8.0
+  evidence_refs:
+  - evidence/E-001/manifest.yaml
+  - evidence/E-003/visual_consistency_review.json
+  - execution/direction/creative_direction.yaml
+  findings: []
+  hard_failures: []
+  summary: "Creative review score 8.0/10 \u2014 originality/concept assessed from\
+    \ HTML content, direction artifacts, and anti-pattern scan; sections=7."
 - critic_capability: EXT-A11Y-01
   domain: accessibility
   verdict: PASS
-  notes: Reduced-motion capture completed without runtime errors.
+  dimension_score: 8.0
+  evidence_refs:
+  - evidence/E-008/manifest.yaml
+  findings: []
+  hard_failures: []
+  summary: "Accessibility score 8.0/10 \u2014 reduced-motion, skip link, semantic/nav\
+    \ checks from E-008 + implementation."
+hard_rejects_triggered:
+- HR-10
 corrections_attempted: []
-quality_gate_result: APPROVED
+quality_gate_result: REJECTED
 scoring_profile: no_meaningful_3d
-benchmark_score: 85.5
-benchmark_result: PASS
+benchmark_score: null
+benchmark_result: FAIL
+dimension_scores: {}
+score_provenance: {}
 restrictions: []

@@ -1,7 +1,7 @@
 # ACOS v1.2 — Implementation Progress Ledger
 
 **Last updated:** 2026-09-05  
-**Current phase:** PF-2 — BM-001 execution (COMPLETE)
+**Current phase:** PF-2 — BM-001 certification correction (COMPLETE)
 
 ---
 
@@ -36,9 +36,9 @@
 | PF1-6 — Operator contract approval | COMPLETE | Explicit operator approval recorded 2026-09-04 |
 
 **PF-1:** COMPLETE  
-**BM-001 v1.1:** FROZEN + EXECUTED (PASS 85.5) — run `bm001-run-4bd803dd4125`  
+**BM-001 v1.1:** Prior PASS/85.5 **INVALIDATED**; corrected re-evaluation **FAIL/REJECTED** (HR-10)  
 **BM-001 v1.0:** FROZEN (historical — superseded by v1.1)  
-**PF-2:** COMPLETE  
+**PF-2:** COMPLETE (certification correction)  
 **PF-3..PF-5:** NOT_STARTED
 
 ---
@@ -52,8 +52,10 @@
 | PF2-2 — ACOS workflow runner | COMPLETE | `validation/benchmark_execution/run_bm001.py` |
 | PF2-3 — BM-001 implementation | COMPLETE | `benchmarks/BM-001/execution/implementation/` |
 | PF2-4 — Browser evidence E-001..E-010 | COMPLETE | `benchmarks/BM-001/execution/evidence/` |
-| PF2-5 — Critics + Quality Gate + score | COMPLETE | APPROVED — benchmark score 85.5 PASS |
-| PF2-6 — Adversarial tests | COMPLETE | PF2-A01..A08 |
+| PF2-5 — Critics + Quality Gate + score | SUPERSEDED | Prior PASS invalidated — proxy critics removed |
+| PF2-6 — Adversarial tests | COMPLETE | PF2-A01..A19 |
+| PF2-7 — Certification correction | COMPLETE | Full evidence contract; substantive critics; HR-derived gate |
+| PF2-8 — Truthful re-evaluation | COMPLETE | FAIL/REJECTED — HR-10 arbitrary_glassmorphism |
 
 **PF-3..PF-5:** NOT_STARTED
 

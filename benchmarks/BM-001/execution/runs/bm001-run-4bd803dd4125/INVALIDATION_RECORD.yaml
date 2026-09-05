@@ -1,0 +1,17 @@
+run_id: bm001-run-4bd803dd4125
+original_result: PASS
+original_score: 85.5
+original_gate: APPROVED
+invalidated_at: '2026-09-05T04:27:41.798542+00:00'
+invalidation_reason: certification_correction_insufficient_evaluation
+details: Prior PASS/85.5/APPROVED used proxy critics, incomplete evidence contract
+  (missing E-003/E-004/E-006), and hard-coded HR-01..HR-10=false.
+preserved_artifacts:
+- benchmarks\BM-001\execution\runs\bm001-run-4bd803dd4125\benchmark_score.yaml
+- benchmarks\BM-001\execution\runs\bm001-run-4bd803dd4125\bm001-8c4500865a01.json
+- benchmarks\BM-001\execution\runs\bm001-run-4bd803dd4125\critic_report.yaml
+- benchmarks\BM-001\execution\runs\bm001-run-4bd803dd4125\design_gate_decision.yaml
+- benchmarks\BM-001\execution\runs\bm001-run-4bd803dd4125\evidence_manifest.yaml
+- benchmarks\BM-001\execution\runs\bm001-run-4bd803dd4125\EXECUTION_REPORT.yaml
+- benchmarks\BM-001\execution\runs\bm001-run-4bd803dd4125\gate_report.yaml
+- benchmarks\BM-001\execution\runs\bm001-run-4bd803dd4125\routing_decision.json

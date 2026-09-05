@@ -52,12 +52,19 @@ benchmarks:
         revision_reason: operator_approved_acceptance_contract_freeze
         attestation_commit_sha: d93f0fe70f8478a6d1be55771b1408227f4ad15e
     execution:
-      status: COMPLETED
-      run_id: bm001-run-4bd803dd4125
-      executed_at: "2026-09-04T20:44:32Z"
-      benchmark_result: PASS
-      benchmark_score: 85.5
-      quality_gate_result: APPROVED
+      status: RE_EVALUATED
+      certified_result: INVALIDATED
+      current_run_id: bm001-run-6c1991e2728f
+      benchmark_result: FAIL
+      benchmark_score: null
+      quality_gate_result: REJECTED
       meaningful_3d_used: false
-      implementation_path: benchmarks/BM-001/execution/implementation
+      prior_run:
+        run_id: bm001-run-4bd803dd4125
+        benchmark_result: PASS
+        benchmark_score: 85.5
+        quality_gate_result: APPROVED
+        invalidation_reason: certification_correction_insufficient_evaluation
+        archive_path: benchmarks/BM-001/execution/runs/bm001-run-4bd803dd4125
       report_path: benchmarks/BM-001/execution/run/EXECUTION_REPORT.yaml
+      implementation_path: benchmarks/BM-001/execution/implementation

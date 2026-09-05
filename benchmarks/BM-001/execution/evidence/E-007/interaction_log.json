@@ -3,21 +3,21 @@
     {
       "type": "click",
       "selector": "nav .nav-toggle",
-      "timestamp": "2026-09-04T20:44:30.694Z"
+      "timestamp": "2026-09-05T04:29:01.853Z"
     },
     {
       "type": "click",
       "selector": "a[href=\"#capabilities\"]",
-      "timestamp": "2026-09-04T20:44:30.737Z"
+      "timestamp": "2026-09-05T04:29:01.894Z"
     },
     {
       "type": "click",
       "selector": ".cap-item button",
-      "timestamp": "2026-09-04T20:44:32.200Z"
+      "timestamp": "2026-09-05T04:29:03.523Z"
     },
     {
       "type": "scroll_settle",
-      "duration_ms": 7473
+      "duration_ms": 7646
     }
   ]
 }

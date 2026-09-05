@@ -1,11 +1,12 @@
 gate_report:
-  status: APPROVED
+  status: REJECTED
   benchmark_id: BM-001
   contract_version: '1.1'
   decisions:
-    hard_reject_triggered: false
+    hard_reject_triggered: true
     evidence_blocker_triggered: false
-    hard_reject_ids: []
+    hard_reject_ids:
+    - HR-10
     evidence_blocker_ids: []
   hard_rejects:
   - id: HR-01
@@ -27,37 +28,94 @@ gate_report:
   - id: HR-09
     triggered: false
   - id: HR-10
-    triggered: false
+    triggered: true
+    source: artifact_analysis
+    benchmark_hard_failure: arbitrary_glassmorphism
+    evidence_refs:
+    - implementation/styles.css
+    detail: backdrop-filter blur on header
   evidence_blockers:
   - id: EB-01
     triggered: false
   evidence:
   - id: E-001
     ref: C:\Shahrukh\Effect79\effect79automation\benchmarks\BM-001\execution\evidence\E-001\manifest.yaml
+  - id: E-002
+    ref: C:\Shahrukh\Effect79\effect79automation\benchmarks\BM-001\execution\evidence\E-002\implementation_check.json
+  - id: E-003
+    ref: C:\Shahrukh\Effect79\effect79automation\benchmarks\BM-001\execution\evidence\E-003\visual_consistency_review.json
+  - id: E-004
+    ref: C:\Shahrukh\Effect79\effect79automation\benchmarks\BM-001\execution\evidence\E-004\responsive_behavior_check.json
   - id: E-005
-    ref: C:\Shahrukh\Effect79\effect79automation\benchmarks\BM-001\execution\evidence\E-001\console_log.json
+    ref: C:\Shahrukh\Effect79\effect79automation\benchmarks\BM-001\execution\evidence\E-005\console_log.json
+  - id: E-006
+    ref: C:\Shahrukh\Effect79\effect79automation\benchmarks\BM-001\execution\evidence\E-006\network_request_log.json
   - id: E-007
     ref: C:\Shahrukh\Effect79\effect79automation\benchmarks\BM-001\execution\evidence\E-007\interaction_log.json
   - id: E-008
     ref: C:\Shahrukh\Effect79\effect79automation\benchmarks\BM-001\execution\evidence\E-008\manifest.yaml
   - id: E-009
-    ref: C:\Shahrukh\Effect79\effect79automation\benchmarks\BM-001\execution\evidence\E-007\performance_metrics.json
-  - id: E-002
-    ref: C:\Shahrukh\Effect79\effect79automation\benchmarks\BM-001\execution\evidence\E-002\implementation_check.json
+    ref: C:\Shahrukh\Effect79\effect79automation\benchmarks\BM-001\execution\evidence\E-009\performance_metrics.json
   critic_summary:
     findings:
-    - critic_capability: ACOS-10
+    - &id002
+      critic_capability: ACOS-10
       domain: visual
-      verdict: PASS
-      notes: Viewport evidence and runtime health support visual review.
+      verdict: FAIL
+      dimension_score: 6.0
+      evidence_refs: &id001
+      - evidence/E-001/manifest.yaml
+      - evidence/E-003/visual_consistency_review.json
+      findings:
+      - check: art_direction
+        severity: critical
+        detail: Glassmorphism/backdrop blur detected
+        evidence_refs:
+        - evidence/E-001/manifest.yaml
+        - implementation/styles.css
+        critic_capability: ACOS-10
+      - check: visual_quality_bar
+        severity: major
+        detail: Visual dimension score 6.0 below premium benchmark bar
+        evidence_refs: *id001
+        critic_capability: ACOS-10
+      hard_failures:
+      - arbitrary_glassmorphism
+      summary: "Visual review score 6.0/10 \u2014 composition/typography/coherence\
+        \ assessed from E-003 + viewport evidence; glassmorphism=yes."
     - critic_capability: ACOS-11
       domain: creative
       verdict: PASS
-      notes: Distinct fictional product concept with intentional art direction.
+      dimension_score: 8.0
+      evidence_refs:
+      - evidence/E-001/manifest.yaml
+      - evidence/E-003/visual_consistency_review.json
+      - execution/direction/creative_direction.yaml
+      findings: []
+      hard_failures: []
+      summary: "Creative review score 8.0/10 \u2014 originality/concept assessed from\
+        \ HTML content, direction artifacts, and anti-pattern scan; sections=7."
     - critic_capability: EXT-A11Y-01
       domain: accessibility
       verdict: PASS
-      notes: Reduced-motion capture completed without runtime errors.
-    hard_critic_failures: []
+      dimension_score: 8.0
+      evidence_refs:
+      - evidence/E-008/manifest.yaml
+      findings: []
+      hard_failures: []
+      summary: "Accessibility score 8.0/10 \u2014 reduced-motion, skip link, semantic/nav\
+        \ checks from E-008 + implementation."
+    hard_critic_failures:
+    - *id002
+    blocked_critics: []
     independent_review_complete: true
-  scores: {}
+    dimension_scores: &id003
+      visual: 6.0
+      creative: 8.0
+      accessibility: 8.0
+      responsive: 10.0
+      functional: 9.0
+      performance: 9.0
+      engineering: 9.0
+      motion_quality: 8.0
+  scores: *id003

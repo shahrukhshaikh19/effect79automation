@@ -1,0 +1,21 @@
+benchmark_result: PASS
+benchmark_score: 85.5
+profile: no_meaningful_3d
+dimension_scores:
+  functional: 9.0
+  visual: 8.5
+  creative: 8.5
+  responsive: 8.5
+  performance: 8.0
+  accessibility: 8.5
+  engineering: 9.0
+  motion_quality: 8.0
+weights_applied:
+  functional: 15
+  visual: 20
+  creative: 20
+  responsive: 15
+  performance: 10
+  accessibility: 5
+  engineering: 10
+  motion_quality: 5

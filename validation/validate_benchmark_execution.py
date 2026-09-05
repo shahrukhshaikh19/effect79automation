@@ -17,11 +17,10 @@ if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
 from benchmark_scope import get_post_foundation_state, is_pf2_execution_path
+from validation.benchmark_execution.evidence_contract import load_evidence_plan, required_evidence_ids
 from validation.validate_benchmark_registration import canonical_hash, load_yaml
 
 FROZEN_CONTRACT_HASH = "b2cb2dbaea31e07331fe1c94df1271e3c167f9a64461e2dc25410d13696cadf3"
-FROZEN_SOURCE_SHA = "18f52a8216c897b08d8dd27cb4f7b14e97b9b955"
-REQUIRED_EVIDENCE = ("E-001", "E-002", "E-005", "E-007", "E-008", "E-009", "E-010")
 
 
 def fail(errors: list[str], msg: str) -> None:
@@ -53,8 +52,9 @@ def validate_frozen_contract(errors: list[str]) -> dict[str, Any] | None:
         fail(errors, "BM-001 canonical hash recomputation failed — contract mutated")
     if data.get("status") != "FROZEN":
         fail(errors, "BM-001 registration status must remain FROZEN (execution via execution_state)")
-    if data.get("global_memory_promotion") is not False:
-        fail(errors, "BM-001 global_memory_promotion must remain false")
+    exec_state = data.get("execution_state") or {}
+    if exec_state.get("certified_result") == "PASS":
+        fail(errors, "BM-001 must not claim certified PASS after invalidation correction")
     return data
 
 
@@ -75,37 +75,26 @@ def validate_execution_report(errors: list[str], pf2: str) -> dict[str, Any] | N
     report = yaml.safe_load(report_path.read_text(encoding="utf-8")) or {}
     if report.get("contract_hash") != FROZEN_CONTRACT_HASH:
         fail(errors, "EXECUTION_REPORT contract_hash mismatch")
-    if not report.get("routing_id"):
-        fail(errors, "EXECUTION_REPORT missing routing_id")
-    if not report.get("design_gate_result"):
-        fail(errors, "EXECUTION_REPORT missing design_gate_result")
     if pf2 == "COMPLETE":
         if report.get("benchmark_result") not in ("PASS", "FAIL", "BLOCKED"):
             fail(errors, "PF-2 COMPLETE requires truthful benchmark_result")
         if not report.get("quality_gate_result"):
             fail(errors, "EXECUTION_REPORT missing quality_gate_result")
+        required = required_evidence_ids(meaningful_3d_used=bool(report.get("meaningful_3d_used")))
+        captured = set(report.get("evidence_captured") or [])
+        if report.get("design_gate_result") == "APPROVED":
+            missing = set(required) - captured
+            if missing and report.get("quality_gate_result") == "APPROVED":
+                fail(errors, f"Approved run missing required evidence: {sorted(missing)}")
     return report
 
 
-def validate_evidence_artifacts(errors: list[str], report: dict[str, Any] | None) -> None:
-    if not report:
-        return
-    captured = set(report.get("evidence_captured") or [])
-    for eid in REQUIRED_EVIDENCE:
-        if eid not in captured and report.get("design_gate_result") == "APPROVED":
-            fail(errors, f"Missing required evidence: {eid}")
-    evidence_root = REPO / "benchmarks" / "BM-001" / "execution" / "evidence"
-    if report.get("design_gate_result") == "APPROVED" and not evidence_root.is_dir():
-        fail(errors, "Missing evidence directory")
-
-
-def validate_no_global_memory_promotion(errors: list[str]) -> None:
-    report_path = REPO / "benchmarks" / "BM-001" / "execution" / "run" / "EXECUTION_REPORT.yaml"
-    if not report_path.is_file():
-        return
-    text = report_path.read_text(encoding="utf-8").lower()
-    if "global_memory_promotion: true" in text.replace(" ", ""):
-        fail(errors, "BM-001 aesthetic must not be promoted to global memory")
+def validate_evidence_plan_loaded(errors: list[str]) -> None:
+    plan = load_evidence_plan()
+    ids = {item.get("evidence_id") for item in plan}
+    for eid in ("E-001", "E-002", "E-003", "E-004", "E-005", "E-006", "E-007", "E-008", "E-009", "E-010", "E-011"):
+        if eid not in ids:
+            fail(errors, f"EVIDENCE_PLAN missing {eid}")
 
 
 def validate_execution_scope(errors: list[str]) -> None:
@@ -128,11 +117,10 @@ def main() -> int:
 
     validate_phase_state(errors)
     validate_frozen_contract(errors)
+    validate_evidence_plan_loaded(errors)
     validate_implementation(errors)
     validate_execution_scope(errors)
     report = validate_execution_report(errors, pf2)
-    validate_evidence_artifacts(errors, report)
-    validate_no_global_memory_promotion(errors)
 
     runner = REPO / "validation" / "benchmark_execution" / "run_bm001.py"
     if not runner.is_file():

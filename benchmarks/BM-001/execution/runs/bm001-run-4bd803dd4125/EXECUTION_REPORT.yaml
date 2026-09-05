@@ -1,0 +1,50 @@
+run_id: bm001-run-4bd803dd4125
+started_at: '2026-09-04T20:44:07.677743+00:00'
+completed_at: '2026-09-04T20:44:32.839787+00:00'
+benchmark_id: BM-001
+contract_version: '1.1'
+contract_hash: b2cb2dbaea31e07331fe1c94df1271e3c167f9a64461e2dc25410d13696cadf3
+routing_id: route-c6369bb8f726
+routing_status: ROUTED
+activated_skills:
+- ACOS-01
+- ACOS-03
+- ACOS-04
+- ACOS-05
+- ACOS-08
+- ACOS-10
+- ACOS-11
+- ACOS-13
+- ACOS-14
+- EXT-A11Y-01
+design_gate_result: APPROVED
+production_blocked_before_gate: true
+implementation_path: benchmarks\BM-001\execution\implementation
+meaningful_3d_used: false
+evidence_captured:
+- E-001
+- E-002
+- E-005
+- E-007
+- E-008
+- E-009
+- E-010
+critic_findings:
+- critic_capability: ACOS-10
+  domain: visual
+  verdict: PASS
+  notes: Viewport evidence and runtime health support visual review.
+- critic_capability: ACOS-11
+  domain: creative
+  verdict: PASS
+  notes: Distinct fictional product concept with intentional art direction.
+- critic_capability: EXT-A11Y-01
+  domain: accessibility
+  verdict: PASS
+  notes: Reduced-motion capture completed without runtime errors.
+corrections_attempted: []
+quality_gate_result: APPROVED
+scoring_profile: no_meaningful_3d
+benchmark_score: 85.5
+benchmark_result: PASS
+restrictions: []

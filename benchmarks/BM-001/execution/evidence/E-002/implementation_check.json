@@ -4,5 +4,7 @@
     "index.html",
     "main.js",
     "styles.css"
-  ]
+  ],
+  "interactive_js": true,
+  "styles": true
 }
