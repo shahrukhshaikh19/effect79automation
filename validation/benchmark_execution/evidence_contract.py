@@ -72,8 +72,10 @@ def validate_evidence_artifact(evidence_id: str, path: Path) -> list[str]:
             payload = json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             return [f"{evidence_id}: invalid JSON in {path.name}"]
-        if payload in ({}, [], None):
+        if payload is None:
             errors.append(f"{evidence_id}: empty JSON payload in {path.name}")
+        elif payload == {}:
+            errors.append(f"{evidence_id}: empty JSON object in {path.name}")
     if path.suffix in (".yaml", ".yml"):
         try:
             payload = yaml.safe_load(path.read_text(encoding="utf-8"))

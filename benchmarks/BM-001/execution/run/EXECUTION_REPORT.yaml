@@ -1,12 +1,12 @@
-run_id: bm001-run-6c1991e2728f
-started_at: '2026-09-05T04:28:41.093814+00:00'
-completed_at: '2026-09-05T04:29:04.459847+00:00'
+run_id: bm001-run-df480e178918
+started_at: '2026-09-05T04:33:31.112011+00:00'
+completed_at: '2026-09-05T04:33:55.465617+00:00'
 benchmark_id: BM-001
 contract_version: '1.1'
 contract_hash: b2cb2dbaea31e07331fe1c94df1271e3c167f9a64461e2dc25410d13696cadf3
 certification_correction: true
 supersedes_run: bm001-run-4bd803dd4125
-routing_id: route-336f2a478b4e
+routing_id: route-3ccfdbaaf85b
 routing_status: ROUTED
 activated_skills:
 - ACOS-01
@@ -45,10 +45,9 @@ evidence_captured:
 - E-008
 - E-009
 - E-010
-evidence_completeness: BLOCKED_INSUFFICIENT_EVIDENCE
+evidence_completeness: SUFFICIENT
 evidence_missing: []
-evidence_invalid:
-- 'E-005: empty JSON payload in console_log.json'
+evidence_invalid: []
 critic_findings:
 - critic_capability: ACOS-10
   domain: visual

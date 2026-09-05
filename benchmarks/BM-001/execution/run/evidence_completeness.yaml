@@ -14,13 +14,13 @@ validated:
 - E-002
 - E-003
 - E-004
+- E-005
 - E-006
 - E-007
 - E-008
 - E-009
 - E-010
 missing: []
-invalid:
-- 'E-005: empty JSON payload in console_log.json'
-sufficient: false
-status: BLOCKED_INSUFFICIENT_EVIDENCE
+invalid: []
+sufficient: true
+status: SUFFICIENT
