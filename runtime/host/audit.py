@@ -16,6 +16,7 @@ from runtime.host.artifact_contract import (
     viewport_manifest,
 )
 from runtime.host.design_gate import evaluate_host_design_gate
+from runtime.host.product_form import form_gate_approved, requires_industrial_form
 from runtime.host.visual_class import validate_visual_class
 
 
@@ -24,6 +25,8 @@ def ensure_roles(session: dict[str, Any]) -> dict[str, Any]:
     task_id = str((session.get("intake") or {}).get("task_id") or "")
     roles.setdefault("producer_session_id", task_id)
     roles.setdefault("critic_pass_id", None)
+    roles.setdefault("form_critic_pass_id", None)
+    roles.setdefault("form_critic_host_context_id", None)
     roles.setdefault("independent_attestation", False)
     roles.setdefault("independence_claim", "none")
     roles.setdefault("independent_host_context", "UNVERIFIED")
@@ -64,6 +67,10 @@ def audit_session(session: dict[str, Any], project_dir: Path) -> dict[str, Any]:
         blockers.append(f"design_gate is {design['status']}")
     if stage in {"PRODUCTION", "EVIDENCE", "CRITICS", "QUALITY_GATE", "SHIP"} and not impl:
         blockers.append("implementation missing")
+    intake = session.get("intake") or {}
+    industrial = requires_industrial_form(intake.get("task_signals"), intake.get("request") or "")
+    if industrial and stage in {"PRODUCTION", "EVIDENCE", "CRITICS", "QUALITY_GATE", "SHIP"} and not form_gate_approved(project_dir):
+        blockers.append("product form gate is not APPROVED")
     if stage in {"CRITICS", "QUALITY_GATE", "SHIP"} and len(pixels) < 2:
         blockers.append("need at least two rendered evidence images under evidence/")
     if runtime_healthy is False:
@@ -83,12 +90,14 @@ def audit_session(session: dict[str, Any], project_dir: Path) -> dict[str, Any]:
         and critics["ok"]
         and independence["ok"]
         and visual["ok"]
+        and (not industrial or form_gate_approved(project_dir))
     )
 
     return {
         "task_id": (session.get("intake") or {}).get("task_id"),
         "stage": stage,
         "design_gate": design["status"],
+        "product_form_gate": (state.get("gate_states") or {}).get("product_form_gate"),
         "quality_gate": (state.get("gate_states") or {}).get("quality_gate"),
         "implementation": impl,
         "pixel_evidence": pixels,
@@ -117,6 +126,16 @@ def _next_command(
         return "tell the user Blender MCP/app is down; after they connect: python tools/host_driver/run_stage.py confirm-blender --mcp-live"
     if stage in {"INTAKE", "CREATIVE", "DESIGN_GATE"}:
         return "write direction artifacts, then: python tools/host_driver/run_stage.py advance"
+    if stage == "PRODUCT_DESIGN":
+        return "write direction/product_design.yaml + form_specification.yaml, then: python tools/host_driver/run_stage.py advance"
+    if stage == "FORM_AUTHORING":
+        return "write form_model.yaml and clay views, then: python tools/host_driver/run_stage.py advance"
+    if stage == "FORM_EVIDENCE":
+        return "confirm evidence/form-clay/ views, then: python tools/host_driver/run_stage.py advance"
+    if stage == "FORM_CRITICS":
+        return "new chat with a distinct ACOS_HOST_CONTEXT_ID: python tools/host_driver/run_stage.py form-critic-pass"
+    if stage == "PRODUCT_FORM_GATE":
+        return "python tools/host_driver/run_stage.py advance"
     if stage == "PRODUCTION" and not impl:
         return "build implementation/, then: python tools/host_driver/run_stage.py advance"
     if stage == "PRODUCTION":

@@ -25,7 +25,7 @@ These are routing patterns, not project examples.
 creative skills only when creative redesign is actually requested; frontend + accessibility + testing skills as required. Do not activate 3D.
 
 ### Interactive 3D experience
-creative/experience direction → Design Gate → cinematic 3D direction → relevant Three.js/R3F and/or Blender route → motion if required → responsive/performance → critics/gate.
+creative/experience direction → Design Gate → (industrial form: product design → clay form → industrial-design critic → Product Form Gate) → cinematic 3D direction → relevant Three.js/R3F and/or Blender route → motion if required → responsive/performance → critics/gate.
 
 ### Reference image → procedural browser-native object
 reference-analysis → cinematic-3d-director → `img2threejs` → relevant Three.js skills → 3d-critic → webgl-performance → quality-gate.

@@ -17,7 +17,7 @@ counts:
   gsap_selected: 5
   blender_selected: 15
   img2threejs: 1
-  proprietary_acos: 14
+  proprietary_acos: 17
 
 external:
   frontend_design_accessibility:
@@ -117,6 +117,9 @@ proprietary:
   - {id: ACOS-12, name: acos-3d-critic, priority: P0}
   - {id: ACOS-13, name: acos-quality-gate, priority: P0}
   - {id: ACOS-14, name: acos-failure-learning, priority: P0}
+  - {id: ACOS-15, name: acos-industrial-product-designer, priority: P0}
+  - {id: ACOS-16, name: acos-product-form-modeler, priority: P0}
+  - {id: ACOS-17, name: acos-industrial-design-critic, priority: P0}
 
 tools:
   blender_mcp:

@@ -80,6 +80,15 @@ Performance:
 Accessibility:
 - keyboard/focus/semantics/contrast/reduced-motion and other relevant checks.
 
+## Product Form Gate (not ship)
+
+When routing sets `requires_industrial_form`, a **Product Form Gate** runs after clay and the industrial-design critic, and **before** lookdev, production GLB, and web.
+
+- File: `gate/product_form_gate.yaml`
+- Statuses: APPROVED | REJECTED | BLOCKED_INSUFFICIENT_EVIDENCE | NOT_APPLICABLE
+- APPROVED unlocks production craft. It does **not** SHIP.
+- Quality Gate (ACOS-13) remains the only ship/no-ship decision.
+
 ## Critic independence
 
 The implementation skill may self-check, but final creative/visual/domain approval must involve the appropriate critic/gate responsibility.

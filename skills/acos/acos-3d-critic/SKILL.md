@@ -50,6 +50,7 @@ Do **not** activate when:
 - The task is **modeling, lookdev, or scene authoring** — external Blender/Three.js production skills.
 - The evaluating agent is the **sole 3D author** without independence — escalate; do not self-approve 3D credibility.
 - The task is **final ship decision** — use `acos-quality-gate`.
+- The task is **neutral clay / industrial-design judgment** of the physical product before beauty — use `acos-industrial-design-critic`. This skill judges lit/runtime 3D credibility after form is approved.
 
 ---
 
@@ -320,6 +321,7 @@ Phase C: do not write real memory records.
 | `acos-reference-analysis` | Reference contract interpretation |
 | External Blender/Three.js skills | Production execution; receive technical defect routes |
 | `acos-quality-gate` | Aggregates 3D dimension when applicable |
+| `acos-industrial-design-critic` | Clay / product-form verdict before beauty; not a substitute |
 | `acos-failure-learning` | Post-failure learning |
 
 **Overlap prevention:** Only activates when **3D output exists**. Visual critic does not own geometry credibility. Performance skill does not waive visible 3D defects.

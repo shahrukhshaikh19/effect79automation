@@ -1,7 +1,7 @@
 generated_by: tools/skill_exposure/sync_native_skills.py
 canonical_root: skills/
 copy_policy: links_only_never_copy_bodies
-skill_count: 50
+skill_count: 53
 platforms:
   cursor: .cursor/skills/
   claude: .claude/skills/
@@ -9,7 +9,7 @@ platforms:
 skills:
   - name: acos-3d-critic
     canonical: skills/acos/acos-3d-critic
-    skill_md_sha256: 9f2e4ea4363553b84b733c11bdf96c77a146172750989688bffc0933f446f11a
+    skill_md_sha256: 3320707030dba9f68e6dc676ef3916797bf9f677397e6cbc3efeeff22871a794
   - name: acos-anti-generic-design
     canonical: skills/acos/acos-anti-generic-design
     skill_md_sha256: 4ef52aaf7344a5df99e3aa02741e1962fec170d16168401fbbd8b03f99ad319b
@@ -18,7 +18,7 @@ skills:
     skill_md_sha256: f64acef97faba5fd24a14125f5d3e4f47b74e3f1f0b8ad2be700f05d1e1644ff
   - name: acos-cinematic-3d-director
     canonical: skills/acos/acos-cinematic-3d-director
-    skill_md_sha256: 006e8c550ffadb674775db753a02d6f2d05649da4c9eaece296945cce7ca944a
+    skill_md_sha256: 6874e57062a61f740ee9c332caf7529ed8a0b1b333531ccb6db58d244aecd6d7
   - name: acos-creative-critic
     canonical: skills/acos/acos-creative-critic
     skill_md_sha256: 59b295a9fdd810d58337b82b00295ceccc396ae351c3cb581fa2a955c35d6989
@@ -31,9 +31,18 @@ skills:
   - name: acos-failure-learning
     canonical: skills/acos/acos-failure-learning
     skill_md_sha256: eda2ae176143e91f0efee8a350eb6fc85a63e3bb7c7ad70c9c2090f5a5ad1fb3
+  - name: acos-industrial-design-critic
+    canonical: skills/acos/acos-industrial-design-critic
+    skill_md_sha256: e012f716ad93855c6f77365b6a8340ca243c6476dac6858f720253dc31144d93
+  - name: acos-industrial-product-designer
+    canonical: skills/acos/acos-industrial-product-designer
+    skill_md_sha256: 933a0073212c7e3cfa9085156f95817a19c5d6bdbfb8239638120341a2fc90c2
   - name: acos-motion-director
     canonical: skills/acos/acos-motion-director
     skill_md_sha256: 40dd4a550bbcb4ce8cddf0b3b5c7887d9e50c059e9fb3747d60ef67ba28bf57e
+  - name: acos-product-form-modeler
+    canonical: skills/acos/acos-product-form-modeler
+    skill_md_sha256: 53aabe6794ba9bbee0985347f87691d8ea6f5fe55f05ec3e9d8058ce92affabe
   - name: acos-quality-gate
     canonical: skills/acos/acos-quality-gate
     skill_md_sha256: b6705523fdf831be5142df242715fed3650f0e959f740c140482491b8f4b9ac8

@@ -20,6 +20,8 @@ BRIEF_YAML = HOST_DIR / "CURRENT_HOST_BRIEF.yaml"
 
 CREATIVE_STAGES = {"REFERENCE_ANALYSIS", "CREATIVE_DIRECTION", "DESIGN_EXPERIENCE"}
 PRODUCTION_STAGES = {"PRODUCTION", "SPECIALIST_ROUTING"}
+FORM_AUTHORING_IDS = {"ACOS-16", "EXT-BLD-01", "EXT-BLD-02", "EXT-BLD-03", "EXT-BLD-13"}
+FORM_PATH_IDS = {"ACOS-15", "ACOS-16", "ACOS-17"}
 CRITIC_STAGES = {"INDEPENDENT_CRITICS"}
 GATE_STAGES = {"QUALITY_GATE", "MEMORY_CANDIDATES"}
 
@@ -50,11 +52,37 @@ def select_invoke_ids(
     if workflow_stage == "WAITING_BLENDER":
         return [], "waiting_blender"
     if workflow_stage in {"INTAKE", "CREATIVE", "DESIGN_GATE"} or (
-        design_gate == "PENDING" and workflow_stage not in {"PRODUCTION", "EVIDENCE", "CRITICS", "QUALITY_GATE"}
+        design_gate == "PENDING"
+        and workflow_stage
+        not in {
+            "PRODUCT_DESIGN",
+            "FORM_AUTHORING",
+            "FORM_EVIDENCE",
+            "FORM_CRITICS",
+            "PRODUCT_FORM_GATE",
+            "PRODUCTION",
+            "EVIDENCE",
+            "CRITICS",
+            "QUALITY_GATE",
+        }
     ):
         return _ids_for_stages(planned, activations, CREATIVE_STAGES), "creative_and_design_gate"
+    if workflow_stage == "PRODUCT_DESIGN":
+        return [sid for sid in planned if sid == "ACOS-15"], "industrial_product_design"
+    if workflow_stage == "FORM_AUTHORING":
+        return [sid for sid in planned if sid in FORM_AUTHORING_IDS], "product_form_authoring"
+    if workflow_stage == "FORM_EVIDENCE":
+        return [], "form_clay_evidence"
+    if workflow_stage == "FORM_CRITICS":
+        return [sid for sid in planned if sid == "ACOS-17"], "industrial_design_critics"
+    if workflow_stage == "PRODUCT_FORM_GATE":
+        return [], "product_form_gate"
     if workflow_stage == "PRODUCTION":
-        return _ids_for_stages(planned, activations, PRODUCTION_STAGES), "specialist_production"
+        return [
+            sid
+            for sid in _ids_for_stages(planned, activations, PRODUCTION_STAGES)
+            if sid not in FORM_PATH_IDS
+        ], "specialist_production"
     if workflow_stage == "EVIDENCE":
         return [], "browser_evidence"
     if workflow_stage == "CRITICS":
@@ -96,6 +124,9 @@ def build_host_brief(
         "routing_id": routing.get("routing_id"),
         "workflow_stage": workflow_stage,
         "design_gate_state": design_gate,
+        "product_form_gate_state": str(
+            ((execution_state or {}).get("gate_states") or {}).get("product_form_gate") or "NOT_APPLICABLE"
+        ),
         "current_workflow_focus": focus,
         "project_dir": project_dir,
         "invoke_now": _rows(invoke_ids, activations),
@@ -121,6 +152,7 @@ def build_host_brief(
                 "Flagship lock: director/modeler/prop/materials/lookdev artifacts + receipts are required. Export YAML alone is not craft.",
                 "Flagship lock: a sphere/cylinder/plane dump, unchecked modeling checkbox, or macro lookdev crop is a production fail.",
                 "Flagship lock: physical products also require /hard-surface. Do not skip it.",
+                "Flagship lock: industrial-form tasks need ACOS-15 spec, ACOS-16 clay, ACOS-17, and Product Form Gate APPROVED before lookdev, production GLB, or web.",
                 "Contract: docs/FLAGSHIP_PREMIUM_WORKFLOW.md",
             ]
         )
@@ -138,6 +170,7 @@ def render_host_brief_md(brief: dict[str, Any]) -> str:
         f"- routing: `{brief.get('routing_id')}`",
         f"- stage: **{brief.get('workflow_stage')}**",
         f"- design_gate: **{brief.get('design_gate_state')}**",
+        f"- product_form_gate: **{brief.get('product_form_gate_state')}**",
         f"- focus: `{brief.get('current_workflow_focus')}`",
         f"- host: `{brief.get('adapter_target')}`",
         f"- project: `{brief.get('project_dir')}`",

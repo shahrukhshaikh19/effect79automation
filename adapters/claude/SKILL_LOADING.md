@@ -1,7 +1,7 @@
 # Claude Adapter — Progressive Skill Loading
 
 **Registry source:** `registry/SKILLS.yaml`  
-**Inventory:** 36 external + 14 proprietary (from registry, not duplicated here)
+**Inventory:** 36 external + 17 proprietary (from registry, not duplicated here)
 
 ## Levels
 

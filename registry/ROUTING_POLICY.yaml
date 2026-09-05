@@ -28,6 +28,8 @@ task_signal_fields:
   requires_accessibility: boolean
   requires_frontend: boolean
   requires_reference_analysis: boolean
+  requires_physical_product: boolean
+  requires_industrial_form: boolean
   reconstruction_path:
     values: [procedural_browser, blender_authoring, none]
   quality_bar:
@@ -61,6 +63,9 @@ skill_domains:
   ACOS-12: {domains: [critic, 3d], cost_tier: low, stage: INDEPENDENT_CRITICS, role: critic}
   ACOS-13: {domains: [gate], cost_tier: low, stage: QUALITY_GATE, role: gate}
   ACOS-14: {domains: [memory], cost_tier: low, stage: MEMORY_CANDIDATES, role: memory}
+  ACOS-15: {domains: [creative, 3d], cost_tier: high, stage: PRODUCT_DESIGN}
+  ACOS-16: {domains: [3d, blender], cost_tier: high, stage: FORM_AUTHORING}
+  ACOS-17: {domains: [critic, 3d], cost_tier: low, stage: FORM_CRITICS, role: critic}
   EXT-A11Y-01: {domains: [accessibility, frontend], cost_tier: low, stage: PRODUCTION}
   EXT-DES-01: {domains: [design], cost_tier: low, stage: DESIGN_EXPERIENCE}
   EXT-3DWEB-01: {domains: [3d, frontend], cost_tier: medium, stage: PRODUCTION}
@@ -153,6 +158,15 @@ routing_rules:
       - {skill_id: EXT-BLD-12, reason: flagship GLB export is the production handoff}
       - {skill_id: EXT-BLD-13, reason: flagship hard-surface for a physical product hero, if: requires_physical_product}
 
+  - id: flagship_industrial_form
+    when:
+      quality_bar: flagship
+      requires_industrial_form: true
+    activate:
+      - {skill_id: ACOS-15, reason: industrial product design before Blender beauty or web}
+      - {skill_id: ACOS-16, reason: form modeler orchestrates clay from an approved spec}
+      - {skill_id: ACOS-17, reason: independent industrial-design critic on clay views}
+
   - id: reference_reconstruction_route
     when:
       deliverable_profile: reference_reconstruction
@@ -205,7 +219,14 @@ design_gate:
   applies_when:
     - requires_creative_direction
     - requires_visual_output
-  required_before_stages: [PRODUCTION, SPECIALIST_ROUTING]
+  required_before_stages:
+    - PRODUCT_DESIGN
+    - FORM_AUTHORING
+    - FORM_EVIDENCE
+    - FORM_CRITICS
+    - PRODUCT_FORM_GATE
+    - PRODUCTION
+    - SPECIALIST_ROUTING
 
 correction_responsibility:
   motion:
@@ -219,6 +240,9 @@ correction_responsibility:
     exclude_roles: [critic, gate, memory]
   3d_fidelity:
     owner_domains: [3d]
+    exclude_roles: [critic, gate, memory]
+  industrial_form:
+    owner_domains: [3d, creative]
     exclude_roles: [critic, gate, memory]
   generic_visual:
     owner_domains: [creative]

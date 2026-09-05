@@ -73,7 +73,8 @@ clear prompt
   → flagship intake
   → if Blender MCP/app down: tell user, wait, confirm, then start
   → Design Gate on direction
-  → Blender authors the hero
+  → if industrial form: product design spec → clay → form critic → Product Form Gate
+  → Blender authors the hero (lookdev / production GLB only after form APPROVED)
   → export GLB
   → Three.js materials / lighting / camera load it
   → scroll / DOM integration
@@ -87,3 +88,5 @@ Premium is the bar for this prompt class. The conductor cannot invent beauty, bu
 Lookdev lock: at least two PNGs under `evidence/lookdev/` before production advances. After browser capture, if the hero is a crushed night-silhouette and the mood reference is lit, `advance` returns to PRODUCTION. Files and a GLB are not enough.
 
 Craft lock: export YAML is not skill execution. Director, modeler, prop-artist, materials, and lookdev must have artifacts + receipts. Physical products also require hard-surface. A sphere/cylinder/plane dump, an unchecked modeling checkbox, or a macro lookdev crop fails production.
+
+Industrial-form lock: wearables, consumer electronics, appliances, and other manufacturable devices must pass Product Form Gate (`gate/product_form_gate.yaml`) before beauty lookdev or web. That gate is not Quality Gate and cannot SHIP. Landscapes are not industrial form.

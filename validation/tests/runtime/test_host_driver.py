@@ -23,6 +23,14 @@ from runtime.host.audit import audit_session
 from runtime.host.design_gate import evaluate_host_design_gate
 from runtime.host.independence import implementation_fingerprint
 from runtime.host.craft_lock import inspect_hero_asset
+from runtime.host.product_form import (
+    evaluate_product_form_gate,
+    next_stage_after_design_gate,
+    requires_industrial_form,
+    validate_clay_evidence,
+    validate_form_critic,
+    validate_product_design,
+)
 from runtime.host.prompt_intake import classify_signals, intake_from_prompt
 from runtime.host.skill_execution import SKILL_CONTRACTS, skill_md_sha256, validate_artifact_execution
 from runtime.host.visual_class import (
@@ -685,6 +693,293 @@ class SkillExecutionProofTests(unittest.TestCase):
             )
             result = validate_creative_artifacts(root, ["ACOS-01"])
             self.assertFalse(result["ok"])
+
+
+def _skill_body(skill_id: str, extra: dict | None = None) -> str:
+    evidence = {
+        step: f"Executed {skill_id} {step} with unique industrial note {index:02d}."
+        for index, step in enumerate(SKILL_CONTRACTS[skill_id]["procedure"])
+    }
+    data = {
+        "skill_id": skill_id,
+        "skill_md_sha256": skill_md_sha256(skill_id),
+        "procedure_evidence": evidence,
+    }
+    if extra:
+        data.update(extra)
+    return yaml.dump(data, sort_keys=False)
+
+
+def _write_product_spec(root: Path, *, thin: bool = False) -> None:
+    direction = root / "direction"
+    direction.mkdir(parents=True, exist_ok=True)
+    if thin:
+        (direction / "product_design.yaml").write_text(
+            _skill_body(
+                "ACOS-15",
+                {
+                    "archetype": "premium",
+                    "committed_direction": "sculpted",
+                    "rejected_directions": [],
+                    "form_directions": ["premium"],
+                },
+            ),
+            encoding="utf-8",
+        )
+        (direction / "form_specification.yaml").write_text(
+            "parts: [blob]\nenvelope: {}\nmodeling_views: [front]\n",
+            encoding="utf-8",
+        )
+        return
+    (direction / "product_design.yaml").write_text(
+        _skill_body(
+            "ACOS-15",
+            {
+                "archetype": "over-ear wireless headphone with articulated yoke",
+                "committed_direction": "split-cup planar with offset yoke pivot",
+                "rejected_directions": ["single sphere cups on a torus band"],
+                "form_directions": [
+                    "split-cup planar with offset yoke pivot",
+                    "single-shell circumaural with hidden hinge",
+                ],
+            },
+        ),
+        encoding="utf-8",
+    )
+    (direction / "form_specification.yaml").write_text(
+        yaml.dump(
+            {
+                "part_architecture": [
+                    {"name": "earcup_shell", "job": "acoustic chamber", "interface": "yoke_pivot"},
+                    {"name": "yoke", "job": "articulation", "interface": "slider"},
+                    {"name": "headband", "job": "clamp", "interface": "slider"},
+                ],
+                "envelope": {"width_mm": 190, "depth_mm": 95, "height_mm": 210},
+                "mechanics": "yoke pivot plus slider travel",
+                "modeling_views": ["front", "profile", "rear", "front34", "rear34", "proportion", "joint"],
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+
+
+def _write_form_model(root: Path) -> None:
+    (root / "direction").mkdir(parents=True, exist_ok=True)
+    (root / "direction" / "form_model.yaml").write_text(
+        _skill_body(
+            "ACOS-16",
+            {
+                "spec_ref": "direction/form_specification.yaml",
+                "clay_views": ["front", "profile", "rear", "front34", "rear34", "proportion"],
+                "production_glb_exported": False,
+                "beauty_lookdev_done": False,
+            },
+        ),
+        encoding="utf-8",
+    )
+
+
+def _write_clay(root: Path, stems: tuple[str, ...] | None = None, *, crushed: bool = False) -> None:
+    clay = root / "evidence" / "form-clay"
+    clay.mkdir(parents=True, exist_ok=True)
+    for stem in stems or ("front", "profile", "rear", "front34", "rear34", "proportion"):
+        if crushed:
+            raw = bytearray()
+            for y in range(280):
+                raw.append(0)
+                for x in range(400):
+                    v = 8 + (x % 2)
+                    raw.extend(bytes((v, v - 1, v + 1)))
+            compressed = zlib.compress(bytes(raw), 1)
+            ihdr = struct.pack(">IIBBBBB", 400, 280, 8, 2, 0, 0, 0)
+
+            def chunk(tag: bytes, body: bytes) -> bytes:
+                return struct.pack(">I", len(body)) + tag + body + struct.pack(">I", zlib.crc32(tag + body) & 0xFFFFFFFF)
+
+            (clay / f"{stem}.png").write_bytes(
+                b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", ihdr) + chunk(b"IDAT", compressed) + chunk(b"IEND", b"")
+            )
+        else:
+            _noise_png(clay / f"{stem}.png", 160, 120, 110)
+
+
+def _write_form_critic(root: Path, *, pass_id: str, verdict: str = "pass") -> None:
+    critics = root / "critics"
+    critics.mkdir(parents=True, exist_ok=True)
+    (critics / "industrial_design.yaml").write_text(
+        _skill_body(
+            "ACOS-17",
+            {
+                "inspected_rendered_output": True,
+                "form_critic_pass_id": pass_id,
+                "independence": "distinct_host_context",
+                "evidence_refs": ["evidence/form-clay/front.png", "evidence/form-clay/profile.png"],
+                "findings": [{"id": "ID-01", "severity": "observation", "view": "front", "observation": "silhouette holds"}],
+                "verdict": verdict,
+            },
+        ),
+        encoding="utf-8",
+    )
+
+
+class ProductFormTests(unittest.TestCase):
+    def test_headphone_routes_industrial_form_skills(self) -> None:
+        intake = intake_from_prompt(
+            "Create a flagship cinematic 3D launch website for a premium over-ear headphone. "
+            "Blender must model this and export GLB."
+        )
+        intake["runtime_capabilities"]["blender"] = "AVAILABLE"
+        self.assertTrue(intake["task_signals"]["requires_industrial_form"])
+        decision = route_task(intake)
+        activated = set(decision["activated_skill_ids"]) | set(decision.get("planned_skill_ids") or [])
+        for skill_id in ("ACOS-15", "ACOS-16", "ACOS-17"):
+            self.assertIn(skill_id, activated)
+
+    def test_physical_instrument_routes_industrial_form(self) -> None:
+        intake = intake_from_prompt(
+            "Build a premium cinematic 3D launch website for an original physical instrument."
+        )
+        intake["runtime_capabilities"]["blender"] = "AVAILABLE"
+        self.assertTrue(requires_industrial_form(intake["task_signals"], intake["request"]))
+        decision = route_task(intake)
+        activated = set(decision["activated_skill_ids"]) | set(decision.get("planned_skill_ids") or [])
+        self.assertIn("ACOS-15", activated)
+
+    def test_landscape_does_not_route_industrial_form(self) -> None:
+        intake = intake_from_prompt(
+            "Cinematic WebGL landscape. Blender must author the hero landscape and export GLB. "
+            "Reference image is mood only — do not reconstruct."
+        )
+        self.assertFalse(intake["task_signals"]["requires_industrial_form"])
+        intake["runtime_capabilities"]["blender"] = "AVAILABLE"
+        decision = route_task(intake)
+        activated = set(decision["activated_skill_ids"]) | set(decision.get("planned_skill_ids") or [])
+        self.assertNotIn("ACOS-15", activated)
+        self.assertNotIn("ACOS-16", activated)
+        self.assertNotIn("ACOS-17", activated)
+
+    def test_thin_threejs_icon_is_not_industrial_form(self) -> None:
+        signals = classify_signals("Add a small Three.js icon to the settings page.")
+        self.assertFalse(signals["requires_industrial_form"])
+        self.assertEqual(next_stage_after_design_gate(signals, "Add a small Three.js icon to the settings page."), "PRODUCTION")
+
+    def test_design_gate_routes_industrial_to_product_design(self) -> None:
+        signals = {"quality_bar": "flagship", "requires_industrial_form": True}
+        self.assertEqual(next_stage_after_design_gate(signals, "over-ear headphone"), "PRODUCT_DESIGN")
+        self.assertEqual(
+            next_stage_after_design_gate({"quality_bar": "flagship"}, "Cinematic WebGL landscape"),
+            "PRODUCTION",
+        )
+
+    def test_form_stages_invoke_only_form_skills(self) -> None:
+        activations = {
+            "ACOS-15": {"stage": "PRODUCT_DESIGN"},
+            "ACOS-16": {"stage": "FORM_AUTHORING"},
+            "ACOS-17": {"stage": "FORM_CRITICS"},
+            "EXT-BLD-01": {"stage": "SPECIALIST_ROUTING"},
+            "EXT-BLD-06": {"stage": "SPECIALIST_ROUTING"},
+            "EXT-BLD-12": {"stage": "SPECIALIST_ROUTING"},
+            "ACOS-06": {"stage": "SPECIALIST_ROUTING"},
+        }
+        planned = list(activations)
+        invoke, focus = select_invoke_ids(planned, activations, workflow_stage="PRODUCT_DESIGN", design_gate="APPROVED")
+        self.assertEqual(invoke, ["ACOS-15"])
+        self.assertEqual(focus, "industrial_product_design")
+        invoke, focus = select_invoke_ids(planned, activations, workflow_stage="FORM_AUTHORING", design_gate="APPROVED")
+        self.assertEqual(set(invoke), {"ACOS-16", "EXT-BLD-01"})
+        self.assertNotIn("EXT-BLD-06", invoke)
+        self.assertNotIn("EXT-BLD-12", invoke)
+        invoke, focus = select_invoke_ids(planned, activations, workflow_stage="FORM_CRITICS", design_gate="APPROVED")
+        self.assertEqual(invoke, ["ACOS-17"])
+        invoke, focus = select_invoke_ids(planned, activations, workflow_stage="PRODUCTION", design_gate="APPROVED")
+        self.assertEqual(set(invoke), {"EXT-BLD-01", "EXT-BLD-06", "EXT-BLD-12", "ACOS-06"})
+        self.assertNotIn("ACOS-15", invoke)
+        self.assertNotIn("ACOS-17", invoke)
+
+    def test_thin_adjective_spec_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            _write_product_spec(root, thin=True)
+            result = validate_product_design(root)
+            self.assertFalse(result["ok"])
+
+    def test_missing_and_front_only_clay_fail(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            result = validate_clay_evidence(root)
+            self.assertFalse(result["ok"])
+            _write_clay(root, ("front",))
+            result = validate_clay_evidence(root)
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("profile" in item for item in result["issues"]))
+
+    def test_beauty_studio_is_not_clay(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            _write_clay(root, crushed=True)
+            result = validate_clay_evidence(root)
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("crushed" in item or "beauty" in item for item in result["issues"]))
+
+    def test_same_host_context_cannot_pass_form_critic(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            _write_form_critic(root, pass_id="form-1", verdict="pass")
+            result = validate_form_critic(
+                root,
+                pass_id="form-1",
+                roles={
+                    "producer_host_context_id": "same-chat",
+                    "form_critic_host_context_id": "same-chat",
+                },
+            )
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("DISTINCT" in item or "illegal" in item for item in result["invalid"]))
+
+    def test_sphere_glb_cannot_approve_form_gate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            _write_product_spec(root)
+            _write_form_model(root)
+            _write_clay(root)
+            _write_form_critic(root, pass_id="form-1", verdict="pass")
+            (root / "implementation").mkdir()
+            _write_glb(root / "implementation" / "hero.glb", [("SM_Cup_L", _sphere_mesh()), ("SM_Cup_R", _sphere_mesh())])
+            report = evaluate_product_form_gate(
+                root,
+                signals={"quality_bar": "flagship", "requires_industrial_form": True},
+                request="over-ear headphone",
+                pass_id="form-1",
+                roles={
+                    "producer_host_context_id": "producer-chat",
+                    "form_critic_host_context_id": "form-critic-chat",
+                },
+            )
+            self.assertNotEqual(report["status"], "APPROVED")
+            self.assertTrue(
+                any("sphere" in item.lower() or "primitive" in item.lower() for item in report["form_gate"]["issues"])
+            )
+
+    def test_rejected_form_blocks_production(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "implementation").mkdir()
+            (root / "implementation" / "index.html").write_text("<html></html>", encoding="utf-8")
+            _write_glb(root / "implementation" / "hero.glb", [("SM_Body", _irregular_mesh())])
+            (root / "gate").mkdir()
+            (root / "gate" / "product_form_gate.yaml").write_text(
+                "status: REJECTED\nform_gate:\n  status: REJECTED\n",
+                encoding="utf-8",
+            )
+            result = validate_flagship_production(
+                root,
+                ["EXT-BLD-12"],
+                {"quality_bar": "flagship", "requires_industrial_form": True},
+                "premium over-ear headphone",
+            )
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("product form gate" in item for item in result["invalid"]))
 
 
 if __name__ == "__main__":

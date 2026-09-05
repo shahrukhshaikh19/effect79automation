@@ -32,7 +32,7 @@ shared_contract:
       L3: references/scripts/assets only when required by activated skill
     inventory_source: registry/SKILLS.yaml
     external_skill_count: 36
-    proprietary_skill_count: 14
+    proprietary_skill_count: 17
     rule: skill availability != skill activation
     native_exposure:
       canonical_root: skills/

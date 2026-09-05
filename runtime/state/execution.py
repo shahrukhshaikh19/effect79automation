@@ -28,6 +28,7 @@ def create_execution_state(task_id: str) -> dict[str, Any]:
         "gate_states": {
             "design_gate": "NOT_APPLICABLE",
             "quality_gate": "NOT_EVALUATED",
+            "product_form_gate": "NOT_APPLICABLE",
         },
         "critic_states": {},
         "correction_attempts": [],

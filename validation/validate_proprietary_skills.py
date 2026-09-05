@@ -72,8 +72,8 @@ def load_registry_proprietary(errors: list[str]) -> list[str]:
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
     items = data.get("proprietary", [])
     names = [item["name"] for item in items if isinstance(item, dict) and "name" in item]
-    if len(names) != 14:
-        fail(errors, f"Expected 14 proprietary names in SKILLS.yaml, found {len(names)}")
+    if len(names) != 17:
+        fail(errors, f"Expected 17 proprietary names in SKILLS.yaml, found {len(names)}")
     return names
 
 

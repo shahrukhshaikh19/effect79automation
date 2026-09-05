@@ -7,12 +7,13 @@
 - Canonical skills live in `skills/`. Hosts discover them from `.cursor/skills/`, `.claude/skills/`, `.agents/skills/`.
 - Phase F routes IDs. Briefs expose native `/skill` names for the **current stage only**.
 - `tools/host_driver/run_stage.py` is the conductor: `init` → brief → host work → `advance` → next brief.
-- `check` is the mechanical audit. `serve` / `capture` collect real browser pixels. `critic-pass` opens an independent critic window.
+- `check` is the mechanical audit. `serve` / `capture` collect real browser pixels. `critic-pass` opens an independent ship critic window. `form-critic-pass` opens an independent industrial-design pass on clay.
 - Design Gate is substantive. File presence cannot APPROVE.
 - Quality Gate cannot SHIP unless pixel evidence exists **and** `independent_host_context` is `DISTINCT`. A CLI `--attest-independent` flag is a claim, not proof.
 - Skill artifacts must repeat the live `SKILL.md` hash and per-step `procedure_evidence`. `skill_procedure_executed: true` is not proof.
 - Flagship lookdev is pixel-checked. A lit mood reference versus a crushed night dump fails and returns to production. This is not GetLayers and does not copy their templates.
 - Flagship craft is checked: Blender skill artifacts (not only export), primitive GLB reject, brief honesty, and one full lookdev frame.
+- Industrial-form products cannot enter lookdev / production GLB / web until Product Form Gate APPROVED. That gate is not the ship Quality Gate.
 - The conductor never invents APPROVED. It can only block an illegal one.
 
 ## Commands

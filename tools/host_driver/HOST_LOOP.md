@@ -12,6 +12,7 @@ python tools/host_driver/run_stage.py advance
 python tools/host_driver/run_stage.py serve
 python tools/host_driver/run_stage.py capture
 python tools/host_driver/run_stage.py critic-pass
+python tools/host_driver/run_stage.py form-critic-pass
 ```
 
 `init --target claude` and `init --target codex` write the same loop for those hosts.
@@ -22,7 +23,7 @@ python tools/host_driver/run_stage.py critic-pass
 2. Execute only **Invoke now**. Write artifacts under `runtime/host/projects/<task>/`.
 3. `advance`. Repeat until SHIP, REJECTED, or a real BLOCKED reason.
 
-Stage order: CREATIVE → Design Gate → PRODUCTION → EVIDENCE → CRITICS → QUALITY_GATE → SHIP
+Stage order: CREATIVE → Design Gate → (industrial form: PRODUCT_DESIGN → FORM_AUTHORING → FORM_EVIDENCE → FORM_CRITICS → PRODUCT_FORM_GATE) → PRODUCTION → EVIDENCE → CRITICS → QUALITY_GATE → SHIP
 
 ## Hard locks
 
@@ -35,4 +36,5 @@ Stage order: CREATIVE → Design Gate → PRODUCTION → EVIDENCE → CRITICS �
 - Authored 3D / Blender-required prompt: `docs/FLAGSHIP_PREMIUM_WORKFLOW.md`. The word “premium” is not required. Blender + craft skills are mandatory. A lathe is not complete. First-frame-only evidence is not complete when the brief names scroll beats.
 - Flagship cannot leave production without `evidence/lookdev/` screenshots. After capture, a crushed/night-silhouette versus a lit mood reference sends the stage back to production. GLB + YAML is not a premium result.
 - Flagship craft is checked: director / modeler / prop-artist / materials / lookdev receipts, plus `hard-surface` for a physical product. A primitive-named or sphere/plane GLB, an unchecked modeling checkbox, or a macro lookdev crop fails production.
+- Industrial-form products require ACOS-15/16/17 and Product Form Gate APPROVED before lookdev. `form-critic-pass` is distinct from ship `critic-pass`. Product Form Gate cannot SHIP.
 - If Blender MCP/app is down: tell the user, wait, then `confirm-blender --mcp-live`. Never skip.

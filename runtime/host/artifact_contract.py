@@ -93,7 +93,12 @@ def hero_assets(project_dir: Path) -> list[str]:
     return sorted(found)
 
 
-def validate_flagship_production(project_dir: Path, planned_ids: list[str], signals: dict[str, Any] | None) -> dict[str, Any]:
+def validate_flagship_production(
+    project_dir: Path,
+    planned_ids: list[str],
+    signals: dict[str, Any] | None,
+    request: str = "",
+) -> dict[str, Any]:
     if not is_flagship(signals):
         return {"ok": True, "missing": [], "invalid": []}
     missing: list[str] = []
@@ -138,6 +143,12 @@ def validate_flagship_production(project_dir: Path, planned_ids: list[str], sign
     invalid.extend(validate_brief_honesty(project_dir))
     if assets:
         invalid.extend(validate_hero_primitives(project_dir))
+    from runtime.host.product_form import form_gate_approved, requires_industrial_form
+
+    if requires_industrial_form(signals, request) and not form_gate_approved(project_dir):
+        invalid.append(
+            "product form gate is not APPROVED — lookdev, production GLB, and web cannot complete"
+        )
     return {"missing": missing, "invalid": invalid, "ok": not missing and not invalid}
 
 

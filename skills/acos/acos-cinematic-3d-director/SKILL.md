@@ -41,6 +41,7 @@ Do **not** activate when:
 - No upstream creative or experience direction exists and the task is "add 3D."
 - Performance, modeling, shader implementation, or asset export is the primary need (route to `acos-webgl-performance` or external production skills).
 - The task is independent 3D critique of rendered output (route to `acos-3d-critic`).
+- The task is industrial product identity, package, parts, or form specification (route to `acos-industrial-product-designer`). Scene/camera direction waits until that spec exists.
 - img2threejs or Blender should run but no 3D creative direction has been defined yet—define direction first, then route to production.
 
 **Hard stop:** If the 3D removal test (see Rejection) fails, do not produce a 3D direction artifact. Record rejection and hand back to upstream owners.

@@ -39,6 +39,15 @@ from runtime.host.independence import (
     host_context_identity,
     implementation_fingerprint,
 )
+from runtime.host.product_form import (
+    evaluate_product_form_gate,
+    next_stage_after_design_gate,
+    requires_industrial_form,
+    validate_clay_evidence,
+    validate_form_critic,
+    validate_form_model,
+    validate_product_design,
+)
 from runtime.host.visual_class import validate_lookdev_evidence, validate_visual_class
 from runtime.host.capabilities import (
     USER_WAIT_MESSAGE,
@@ -115,6 +124,54 @@ def _write_todo(session: dict[str, Any], brief: dict[str, Any], extra: list[str]
                 "",
             ]
         )
+    elif stage == "PRODUCT_DESIGN":
+        lines.extend(
+            [
+                "- Invoke `/acos-industrial-product-designer` only.",
+                "- Write `direction/product_design.yaml` and `direction/form_specification.yaml`.",
+                "- Adjectives are not a spec. Name parts, envelope, and at least two form directions.",
+                "- Do not model, lookdev, export GLB, or build the website.",
+                "",
+            ]
+        )
+    elif stage == "FORM_AUTHORING":
+        lines.extend(
+            [
+                "- Invoke `/acos-product-form-modeler` plus listed Blender director/modeler/hard-surface skills.",
+                "- Clay only. Neutral grey. No beauty lookdev. No production GLB. No `implementation/`.",
+                "- Write `direction/form_model.yaml` and `evidence/form-clay/{front,profile,rear,front34,rear34,proportion}.png`.",
+                "- Add `joint.png` if mechanics are not none. Add `top.png` if the envelope needs plan.",
+                "",
+            ]
+        )
+    elif stage == "FORM_EVIDENCE":
+        lines.extend(
+            [
+                "- No skills this stage. Confirm the clay set exists under `evidence/form-clay/`.",
+                "- Beauty / lookdev / crushed studio frames are not clay.",
+                "- Then: `python tools/host_driver/run_stage.py advance`",
+                "",
+            ]
+        )
+    elif stage == "FORM_CRITICS":
+        lines.extend(
+            [
+                "- Independent form critic only. New chat with a distinct `ACOS_HOST_CONTEXT_ID`.",
+                "- Open the pass: `python tools/host_driver/run_stage.py form-critic-pass`",
+                "- Invoke `/acos-industrial-design-critic`. Inspect clay pixels. Write `critics/industrial_design.yaml`.",
+                "- Do not edit meshes or implementation. Do not run ship critics or quality gate.",
+                "",
+            ]
+        )
+    elif stage == "PRODUCT_FORM_GATE":
+        lines.extend(
+            [
+                "- No skills. Run `python tools/host_driver/run_stage.py advance`.",
+                "- Product Form Gate is not Quality Gate and cannot SHIP.",
+                "- APPROVED unlocks lookdev / production GLB / web. REJECTED returns to form.",
+                "",
+            ]
+        )
     elif stage == "PRODUCTION":
         lines.extend(
             [
@@ -134,6 +191,7 @@ def _write_todo(session: dict[str, Any], brief: dict[str, Any], extra: list[str]
                     "- Flagship lock: write at least two lookdev PNGs under evidence/lookdev/ from Blender viewport / browser. YAML is not lookdev.",
                     "- One lookdev shot must be a full hero or full scene. A surface macro is a fail.",
                     "- Do not export a sphere/cylinder/torus/plane kitbash as the hero. Physical products need /hard-surface.",
+                    "- Industrial-form tasks: Product Form Gate must already be APPROVED. Do not start lookdev before that.",
                     "- If a mood reference exists, the render class must match (lit water/sky vs night-silhouette is a fail).",
                     "",
                 ]
@@ -239,7 +297,7 @@ def _start_routed_session(intake: dict[str, Any], routing: dict[str, Any], targe
         set_design_gate_state(state, "NOT_APPLICABLE")
         unlock_planned_skills(state, routing)
     project = (HOST_DIR / "projects" / intake["task_id"]).resolve()
-    for sub in ("direction", "implementation", "evidence", "critics", "gate"):
+    for sub in ("direction", "implementation", "evidence", "evidence/form-clay", "critics", "gate"):
         (project / sub).mkdir(parents=True, exist_ok=True)
     (project / "request.md").write_text(intake.get("request", "") + "\n", encoding="utf-8")
     return {
@@ -260,6 +318,8 @@ def _new_roles(task_id: str) -> dict[str, Any]:
         "producer_host_context_source": context["source"],
         "critic_pass_id": None,
         "critic_host_context_id": None,
+        "form_critic_pass_id": None,
+        "form_critic_host_context_id": None,
         "independent_attestation": False,
         "independence_claim": "none",
         "independent_host_context": "UNVERIFIED",
@@ -322,6 +382,7 @@ def cmd_status(_: argparse.Namespace) -> int:
             "task_id": session["intake"]["task_id"],
             "stage": state["current_stage"],
             "design_gate": state["gate_states"].get("design_gate"),
+            "product_form_gate": state["gate_states"].get("product_form_gate"),
             "quality_gate": state["gate_states"].get("quality_gate"),
             "project_dir": session["project_dir"],
             "invoke_now": [r.get("invoke") for r in brief.get("invoke_now") or []],
@@ -361,9 +422,17 @@ def cmd_advance(_: argparse.Namespace) -> int:
         if gate["status"] == "APPROVED":
             set_design_gate_state(state, "APPROVED")
             unlock_planned_skills(state, routing)
-            state["current_stage"] = "PRODUCTION"
+            signals = session["intake"].get("task_signals")
+            request = session["intake"].get("request") or ""
+            nxt = next_stage_after_design_gate(signals, request)
+            state["current_stage"] = nxt
+            if nxt == "PRODUCT_DESIGN":
+                state["gate_states"]["product_form_gate"] = "PENDING"
+                notes.append("Design Gate APPROVED — industrial form path: write the product-design spec next")
+            else:
+                state["gate_states"]["product_form_gate"] = "NOT_APPLICABLE"
+                notes.append("Design Gate APPROVED — production skills unlocked")
             append_event(state, "DESIGN_GATE_APPROVED", routing.get("routing_id") or "")
-            notes.append("Design Gate APPROVED — production skills unlocked")
         elif gate["status"] == "REJECTED":
             set_design_gate_state(state, "REJECTED")
             state["current_stage"] = "CREATIVE"
@@ -373,11 +442,26 @@ def cmd_advance(_: argparse.Namespace) -> int:
             state["current_stage"] = "CREATIVE"
             notes.extend([f"missing {m}" for m in gate.get("missing_artifacts") or []])
             notes.extend(gate.get("failures") or [])
+    elif stage == "PRODUCT_DESIGN":
+        notes.extend(_advance_product_design(session, project))
+    elif stage == "FORM_AUTHORING":
+        notes.extend(_advance_form_authoring(session, project))
+    elif stage == "FORM_EVIDENCE":
+        notes.extend(_advance_form_evidence(session, project))
+    elif stage == "FORM_CRITICS":
+        notes.extend(_advance_form_critics(session, project))
+    elif stage == "PRODUCT_FORM_GATE":
+        notes.extend(_advance_product_form_gate(session, project))
     elif stage == "PRODUCTION":
         if not has_implementation(project):
             notes.append("implementation missing — expected implementation/index.html (or src/main)")
         else:
-            flagship = validate_flagship_production(project, planned, session["intake"].get("task_signals"))
+            flagship = validate_flagship_production(
+                project,
+                planned,
+                session["intake"].get("task_signals"),
+                session["intake"].get("request") or "",
+            )
             if not flagship["ok"]:
                 notes.extend([f"missing {m}" for m in flagship["missing"]])
                 notes.extend(flagship["invalid"])
@@ -423,9 +507,97 @@ def cmd_advance(_: argparse.Namespace) -> int:
     _save(session)
     print(f"stage: {session['state']['current_stage']}")
     print(f"design_gate: {session['state']['gate_states'].get('design_gate')}")
+    print(f"product_form_gate: {session['state']['gate_states'].get('product_form_gate')}")
     for note in notes:
         print(f"- {note}")
     return 0
+
+
+def _advance_product_design(session: dict[str, Any], project: Path) -> list[str]:
+    result = validate_product_design(project)
+    if not result["ok"]:
+        return [f"missing {m}" for m in result["missing"]] + result["invalid"]
+    session["state"]["current_stage"] = "FORM_AUTHORING"
+    return ["Product design spec accepted — clay form next"]
+
+
+def _advance_form_authoring(session: dict[str, Any], project: Path) -> list[str]:
+    result = validate_form_model(project)
+    if not result["ok"]:
+        return [f"missing {m}" for m in result["missing"]] + result["invalid"]
+    session["state"]["current_stage"] = "FORM_EVIDENCE"
+    return ["Form model recorded — confirm clay multi-view next"]
+
+
+def _advance_form_evidence(session: dict[str, Any], project: Path) -> list[str]:
+    spec = load_yaml(project / "direction" / "form_specification.yaml") if (project / "direction" / "form_specification.yaml").is_file() else {}
+    clay = validate_clay_evidence(project, spec)
+    if not clay["ok"]:
+        return clay["issues"]
+    session["state"]["current_stage"] = "FORM_CRITICS"
+    return [
+        "Clay set present — independent form critic next",
+        "New chat with a distinct ACOS_HOST_CONTEXT_ID, then: python tools/host_driver/run_stage.py form-critic-pass",
+    ]
+
+
+def _advance_form_critics(session: dict[str, Any], project: Path) -> list[str]:
+    roles = ensure_roles(session)
+    critic = validate_form_critic(
+        project,
+        pass_id=roles.get("form_critic_pass_id"),
+        roles=roles,
+    )
+    if not critic["ok"]:
+        notes = [f"missing {m}" for m in critic.get("missing") or []] + (critic.get("invalid") or [])
+        if any("industrial_design.yaml" in item for item in notes):
+            notes.append(
+                "Open an independent form pass: python tools/host_driver/run_stage.py form-critic-pass"
+            )
+        return notes
+    session["state"]["current_stage"] = "PRODUCT_FORM_GATE"
+    return ["Form critic present — Product Form Gate next"]
+
+
+def _advance_product_form_gate(session: dict[str, Any], project: Path) -> list[str]:
+    roles = ensure_roles(session)
+    report = evaluate_product_form_gate(
+        project,
+        signals=session["intake"].get("task_signals"),
+        request=session["intake"].get("request") or "",
+        pass_id=roles.get("form_critic_pass_id"),
+        roles=roles,
+    )
+    _dump(project / "gate" / "product_form_gate.yaml", report)
+    status = str(report.get("status") or "").upper()
+    state = session["state"]
+    issues = list((report.get("form_gate") or {}).get("issues") or [])
+    if status == "APPROVED":
+        state["gate_states"]["product_form_gate"] = "APPROVED"
+        state["current_stage"] = "PRODUCTION"
+        append_event(state, "GATE_APPROVED", "product_form_gate")
+        return ["Product Form Gate APPROVED — lookdev, production GLB, and web unlocked"]
+    if status == "REJECTED":
+        state["gate_states"]["product_form_gate"] = "REJECTED"
+        blob = " ".join(issues).lower()
+        if any(key in blob for key in ("product_design", "form_specification", "part_architecture", "archetype", "form direction", "envelope")):
+            state["current_stage"] = "PRODUCT_DESIGN"
+            dest = "product design spec"
+        else:
+            state["current_stage"] = "FORM_AUTHORING"
+            dest = "form authoring"
+        append_event(state, "GATE_REJECTED", "product_form_gate")
+        return [f"Product Form Gate REJECTED — return to {dest}"] + issues[:8]
+    state["gate_states"]["product_form_gate"] = "BLOCKED_INSUFFICIENT_EVIDENCE"
+    blob = " ".join(issues).lower()
+    if any("form-clay" in item or "clay" in item for item in issues):
+        state["current_stage"] = "FORM_EVIDENCE"
+    elif any("industrial_design" in item or "form critic" in item for item in issues):
+        state["current_stage"] = "FORM_CRITICS"
+    notes = ["Product Form Gate BLOCKED_INSUFFICIENT_EVIDENCE"] + issues[:8]
+    if "form critic" in blob or "industrial_design" in blob:
+        notes.append("python tools/host_driver/run_stage.py form-critic-pass")
+    return notes
 
 
 def _apply_quality_gate(session: dict[str, Any], project: Path) -> list[str]:
@@ -558,6 +730,67 @@ def cmd_critic_pass(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_form_critic_pass(args: argparse.Namespace) -> int:
+    session = _load_session()
+    project = REPO / session["project_dir"]
+    spec_path = project / "direction" / "form_specification.yaml"
+    spec = load_yaml(spec_path) if spec_path.is_file() else {}
+    clay = validate_clay_evidence(project, spec)
+    if not clay["ok"]:
+        raise SystemExit("clay evidence incomplete — write evidence/form-clay/ first: " + "; ".join(clay["issues"][:4]))
+
+    roles = ensure_roles(session)
+    pass_id = uuid.uuid4().hex
+    critic_context = host_context_identity()
+    roles["form_critic_pass_id"] = pass_id
+    roles["form_critic_host_context_id"] = critic_context["id"]
+    roles["form_critic_host_context_source"] = critic_context["source"]
+    roles["form_independence_claim"] = "operator_attested" if args.attest_independent else "none"
+    form_context = classify_host_context(
+        roles.get("producer_host_context_id"),
+        critic_context["id"],
+    )
+    roles["form_independent_host_context"] = form_context
+    roles["form_critic_pass_opened_at"] = datetime.now(timezone.utc).isoformat()
+
+    critic_path = project / "critics" / "industrial_design.yaml"
+    if critic_path.is_file():
+        superseded = project / "critics" / "_superseded" / f"form-{pass_id[:8]}"
+        superseded.mkdir(parents=True, exist_ok=True)
+        data = load_yaml(critic_path)
+        if data.get("form_critic_pass_id") != pass_id:
+            shutil.move(str(critic_path), str(superseded / critic_path.name))
+
+    gate_path = project / "gate" / "product_form_gate.yaml"
+    if gate_path.is_file():
+        dest = project / "gate" / "_superseded"
+        dest.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(gate_path), str(dest / f"product_form_gate-{pass_id[:8]}.yaml"))
+
+    session["state"]["current_stage"] = "FORM_CRITICS"
+    session["state"]["gate_states"]["product_form_gate"] = "PENDING"
+    _save(session)
+
+    print(yaml.dump(
+        {
+            "form_critic_pass_id": pass_id,
+            "attested_independent": bool(args.attest_independent),
+            "form_independent_host_context": form_context,
+            "stage": "FORM_CRITICS",
+            "warning": (
+                None
+                if form_context == "DISTINCT"
+                else "Form critic pass stays locked: form context is not DISTINCT. "
+                "Use a new chat with a different ACOS_HOST_CONTEXT_ID."
+            ),
+        },
+        sort_keys=False,
+    ))
+    if form_context == "DISTINCT":
+        print("Distinct form critic context recorded. Inspect clay only. Do not edit meshes or implementation/.")
+    return 0
+
+
 def cmd_blender_status(_: argparse.Namespace) -> int:
     ready = blender_readiness()
     print(yaml.dump(ready, sort_keys=False))
@@ -628,6 +861,14 @@ def main() -> int:
         help="Operator claim only. Does not prove a different host chat. SHIP requires DISTINCT host context.",
     )
     critic.set_defaults(func=cmd_critic_pass)
+
+    form_critic = sub.add_parser("form-critic-pass", help="Open an independent industrial-design critic pass on clay")
+    form_critic.add_argument(
+        "--attest-independent",
+        action="store_true",
+        help="Operator claim only. Form APPROVE still requires DISTINCT host context.",
+    )
+    form_critic.set_defaults(func=cmd_form_critic_pass)
 
     blender_status = sub.add_parser("blender-status", help="Show Blender app/MCP readiness")
     blender_status.set_defaults(func=cmd_blender_status)
