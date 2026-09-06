@@ -296,7 +296,7 @@ def validate_script_security(entries: list[dict], errors: list[str]) -> None:
 
 
 def check_proprietary_skills_phase(errors: list[str]) -> None:
-    """Allow zero proprietary skills (Phase B) or exactly 14 registry skills (Phase C+)."""
+    """Allow zero proprietary skills (Phase B) or the registry-declared set (Phase C+)."""
     skill_files = sorted((REPO / "skills" / "acos").rglob("SKILL.md"))
     if not skill_files:
         return
@@ -308,12 +308,13 @@ def check_proprietary_skills_phase(errors: list[str]) -> None:
         for item in registry.get("proprietary", [])
         if isinstance(item, dict) and "name" in item
     }
+    declared = int((registry.get("counts") or {}).get("proprietary_acos") or len(expected))
     actual = {p.parent.name for p in skill_files}
-    if actual == expected and len(actual) == 14:
+    if actual == expected and len(actual) == declared:
         return
     fail(
         errors,
-        f"Proprietary skills must be absent (Phase B) or complete set of 14 (Phase C+): {actual}",
+        f"Proprietary skills must be absent (Phase B) or the registry-declared set ({declared}): {actual}",
     )
 
 

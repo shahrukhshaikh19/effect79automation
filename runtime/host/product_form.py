@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
+import re
 
 import yaml
 
@@ -87,6 +88,66 @@ def form_gate_approved(project_dir: Path) -> bool:
     return form_gate_status(project_dir) == "APPROVED"
 
 
+_TWS_ARCHETYPE = re.compile(r"\b(earbud|in-ear|tws|charging case|iem)\b", re.I)
+_CATEGORY_KILL = re.compile(r"pill|bean case|stem-bud|stem bud|airpods|category silhouette", re.I)
+_PRODUCT_READ = re.compile(r"in-ear|ear tip|short stem|housing|compact case|pocket|cup|yoke|headband", re.I)
+_UNFINISHED_CLAY = re.compile(
+    r"\b(blockout|placeholder|not a finished|still a box|wedge|cube hero|keel identity are incomplete)\b",
+    re.I,
+)
+
+
+def _num(data: dict[str, Any], *keys: str) -> float | None:
+    for key in keys:
+        if key in data and data[key] is not None:
+            try:
+                return float(data[key])
+            except (TypeError, ValueError):
+                return None
+    return None
+
+
+def _package_aspect_issues(envelope: dict[str, Any]) -> list[str]:
+    case = envelope.get("case_closed") if isinstance(envelope.get("case_closed"), dict) else envelope
+    if not isinstance(case, dict):
+        return []
+    width = _num(case, "width_mm", "width")
+    depth = _num(case, "depth_mm", "depth")
+    height = _num(case, "height_mm", "height")
+    issues: list[str] = []
+    if width and height and width / height > 2.15:
+        issues.append("form_specification.yaml: package is a wide bar — not a compact product")
+    if depth and height and depth / height > 1.45:
+        issues.append("form_specification.yaml: package is too deep/chunky versus height")
+    bud = envelope.get("earbud") if isinstance(envelope.get("earbud"), dict) else None
+    if isinstance(bud, dict) and width:
+        bud_w = _num(bud, "acoustic_width_mm", "width_mm", "width")
+        if bud_w and width > 1.2 * (2 * bud_w + 16):
+            issues.append("form_specification.yaml: case is oversized versus the two instruments")
+    return issues
+
+
+def _category_clone_issues(design: dict[str, Any]) -> list[str]:
+    blob = " ".join(
+        [
+            str(design.get("archetype") or ""),
+            str(design.get("committed_direction") or ""),
+            str(design.get("reads_as") or ""),
+            str(design.get("rejected_directions") or ""),
+        ]
+    )
+    if not _TWS_ARCHETYPE.search(str(design.get("archetype") or "")):
+        return []
+    rejected = str(design.get("rejected_directions") or "")
+    committed = f"{design.get('committed_direction') or ''} {design.get('reads_as') or ''}"
+    if _CATEGORY_KILL.search(rejected) and not _PRODUCT_READ.search(committed):
+        return [
+            "direction/product_design.yaml: rejected the category package as a brand clone — "
+            "compact case + in-ear instruments must still read"
+        ]
+    return []
+
+
 def _list_len(value: Any) -> int:
     if isinstance(value, list):
         return len(value)
@@ -111,6 +172,9 @@ def validate_product_design(project_dir: Path) -> dict[str, Any]:
                 invalid.append(f"{rel}: need at least two form directions and one rejected")
             if len(str(data.get("archetype") or data.get("committed_direction") or "")) < 12:
                 invalid.append(f"{rel}: archetype / committed_direction missing")
+            if len(str(data.get("reads_as") or "")) < 20:
+                invalid.append(f"{rel}: reads_as missing — a stranger must name the object from silhouette")
+            invalid.extend(_category_clone_issues(data))
         if rel == FORM_SPEC:
             parts = data.get("part_architecture") or data.get("parts")
             if _list_len(parts) < 3:
@@ -118,6 +182,8 @@ def validate_product_design(project_dir: Path) -> dict[str, Any]:
             envelope = data.get("envelope") or {}
             if not envelope:
                 invalid.append(f"{rel}: envelope dimensions missing")
+            else:
+                invalid.extend(_package_aspect_issues(envelope))
             views = data.get("modeling_views") or []
             if _list_len(views) < 4:
                 invalid.append(f"{rel}: modeling_views must list the clay set")
@@ -140,6 +206,16 @@ def validate_form_model(project_dir: Path) -> dict[str, Any]:
         invalid.append(f"{FORM_MODEL}: spec_ref missing")
     if _list_len(data.get("clay_views")) < 6:
         invalid.append(f"{FORM_MODEL}: clay_views must list the required stems")
+    if str(data.get("product_read_verdict") or "").lower() != "pass":
+        invalid.append(f"{FORM_MODEL}: product_read_verdict must be pass — clay must read as the product")
+    if data.get("package_fit_ok") is not True:
+        invalid.append(f"{FORM_MODEL}: package_fit_ok must be true — case/parts scale must match the spec")
+    notes = " ".join(
+        str(data.get(key) or "")
+        for key in ("primitive_challenge", "primary_forms", "open_risks", "notes")
+    )
+    if _UNFINISHED_CLAY.search(notes):
+        invalid.append(f"{FORM_MODEL}: clay is still unfinished blockout — do not advance")
     if not invalid:
         write_execution_receipt(project_dir, "ACOS-16", FORM_MODEL)
     return {"ok": not invalid, "missing": [], "invalid": invalid}

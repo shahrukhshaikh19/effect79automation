@@ -92,8 +92,9 @@ Do **not** activate to:
 3. **primary_forms** — Build the committed primary volumes. Challenge any mesh that still fits a UV-sphere or plane.
 4. **clay_capture** — Neutral / clay / grey shader. No chromatic beauty, no crushed night studio, no bloom hide.
 5. **proportion_correct** — Fix from clay, not from roughness maps.
-6. **joints_and_seams** — Only after primary silhouette reads.
-7. **handoff_clay** — Required views on disk. Production export is forbidden.
+6. **product_read_check** — A stranger looking at clay must name the brief’s product. A rounded box + wedges is a fail even if names are `Case_*` / `Earbud_*`. Set `product_read_verdict: pass` only when that is true. `package_fit_ok: true` only when envelope matches the instruments. Unfinished blockout cannot advance.
+7. **joints_and_seams** — Only after primary silhouette reads.
+8. **handoff_clay** — Required views on disk. Production export is forbidden.
 
 Required clay views under `evidence/form-clay/` (PNG > 4KB):
 
@@ -121,6 +122,8 @@ Must record:
 - `clay_views` list matching files on disk
 - `production_glb_exported: false`
 - `beauty_lookdev_done: false`
+- `product_read_verdict: pass|fail`
+- `package_fit_ok: true|false`
 
 ## Rejection / failure conditions
 
@@ -130,6 +133,9 @@ Contract fail when:
 - Primary form is decorated instead of corrected
 - Clay views missing or are beauty/dark cinematic frames
 - Hero remains two spheres and a rod
+- Clay does not read as the product class (`product_read_verdict` not pass)
+- Notes still call the form blockout / placeholder / unfinished
+- Package does not fit the instruments
 - Spec was not ingested (`spec_ref` missing)
 
 ## Handoff contract

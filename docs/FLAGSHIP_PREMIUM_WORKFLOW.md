@@ -89,4 +89,4 @@ Lookdev lock: at least two PNGs under `evidence/lookdev/` before production adva
 
 Craft lock: export YAML is not skill execution. Director, modeler, prop-artist, materials, and lookdev must have artifacts + receipts. Physical products also require hard-surface. A sphere/cylinder/plane dump, an unchecked modeling checkbox, or a macro lookdev crop fails production.
 
-Industrial-form lock: wearables, consumer electronics, appliances, and other manufacturable devices must pass Product Form Gate (`gate/product_form_gate.yaml`) before beauty lookdev or web. That gate is not Quality Gate and cannot SHIP. Landscapes are not industrial form.
+Industrial-form lock: wearables, consumer electronics, appliances, and other manufacturable devices must pass Product Form Gate (`gate/product_form_gate.yaml`) before beauty lookdev or web. That gate is not Quality Gate and cannot SHIP. Landscapes are not industrial form. Brand clone is not the category package — a TWS must still read as a compact case plus in-ear instruments. Clay cannot leave form authoring without a product-read pass.

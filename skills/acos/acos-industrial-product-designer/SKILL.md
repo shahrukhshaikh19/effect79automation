@@ -78,11 +78,13 @@ Do not invent a product category the brief did not ask for.
 2. **archetype_and_architecture** — Name the product type, what must move, what must be held or worn, what must be sealed.
 3. **scale_and_envelope** — Real dimensions or justified ranges. Human scale when relevant.
 4. **form_directions** — At least two distinct silhouette directions. Pick one with a written reason. Do not skip exploration.
-5. **form_hierarchy** — Primary volumes, secondary construction, tertiary only as function (not decoration).
-6. **parts_and_mechanics** — Named parts, joints, pivots, travel, clamp or hinge logic, assembly splits, material boundaries.
-7. **cmf_intent** — Finish families and transitions. Not Principled graphs.
-8. **multi_view_spec** — What front, profile, rear, ¾, and joint views must prove.
-9. **handoff** — Form specification locked for `acos-product-form-modeler`. No mesh yet.
+5. **category_vs_clone** — Brand clone ≠ product class. Do not reject the category package (compact TWS case, in-ear housing+tip, over-ear cups+yoke) as “AirPods / generic.” Clone is logo, layout, and literal identity — not the readable object class.
+6. **product_read** — Write `reads_as`: what a stranger names from silhouette. If they would not say the brief’s product, the spec is wrong.
+7. **form_hierarchy** — Primary volumes, secondary construction, tertiary only as function (not decoration).
+8. **parts_and_mechanics** — Named parts, joints, pivots, travel, clamp or hinge logic, assembly splits, material boundaries.
+9. **cmf_intent** — Finish families and transitions. Not Principled graphs.
+10. **multi_view_spec** — What front, profile, rear, ¾, and joint views must prove.
+11. **handoff** — Form specification locked for `acos-product-form-modeler`. No mesh yet.
 
 ## Required outputs
 
@@ -91,7 +93,8 @@ Do not invent a product category the brief did not ask for.
 - `skill_id: ACOS-15` and live `skill_md_sha256`
 - `procedure_evidence` for every required procedure key (unique prose)
 - `archetype`, `committed_direction`, `rejected_directions` (≥1 rejected)
-- `envelope` with numeric or bounded dimensions
+- `reads_as` — stranger-name test for the silhouette
+- `envelope` with numeric or bounded dimensions; case must fit the instruments (not a clutch brick)
 - `part_architecture` as a list of named parts with job + interface
 - `mechanics` (pivots / travel / constraints) or explicit `mechanics: none` with reason
 - `form_hierarchy.primary` that a clay silhouette can test
@@ -110,6 +113,9 @@ Fail this skill’s contract when:
 - CMF or branding is used to invent identity the silhouette lacks
 - Meshes or lookdev are produced here
 - Envelope or modeling views are missing
+- Category package rejected as a brand clone (`pill/stem = AirPods`)
+- `reads_as` missing or does not name the brief’s product
+- Package aspect is a wide bar or oversized versus the parts
 
 ## Handoff contract
 

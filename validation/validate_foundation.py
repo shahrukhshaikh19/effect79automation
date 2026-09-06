@@ -98,7 +98,7 @@ def parse_yaml(path: Path, errors: list[str]) -> dict | list | None:
 
 
 def check_proprietary_skills_phase(errors: list[str]) -> None:
-    """Allow zero proprietary skills (Phase A/B) or exactly 14 registry skills (Phase C+)."""
+    """Allow zero proprietary skills (Phase A/B) or the registry-declared set (Phase C+)."""
     acos_dir = REPO_ROOT / "skills" / "acos"
     skill_files = sorted(acos_dir.rglob("SKILL.md")) if acos_dir.is_dir() else []
     if not skill_files:
@@ -116,13 +116,14 @@ def check_proprietary_skills_phase(errors: list[str]) -> None:
         for item in data.get("proprietary", [])
         if isinstance(item, dict) and "name" in item
     }
+    declared = int((data.get("counts") or {}).get("proprietary_acos") or len(expected))
     actual = {p.parent.name for p in skill_files}
-    if actual == expected and len(actual) == 14:
+    if actual == expected and len(actual) == declared:
         return
     rel = [str(p.relative_to(REPO_ROOT)) for p in skill_files]
     fail(
         errors,
-        f"Proprietary skills must be absent (Phase A/B) or exactly 14 registry skills (Phase C+): {rel}",
+        f"Proprietary skills must be absent (Phase A/B) or the registry-declared set ({declared}): {rel}",
     )
 
 

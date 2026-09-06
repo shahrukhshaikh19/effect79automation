@@ -738,6 +738,7 @@ def _write_product_spec(root: Path, *, thin: bool = False) -> None:
                 "archetype": "over-ear wireless headphone with articulated yoke",
                 "committed_direction": "split-cup planar with offset yoke pivot",
                 "rejected_directions": ["single sphere cups on a torus band"],
+                "reads_as": "over-ear headphone with two cups, a yoke, and a headband",
                 "form_directions": [
                     "split-cup planar with offset yoke pivot",
                     "single-shell circumaural with hidden hinge",
@@ -774,6 +775,8 @@ def _write_form_model(root: Path) -> None:
                 "clay_views": ["front", "profile", "rear", "front34", "rear34", "proportion"],
                 "production_glb_exported": False,
                 "beauty_lookdev_done": False,
+                "product_read_verdict": "pass",
+                "package_fit_ok": True,
             },
         ),
         encoding="utf-8",
@@ -896,6 +899,81 @@ class ProductFormTests(unittest.TestCase):
         self.assertEqual(set(invoke), {"EXT-BLD-01", "EXT-BLD-06", "EXT-BLD-12", "ACOS-06"})
         self.assertNotIn("ACOS-15", invoke)
         self.assertNotIn("ACOS-17", invoke)
+
+    def test_tws_spec_cannot_reject_category_as_clone(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            direction = root / "direction"
+            direction.mkdir()
+            (direction / "product_design.yaml").write_text(
+                _skill_body(
+                    "ACOS-15",
+                    {
+                        "archetype": "in-ear wireless earbuds plus a hinged charging case",
+                        "committed_direction": "ledger brick with keel wedges",
+                        "reads_as": "wide rectangular box",
+                        "rejected_directions": ["stem-bud plus bean/pill case (AirPods category silhouette)"],
+                        "form_directions": ["ledger brick", "book clamshell"],
+                    },
+                ),
+                encoding="utf-8",
+            )
+            (direction / "form_specification.yaml").write_text(
+                yaml.dump(
+                    {
+                        "part_architecture": [
+                            {"name": "Case_Base", "job": "wells", "interface": "hinge"},
+                            {"name": "Case_Lid", "job": "seal", "interface": "hinge"},
+                            {"name": "Earbud_Left", "job": "in-ear", "interface": "well"},
+                        ],
+                        "envelope": {
+                            "case_closed": {"width_mm": 68, "depth_mm": 42, "height_mm": 26},
+                            "earbud": {"acoustic_width_mm": 18, "keel_length_mm": 28},
+                        },
+                        "modeling_views": ["front", "profile", "rear", "front34"],
+                    },
+                    sort_keys=False,
+                ),
+                encoding="utf-8",
+            )
+            result = validate_product_design(root)
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("clone" in item or "wide bar" in item or "oversized" in item for item in result["invalid"]))
+
+    def test_unfinished_form_model_cannot_pass(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "direction").mkdir()
+            (root / "direction" / "form_model.yaml").write_text(
+                _skill_body(
+                    "ACOS-16",
+                    {
+                        "spec_ref": "direction/form_specification.yaml",
+                        "clay_views": ["front", "profile", "rear", "front34", "rear34", "proportion"],
+                        "production_glb_exported": False,
+                        "beauty_lookdev_done": False,
+                        "product_read_verdict": "pass",
+                        "package_fit_ok": True,
+                        "primitive_challenge": "Current clay still reads as a hard ledger blockout",
+                    },
+                ),
+                encoding="utf-8",
+            )
+            from runtime.host.product_form import validate_form_model
+
+            result = validate_form_model(root)
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("unfinished" in item or "blockout" in item for item in result["invalid"]))
+
+    def test_valid_headphone_spec_and_form_pass(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            _write_product_spec(root)
+            _write_form_model(root)
+            self.assertTrue(validate_product_design(root)["ok"], validate_product_design(root))
+            from runtime.host.product_form import validate_form_model
+
+            self.assertTrue(validate_form_model(root)["ok"], validate_form_model(root))
 
     def test_thin_adjective_spec_fails(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
