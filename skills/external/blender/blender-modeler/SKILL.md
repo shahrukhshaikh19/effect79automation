@@ -131,6 +131,10 @@ Prefer instances over duplicate geometry for repeated elements.
 
 See `../references/mcp-integration.md`
 
+## When owned by acos-product-form-modeler
+
+ACOS-16 owns product-form order. Do not stop at cube + bevel + through-boolean. Cavities: inset / extrude / vert falloff before a through-cut. Set joint origin before parenting. After every MCP hop, the clay must still match the spec `reads_as`. Modifier success is not product-read.
+
 ## Constraints
 
 ### MUST DO
@@ -146,6 +150,7 @@ See `../references/mcp-integration.md`
 - Leave default names (Cube.001)
 - Model without scale reference
 - Skip cleanup pass
+- Hand off a bevel-boolean dump as the industrial hero when ACOS-16 is the owner
 
 ## Reference Guide
 

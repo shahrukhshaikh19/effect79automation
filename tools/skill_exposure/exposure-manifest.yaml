@@ -36,13 +36,13 @@ skills:
     skill_md_sha256: e012f716ad93855c6f77365b6a8340ca243c6476dac6858f720253dc31144d93
   - name: acos-industrial-product-designer
     canonical: skills/acos/acos-industrial-product-designer
-    skill_md_sha256: 933a0073212c7e3cfa9085156f95817a19c5d6bdbfb8239638120341a2fc90c2
+    skill_md_sha256: 2a6894c1aa2e3f752de0e279e15266ca06b18714678f1958e1175fa1feb666cf
   - name: acos-motion-director
     canonical: skills/acos/acos-motion-director
     skill_md_sha256: 40dd4a550bbcb4ce8cddf0b3b5c7887d9e50c059e9fb3747d60ef67ba28bf57e
   - name: acos-product-form-modeler
     canonical: skills/acos/acos-product-form-modeler
-    skill_md_sha256: 53aabe6794ba9bbee0985347f87691d8ea6f5fe55f05ec3e9d8058ce92affabe
+    skill_md_sha256: 6954e91356d71ef33c7901524c29f80a94b3feb245eeadf74416e0f0adafa4ec
   - name: acos-quality-gate
     canonical: skills/acos/acos-quality-gate
     skill_md_sha256: b6705523fdf831be5142df242715fed3650f0e959f740c140482491b8f4b9ac8
@@ -69,7 +69,7 @@ skills:
     skill_md_sha256: 46a0c1cf5020dc46dc073691ca85a40e86af8aafc7e51057b2a965c068a05fe2
   - name: blender-modeler
     canonical: skills/external/blender/blender-modeler
-    skill_md_sha256: 96e5cd79f5f518f5ca2c93d4f128b4cf59af78a3207edcc021e070aa03aa4ad7
+    skill_md_sha256: 2a9c5460b985f5f532e882eedc3c0389739630ff36076398956ec623a20ebd28
   - name: camera-cinematography
     canonical: skills/external/blender/camera-cinematography
     skill_md_sha256: 7d743ca9732942c95e545a82a204d9a4dff9312bb1ced8698911382dcb364dd8
@@ -99,7 +99,7 @@ skills:
     skill_md_sha256: fbe7a2b9e66e66d2c956f650583d48385498b677ba1292f1dce9d1ffb1a77ea0
   - name: hard-surface
     canonical: skills/external/blender/hard-surface
-    skill_md_sha256: bfef5179a606fcea73ae6b88860f7e99c3b079601ad9823d583f9757669929e1
+    skill_md_sha256: 94b5661dd92516e23726bd42b337ce9976b052f0eb4335b91a9b2cff017e7466
   - name: img2threejs
     canonical: skills/external/img2threejs
     skill_md_sha256: c5c1b5affeb1d37c0b4d7def93188c4b7a6446d1211d70c85667059d4dec0fe6
@@ -120,7 +120,7 @@ skills:
     skill_md_sha256: 150c376701a76b4f09f731f0844099a3b0eab1c60e042a2af0f9db9affb2540c
   - name: prop-artist
     canonical: skills/external/blender/prop-artist
-    skill_md_sha256: 53fe5b2f6a1af811bb1c66f7cdecc5560486b3bd69411542d0aff15598078c58
+    skill_md_sha256: c6ef88d304e08cd76707f30d32670dd7a809cd85d7e2670139c30f1f62b75459
   - name: qa-review
     canonical: skills/external/blender/qa-review
     skill_md_sha256: 8ad6cafc2accb4b39d81954c5fedfa5d7f1136523f0ca0de9c729644a29482ca

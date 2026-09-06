@@ -154,6 +154,7 @@ def build_host_brief(
                 "Flagship lock: physical products also require /hard-surface. Do not skip it.",
                 "Flagship lock: industrial-form tasks need ACOS-15 spec, ACOS-16 clay, ACOS-17, and Product Form Gate APPROVED before lookdev, production GLB, or web.",
                 "Flagship lock: brand clone ≠ product class. Do not reject a compact case + in-ear instruments as AirPods. Clay that does not read as the product cannot advance.",
+                "Flagship lock: first MCP clay dump cannot pass. Write form_scene.yaml named-part bounds. Iterate until clay matches reads_as.",
                 "Contract: docs/FLAGSHIP_PREMIUM_WORKFLOW.md",
             ]
         )

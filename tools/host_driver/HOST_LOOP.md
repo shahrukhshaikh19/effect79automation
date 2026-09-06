@@ -37,5 +37,5 @@ Stage order: CREATIVE → Design Gate → (industrial form: PRODUCT_DESIGN → F
 - Flagship cannot leave production without `evidence/lookdev/` screenshots. After capture, a crushed/night-silhouette versus a lit mood reference sends the stage back to production. GLB + YAML is not a premium result.
 - Flagship craft is checked: director / modeler / prop-artist / materials / lookdev receipts, plus `hard-surface` for a physical product. A primitive-named or sphere/plane GLB, an unchecked modeling checkbox, or a macro lookdev crop fails production.
 - Industrial-form products require ACOS-15/16/17 and Product Form Gate APPROVED before lookdev. `form-critic-pass` is distinct from ship `critic-pass`. Product Form Gate cannot SHIP.
-- Category package is not a brand clone. Spec must include `reads_as`. Clay cannot advance without `product_read_verdict: pass` and `package_fit_ok: true`. A boxy unfinished blockout is a form fail.
+- Category package is not a brand clone. Spec must include `reads_as`. Clay cannot advance without `product_read_verdict: pass`, `package_fit_ok: true`, `first_dump_verdict: fail`, `clay_iteration >= 2`, and `direction/form_scene.yaml` part bounds. A boxy unfinished blockout is a form fail.
 - If Blender MCP/app is down: tell the user, wait, then `confirm-blender --mcp-live`. Never skip.

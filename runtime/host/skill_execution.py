@@ -84,6 +84,7 @@ SKILL_CONTRACTS: dict[str, dict[str, Any]] = {
             "clay_capture",
             "proportion_correct",
             "product_read_check",
+            "inspect_vs_reads_as",
             "joints_and_seams",
             "handoff_clay",
         ],

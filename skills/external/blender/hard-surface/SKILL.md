@@ -38,6 +38,8 @@ Reference → Scale Blockout → Primary Volumes → Panel Breaks
     → Greebles (instanced) → UV Planning → Materials
 ```
 
+When ACOS-16 owns clay: a through-boolean that exits the opposite face of a pocket enclosure is a fail. Cut cavities after the enclosure mass reads. Do not use boolean as the product identity.
+
 ## Boolean Workflow
 
 ```
@@ -151,6 +153,7 @@ Execute via MCP:
 - Model every bolt uniquely
 - Skip weighted normals on hard surface
 - Exceed polycount budget with micro-detail
+- Punch a well/cup through the enclosure floor when ACOS-16 owns clay
 
 ## Reference Guide
 

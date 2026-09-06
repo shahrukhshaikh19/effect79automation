@@ -765,6 +765,33 @@ def _write_product_spec(root: Path, *, thin: bool = False) -> None:
     )
 
 
+def _write_form_scene(root: Path, *, through_floor: bool = False) -> None:
+    (root / "direction").mkdir(parents=True, exist_ok=True)
+    lid_min_z = -80.0 if through_floor else 80.0
+    (root / "direction" / "form_scene.yaml").write_text(
+        yaml.dump(
+            {
+                "parts": [
+                    {
+                        "name": "earcup_shell",
+                        "bbox_mm": {"min": [-95, -40, 20], "max": [-20, 40, 120]},
+                    },
+                    {
+                        "name": "yoke",
+                        "bbox_mm": {"min": [-15, -10, 40], "max": [15, 10, 160]},
+                    },
+                    {
+                        "name": "headband",
+                        "bbox_mm": {"min": [-90, -8, lid_min_z], "max": [90, 8, 210]},
+                    },
+                ]
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+
+
 def _write_form_model(root: Path) -> None:
     (root / "direction").mkdir(parents=True, exist_ok=True)
     (root / "direction" / "form_model.yaml").write_text(
@@ -777,6 +804,8 @@ def _write_form_model(root: Path) -> None:
                 "beauty_lookdev_done": False,
                 "product_read_verdict": "pass",
                 "package_fit_ok": True,
+                "first_dump_verdict": "fail",
+                "clay_iteration": 2,
             },
         ),
         encoding="utf-8",
@@ -970,10 +999,110 @@ class ProductFormTests(unittest.TestCase):
             root = Path(tmp)
             _write_product_spec(root)
             _write_form_model(root)
+            _write_form_scene(root)
             self.assertTrue(validate_product_design(root)["ok"], validate_product_design(root))
             from runtime.host.product_form import validate_form_model
 
             self.assertTrue(validate_form_model(root)["ok"], validate_form_model(root))
+
+    def test_first_clay_dump_cannot_pass(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            _write_product_spec(root)
+            _write_form_scene(root)
+            (root / "direction" / "form_model.yaml").write_text(
+                _skill_body(
+                    "ACOS-16",
+                    {
+                        "spec_ref": "direction/form_specification.yaml",
+                        "clay_views": ["front", "profile", "rear", "front34", "rear34", "proportion"],
+                        "production_glb_exported": False,
+                        "beauty_lookdev_done": False,
+                        "product_read_verdict": "pass",
+                        "package_fit_ok": True,
+                        "first_dump_verdict": "pass",
+                        "clay_iteration": 1,
+                    },
+                ),
+                encoding="utf-8",
+            )
+            from runtime.host.product_form import validate_form_model
+
+            result = validate_form_model(root)
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("first" in item or "iteration" in item for item in result["invalid"]))
+
+    def test_missing_form_scene_blocks_clay(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            _write_product_spec(root)
+            _write_form_model(root)
+            _write_clay(root)
+            result = validate_clay_evidence(root, yaml.safe_load((root / "direction" / "form_specification.yaml").read_text(encoding="utf-8")))
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("form_scene" in item for item in result["issues"]))
+
+    def test_earbud_through_floor_fails_scene(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            direction = root / "direction"
+            direction.mkdir()
+            (direction / "form_specification.yaml").write_text(
+                yaml.dump(
+                    {
+                        "part_architecture": [
+                            {"name": "Case_Base", "job": "wells", "interface": "hinge"},
+                            {"name": "Case_Lid", "job": "seal", "interface": "hinge"},
+                            {"name": "Earbud_Left", "job": "in-ear", "interface": "well"},
+                        ],
+                        "envelope": {"case_closed": {"width_mm": 56, "depth_mm": 24, "height_mm": 22}},
+                    },
+                    sort_keys=False,
+                ),
+                encoding="utf-8",
+            )
+            (direction / "form_scene.yaml").write_text(
+                yaml.dump(
+                    {
+                        "parts": [
+                            {"name": "Case_Base", "bbox_mm": {"min": [-26, -12, 0], "max": [26, 12, 17]}},
+                            {"name": "Case_Lid", "bbox_mm": {"min": [-26, -12, 17], "max": [26, 12, 26]}},
+                            {"name": "Earbud_Left", "bbox_mm": {"min": [-10, -8, -20], "max": [-2, 8, 5]}},
+                        ]
+                    },
+                    sort_keys=False,
+                ),
+                encoding="utf-8",
+            )
+            from runtime.host.product_form import validate_form_scene
+
+            result = validate_form_scene(root)
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("floor" in item for item in result["issues"]))
+
+    def test_compact_tws_envelope_is_not_a_wide_bar(self) -> None:
+        from runtime.host.product_form import _package_aspect_issues
+
+        issues = _package_aspect_issues(
+            {
+                "case_closed": {"width_mm": 56, "depth_mm": 24, "height_mm": 22},
+                "earbud": {"acoustic_width_mm": 17},
+            }
+        )
+        self.assertFalse(any("wide bar" in item for item in issues))
+
+    def test_industrial_mood_refs_route_acos_02(self) -> None:
+        intake = intake_from_prompt(
+            "BUILD ONLY THIS. Product: VELAR original in-ear wireless earbuds and a hinged charging case. "
+            "This is a physical product. Blender must model this and export GLB. "
+            "Reference: mood only if supplied. Do not reconstruct any reference pixel-for-pixel."
+        )
+        intake["runtime_capabilities"]["blender"] = "AVAILABLE"
+        self.assertTrue(intake["task_signals"]["requires_reference_analysis"])
+        self.assertTrue(intake["task_signals"]["requires_industrial_form"])
+        decision = route_task(intake)
+        activated = set(decision["activated_skill_ids"]) | set(decision.get("planned_skill_ids") or [])
+        self.assertIn("ACOS-02", activated)
 
     def test_thin_adjective_spec_fails(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -1020,6 +1149,7 @@ class ProductFormTests(unittest.TestCase):
             root = Path(tmp)
             _write_product_spec(root)
             _write_form_model(root)
+            _write_form_scene(root)
             _write_clay(root)
             _write_form_critic(root, pass_id="form-1", verdict="pass")
             (root / "implementation").mkdir()

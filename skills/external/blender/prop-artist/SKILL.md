@@ -76,6 +76,7 @@ Reference → Scale blockout → Primary volumes → Secondary forms
 - Over-greeble everyday objects
 - Use sci-fi panel language on mundane props
 - Skip collision planning for interactables
+- Model an in-ear / handheld instrument as one sphere or one cube when ACOS-16 owns clay — housing, interface, and contact are separate volumes
 
 ## Reference Guide
 

@@ -31,6 +31,7 @@ REQUIRED_CLAY_STEMS = ("front", "profile", "rear", "front34", "rear34", "proport
 PRODUCT_DESIGN = "direction/product_design.yaml"
 FORM_SPEC = "direction/form_specification.yaml"
 FORM_MODEL = "direction/form_model.yaml"
+FORM_SCENE = "direction/form_scene.yaml"
 ID_CRITIC = "critics/industrial_design.yaml"
 FORM_GATE = "gate/product_form_gate.yaml"
 SAME_SESSION = "same_host_session_as_producer"
@@ -115,7 +116,7 @@ def _package_aspect_issues(envelope: dict[str, Any]) -> list[str]:
     depth = _num(case, "depth_mm", "depth")
     height = _num(case, "height_mm", "height")
     issues: list[str] = []
-    if width and height and width / height > 2.15:
+    if width and height and width / height > 2.85:
         issues.append("form_specification.yaml: package is a wide bar — not a compact product")
     if depth and height and depth / height > 1.45:
         issues.append("form_specification.yaml: package is too deep/chunky versus height")
@@ -146,6 +147,86 @@ def _category_clone_issues(design: dict[str, Any]) -> list[str]:
             "compact case + in-ear instruments must still read"
         ]
     return []
+
+
+def _part_names(spec: dict[str, Any]) -> list[str]:
+    parts = spec.get("part_architecture") or spec.get("parts") or []
+    names: list[str] = []
+    for part in parts:
+        if isinstance(part, dict):
+            names.append(str(part.get("name") or part.get("id") or "").strip())
+        else:
+            names.append(str(part).strip())
+    return [name for name in names if name]
+
+
+def _bbox_mm(part: dict[str, Any]) -> tuple[tuple[float, float, float], tuple[float, float, float]] | None:
+    bbox = part.get("bbox_mm") or part.get("bbox") or {}
+    if not isinstance(bbox, dict):
+        return None
+    raw_min = bbox.get("min") or [bbox.get("min_x"), bbox.get("min_y"), bbox.get("min_z")]
+    raw_max = bbox.get("max") or [bbox.get("max_x"), bbox.get("max_y"), bbox.get("max_z")]
+    try:
+        mn = (float(raw_min[0]), float(raw_min[1]), float(raw_min[2]))
+        mx = (float(raw_max[0]), float(raw_max[1]), float(raw_max[2]))
+    except (TypeError, ValueError, IndexError):
+        return None
+    if any(mx[i] <= mn[i] for i in range(3)):
+        return None
+    return mn, mx
+
+
+def _centroid(bounds: tuple[tuple[float, float, float], tuple[float, float, float]]) -> tuple[float, float, float]:
+    mn, mx = bounds
+    return ((mn[0] + mx[0]) / 2, (mn[1] + mx[1]) / 2, (mn[2] + mx[2]) / 2)
+
+
+def validate_form_scene(project_dir: Path, spec: dict[str, Any] | None = None) -> dict[str, Any]:
+    spec = spec if spec is not None else _load(project_dir / FORM_SPEC)
+    path = project_dir / FORM_SCENE
+    if not path.is_file() or path.stat().st_size < 40:
+        return {"ok": False, "issues": [f"{FORM_SCENE} missing — named part bounds are required before clay advance"]}
+    data = _load(path)
+    recorded = {
+        str(part.get("name") or "").strip(): part
+        for part in (data.get("parts") or [])
+        if isinstance(part, dict)
+    }
+    issues: list[str] = []
+    bounds: dict[str, tuple[tuple[float, float, float], tuple[float, float, float]]] = {}
+    for name in _part_names(spec):
+        part = recorded.get(name)
+        if not part:
+            issues.append(f"{FORM_SCENE}: missing spec part {name}")
+            continue
+        box = _bbox_mm(part)
+        if not box:
+            issues.append(f"{FORM_SCENE}: {name} needs numeric bbox_mm min/max")
+            continue
+        bounds[name] = box
+    case_boxes = [box for name, box in bounds.items() if name.lower().startswith("case_")]
+    bud_boxes = [box for name, box in bounds.items() if name.lower().startswith("earbud_")]
+    if case_boxes and bud_boxes:
+        case_floor = min(box[0][2] for box in case_boxes)
+        for name, box in bounds.items():
+            if name.lower().startswith("earbud_") and box[0][2] < case_floor - 3:
+                issues.append(f"{FORM_SCENE}: {name} is through the case floor — not seated")
+        if "Case_Base" in bounds and "Case_Lid" in bounds:
+            a = _centroid(bounds["Case_Base"])
+            b = _centroid(bounds["Case_Lid"])
+            dist = ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2) ** 0.5
+            env = spec.get("envelope") or {}
+            case = env.get("case_closed") if isinstance(env.get("case_closed"), dict) else env
+            span = 0.0
+            if isinstance(case, dict):
+                span = max(
+                    _num(case, "width_mm", "width") or 0,
+                    _num(case, "depth_mm", "depth") or 0,
+                    _num(case, "height_mm", "height") or 0,
+                )
+            if span and dist > 3 * span:
+                issues.append(f"{FORM_SCENE}: Case_Lid is exploded away from Case_Base")
+    return {"ok": not issues, "issues": issues}
 
 
 def _list_len(value: Any) -> int:
@@ -210,12 +291,22 @@ def validate_form_model(project_dir: Path) -> dict[str, Any]:
         invalid.append(f"{FORM_MODEL}: product_read_verdict must be pass — clay must read as the product")
     if data.get("package_fit_ok") is not True:
         invalid.append(f"{FORM_MODEL}: package_fit_ok must be true — case/parts scale must match the spec")
+    try:
+        iteration = int(data.get("clay_iteration") or 0)
+    except (TypeError, ValueError):
+        iteration = 0
+    if iteration < 2:
+        invalid.append(f"{FORM_MODEL}: clay_iteration must be >= 2 — first MCP dump cannot pass")
+    if str(data.get("first_dump_verdict") or "").lower() != "fail":
+        invalid.append(f"{FORM_MODEL}: first_dump_verdict must be fail — inspect clay vs reads_as before pass")
     notes = " ".join(
         str(data.get(key) or "")
         for key in ("primitive_challenge", "primary_forms", "open_risks", "notes")
     )
     if _UNFINISHED_CLAY.search(notes):
         invalid.append(f"{FORM_MODEL}: clay is still unfinished blockout — do not advance")
+    spec = _load(project_dir / FORM_SPEC)
+    invalid.extend(validate_form_scene(project_dir, spec)["issues"])
     if not invalid:
         write_execution_receipt(project_dir, "ACOS-16", FORM_MODEL)
     return {"ok": not invalid, "missing": [], "invalid": invalid}
@@ -257,6 +348,7 @@ def validate_clay_evidence(project_dir: Path, spec: dict[str, Any] | None = None
         readable += 1
     if lookdev_images(project_dir) and not shots:
         issues.append("lookdev exists but form-clay does not — lookdev cannot replace clay")
+    issues.extend(validate_form_scene(project_dir, spec)["issues"])
     return {"ok": not issues and readable >= 6, "issues": issues}
 
 

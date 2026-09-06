@@ -22,7 +22,8 @@ _VISUAL = re.compile(
     re.I,
 )
 _REF_MOOD = re.compile(
-    r"\b(reference image|reference still|mood reference|composition only)\b",
+    r"\b(reference image|reference still|mood reference|composition only|mood only|product-read)\b"
+    r"|reference:",
     re.I,
 )
 _RECONSTRUCT = re.compile(
@@ -72,6 +73,8 @@ def classify_signals(prompt: str) -> dict[str, Any]:
     wants_3d = bool(_3D.search(text))
     wants_reconstruct = bool(_RECONSTRUCT.search(text)) and not _NO_RECONSTRUCT.search(text)
     wants_ref = wants_reconstruct or bool(_REF_MOOD.search(text))
+    if bool(_INDUSTRIAL_FORM.search(text)) and re.search(r"\breference", text, re.I):
+        wants_ref = True
     wants_visual = bool(_VISUAL.search(text)) or wants_3d
     wants_motion = bool(_MOTION.search(text)) or bool(_SCROLL_STORY.search(text)) or bool(_LIVE_SCENE.search(text))
     authored = bool(_FLAGSHIP.search(text) or _BLENDER_REQUIRED.search(text))
