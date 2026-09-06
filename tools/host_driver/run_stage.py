@@ -115,10 +115,9 @@ def _write_todo(session: dict[str, Any], brief: dict[str, Any], extra: list[str]
     elif stage in {"INTAKE", "CREATIVE", "DESIGN_GATE"}:
         lines.extend(
             [
-                "- `direction/creative_direction.yaml` (if ACOS-01 planned)",
-                "- `direction/anti_generic_review.yaml` (if ACOS-03 planned)",
-                "- `direction/art_direction.yaml` (if ACOS-04 planned)",
-                "- `direction/experience_direction.yaml` (if ACOS-05 planned)",
+                "- `direction/creative_direction.yaml` (ACOS-01 only this stage).",
+                "- `direction/reference_analysis.yaml` if ACOS-02 is in invoke_now.",
+                "- Do not write ACOS-03 / ACOS-04 / ACOS-05 yet. Art and IA wait until after form.",
                 "- Each file must copy `skill_id` + `skill_md_sha256` from the brief and fill `procedure_evidence`.",
                 "- `skill_procedure_executed: true` or a producer name is not proof.",
                 "",
@@ -137,10 +136,11 @@ def _write_todo(session: dict[str, Any], brief: dict[str, Any], extra: list[str]
     elif stage == "FORM_AUTHORING":
         lines.extend(
             [
-                "- Invoke `/acos-product-form-modeler` plus listed Blender director/modeler/hard-surface skills.",
+                "- Invoke `/acos-product-form-modeler` only. Run `python tools/form/build_form.py --project <project_dir>`.",
+                "- Do not write `_clay_iterN.py`. Do not invoke /hard-surface unless the brief is weapons/vehicles/sci-fi.",
                 "- Clay only. Neutral grey. No beauty lookdev. No production GLB. No `implementation/`.",
-                "- Write `direction/form_model.yaml` and `evidence/form-clay/{front,profile,rear,front34,rear34,proportion}.png`.",
-                "- Add `joint.png` if mechanics are not none. Add `top.png` if the envelope needs plan.",
+                "- After PNGs exist, write `direction/clay_look.yaml` (sha256 + png_shows + gaps) before the next build or advance.",
+                "- Write `direction/form_model.yaml` with `builder: tools/form/build_form.py`.",
                 "",
             ]
         )
@@ -190,7 +190,7 @@ def _write_todo(session: dict[str, Any], brief: dict[str, Any], extra: list[str]
                     "- Flagship lock: write director / modeler / prop-artist / materials / lookdev artifacts with live hashes. Export YAML is not enough.",
                     "- Flagship lock: write at least two lookdev PNGs under evidence/lookdev/ from Blender viewport / browser. YAML is not lookdev.",
                     "- One lookdev shot must be a full hero or full scene. A surface macro is a fail.",
-                    "- Do not export a sphere/cylinder/torus/plane kitbash as the hero. Physical products need /hard-surface.",
+                    "- Do not export a sphere/cylinder/torus/plane kitbash as the hero. /hard-surface is only for weapons/vehicles/sci-fi.",
                     "- Industrial-form tasks: Product Form Gate must already be APPROVED. Do not start lookdev before that.",
                     "- If a mood reference exists, the render class must match (lit water/sky vs night-silhouette is a fail).",
                     "",

@@ -13,7 +13,7 @@
 - Skill artifacts must repeat the live `SKILL.md` hash and per-step `procedure_evidence`. `skill_procedure_executed: true` is not proof.
 - Flagship lookdev is pixel-checked. A lit mood reference versus a crushed night dump fails and returns to production. This is not GetLayers and does not copy their templates.
 - Flagship craft is checked: Blender skill artifacts (not only export), primitive GLB reject, brief honesty, and one full lookdev frame.
-- Industrial-form products cannot enter lookdev / production GLB / web until Product Form Gate APPROVED. That gate is not the ship Quality Gate. Category package is not a brand clone; clay cannot advance without a product-read pass, named-part bounds, and a failed first dump.
+- Industrial-form products cannot enter lookdev / production GLB / web until Product Form Gate APPROVED. That gate is not the ship Quality Gate. Clay cannot advance on a producer product-read pass. Producer writes fail or ready_for_critic. Form authoring runs `tools/form/build_form.py`. `clay_look.yaml` must match current clay PNG hashes before the next hop. CREATIVE invoke_now is ACOS-01 + ACOS-02 only. `/hard-surface` is not required for every physical product.
 - The conductor never invents APPROVED. It can only block an illegal one.
 
 ## Commands

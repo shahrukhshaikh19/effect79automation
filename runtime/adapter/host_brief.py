@@ -19,9 +19,11 @@ BRIEF_MD = HOST_DIR / "CURRENT_HOST_BRIEF.md"
 BRIEF_YAML = HOST_DIR / "CURRENT_HOST_BRIEF.yaml"
 
 CREATIVE_STAGES = {"REFERENCE_ANALYSIS", "CREATIVE_DIRECTION", "DESIGN_EXPERIENCE"}
+CREATIVE_NOW_IDS = {"ACOS-01", "ACOS-02"}
 PRODUCTION_STAGES = {"PRODUCTION", "SPECIALIST_ROUTING"}
-FORM_AUTHORING_IDS = {"ACOS-16", "EXT-BLD-01", "EXT-BLD-02", "EXT-BLD-03", "EXT-BLD-13"}
+FORM_AUTHORING_IDS = {"ACOS-16"}
 FORM_PATH_IDS = {"ACOS-15", "ACOS-16", "ACOS-17"}
+FORM_BUILDER = "tools/form/build_form.py"
 CRITIC_STAGES = {"INDEPENDENT_CRITICS"}
 GATE_STAGES = {"QUALITY_GATE", "MEMORY_CANDIDATES"}
 
@@ -66,7 +68,8 @@ def select_invoke_ids(
             "QUALITY_GATE",
         }
     ):
-        return _ids_for_stages(planned, activations, CREATIVE_STAGES), "creative_and_design_gate"
+        ids = [sid for sid in _ids_for_stages(planned, activations, CREATIVE_STAGES) if sid in CREATIVE_NOW_IDS]
+        return ids, "creative_and_design_gate"
     if workflow_stage == "PRODUCT_DESIGN":
         return [sid for sid in planned if sid == "ACOS-15"], "industrial_product_design"
     if workflow_stage == "FORM_AUTHORING":
@@ -91,7 +94,8 @@ def select_invoke_ids(
         return _ids_for_stages(planned, activations, GATE_STAGES), "quality_gate"
     if design_gate == "APPROVED":
         return _ids_for_stages(planned, activations, PRODUCTION_STAGES), "specialist_production"
-    return _ids_for_stages(planned, activations, CREATIVE_STAGES), "creative_and_design_gate"
+    ids = [sid for sid in _ids_for_stages(planned, activations, CREATIVE_STAGES) if sid in CREATIVE_NOW_IDS]
+    return ids, "creative_and_design_gate"
 
 
 def build_host_brief(
@@ -151,10 +155,12 @@ def build_host_brief(
                 "Flagship lock: lookdev screenshots under evidence/lookdev/ before leaving production. A night-silhouette versus a lit mood reference is a fail — go back to lookdev.",
                 "Flagship lock: director/modeler/prop/materials/lookdev artifacts + receipts are required. Export YAML alone is not craft.",
                 "Flagship lock: a sphere/cylinder/plane dump, unchecked modeling checkbox, or macro lookdev crop is a production fail.",
-                "Flagship lock: physical products also require /hard-surface. Do not skip it.",
+                "Flagship lock: /hard-surface is only for weapons, vehicles, and sci-fi machinery — not every physical product.",
                 "Flagship lock: industrial-form tasks need ACOS-15 spec, ACOS-16 clay, ACOS-17, and Product Form Gate APPROVED before lookdev, production GLB, or web.",
                 "Flagship lock: brand clone ≠ product class. Do not reject a compact case + in-ear instruments as AirPods. Clay that does not read as the product cannot advance.",
-                "Flagship lock: first MCP clay dump cannot pass. Write form_scene.yaml named-part bounds. Iterate until clay matches reads_as.",
+                "Flagship lock: first MCP clay dump cannot pass. Write form_scene.yaml named-part bounds. Producer never writes product_read pass — fail stays, ready_for_critic goes to ACOS-17.",
+                f"Flagship lock: form authoring runs `{FORM_BUILDER}` — do not write _clay_iterN.py novels.",
+                "Flagship lock: after clay PNGs exist, write direction/clay_look.yaml from those pixels (sha256 + png_shows + gaps). No next build or advance until the look matches the current files.",
                 "Contract: docs/FLAGSHIP_PREMIUM_WORKFLOW.md",
             ]
         )

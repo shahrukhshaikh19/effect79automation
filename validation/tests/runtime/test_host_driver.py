@@ -24,6 +24,7 @@ from runtime.host.design_gate import evaluate_host_design_gate
 from runtime.host.independence import implementation_fingerprint
 from runtime.host.craft_lock import inspect_hero_asset
 from runtime.host.product_form import (
+    clay_png_sha256,
     evaluate_product_form_gate,
     next_stage_after_design_gate,
     requires_industrial_form,
@@ -260,6 +261,26 @@ class BriefStageTests(unittest.TestCase):
         self.assertNotIn("ACOS-10", invoke)
         self.assertNotIn("ACOS-06", invoke)
 
+    def test_creative_invoke_is_only_thesis_and_refs(self) -> None:
+        activations = {
+            "ACOS-01": {"stage": "CREATIVE_DIRECTION"},
+            "ACOS-02": {"stage": "REFERENCE_ANALYSIS"},
+            "ACOS-03": {"stage": "DESIGN_EXPERIENCE"},
+            "ACOS-04": {"stage": "DESIGN_EXPERIENCE"},
+            "ACOS-05": {"stage": "DESIGN_EXPERIENCE"},
+        }
+        invoke, focus = select_invoke_ids(
+            ["ACOS-01", "ACOS-02", "ACOS-03", "ACOS-04", "ACOS-05"],
+            activations,
+            workflow_stage="CREATIVE",
+            design_gate="PENDING",
+        )
+        self.assertEqual(set(invoke), {"ACOS-01", "ACOS-02"})
+        self.assertEqual(focus, "creative_and_design_gate")
+        self.assertNotIn("ACOS-03", invoke)
+        self.assertNotIn("ACOS-04", invoke)
+        self.assertNotIn("ACOS-05", invoke)
+
     def test_production_after_gate(self) -> None:
         activations = {
             "ACOS-01": {"stage": "CREATIVE_DIRECTION"},
@@ -293,6 +314,29 @@ class DesignGateTests(unittest.TestCase):
             )
             result = evaluate_host_design_gate(root, ["ACOS-01"])
             self.assertEqual(result["status"], "REJECTED")
+
+    def test_design_gate_does_not_require_creative_quintet(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "direction").mkdir()
+            (root / "direction" / "creative_direction.yaml").write_text(
+                _skill_body(
+                    "ACOS-01",
+                    {
+                        "central_creative_thesis": (
+                            "VELAR is a pocket case that opens to two in-ear instruments, "
+                            "not a logo wall or a generic gadget hero."
+                        ),
+                        "project_specificity": {
+                            "name_swap_test": "pass",
+                            "justification": "The object is a hinged case plus two buds, not a name-swap perfume.",
+                        },
+                    },
+                ),
+                encoding="utf-8",
+            )
+            result = evaluate_host_design_gate(root, ["ACOS-01", "ACOS-03", "ACOS-04", "ACOS-05"])
+            self.assertEqual(result["status"], "APPROVED", result)
 
 
 class EvidenceContractTests(unittest.TestCase):
@@ -425,10 +469,11 @@ class FlagshipWorkflowTests(unittest.TestCase):
         decision = route_task(intake)
         activated = set(decision["activated_skill_ids"]) | set(decision.get("planned_skill_ids") or [])
         self.assertEqual(decision["status"], "ROUTED")
-        for skill_id in ("EXT-3DWEB-02", "EXT-3DWEB-03", "EXT-3DWEB-04", "EXT-BLD-01", "EXT-BLD-12", "EXT-BLD-13"):
+        for skill_id in ("EXT-3DWEB-02", "EXT-3DWEB-03", "EXT-3DWEB-04", "EXT-BLD-01", "EXT-BLD-12"):
             self.assertIn(skill_id, activated)
+        self.assertNotIn("EXT-BLD-13", activated)
 
-    def test_headphone_routes_hard_surface(self) -> None:
+    def test_headphone_does_not_force_hard_surface(self) -> None:
         intake = intake_from_prompt(
             "Create a flagship cinematic 3D launch website for a premium over-ear headphone. "
             "Blender must model this and export GLB."
@@ -436,8 +481,20 @@ class FlagshipWorkflowTests(unittest.TestCase):
         intake["runtime_capabilities"]["blender"] = "AVAILABLE"
         decision = route_task(intake)
         activated = set(decision["activated_skill_ids"]) | set(decision.get("planned_skill_ids") or [])
-        self.assertIn("EXT-BLD-13", activated)
+        self.assertNotIn("EXT-BLD-13", activated)
         self.assertTrue(intake["task_signals"]["requires_physical_product"])
+        self.assertFalse(intake["task_signals"]["requires_hard_surface"])
+
+    def test_weapon_routes_hard_surface(self) -> None:
+        intake = intake_from_prompt(
+            "Create a flagship cinematic 3D launch website for an original sci-fi weapon. "
+            "Blender must model this and export GLB."
+        )
+        intake["runtime_capabilities"]["blender"] = "AVAILABLE"
+        decision = route_task(intake)
+        activated = set(decision["activated_skill_ids"]) | set(decision.get("planned_skill_ids") or [])
+        self.assertIn("EXT-BLD-13", activated)
+        self.assertTrue(intake["task_signals"]["requires_hard_surface"])
 
     def test_landscape_does_not_route_hard_surface(self) -> None:
         intake = intake_from_prompt(
@@ -802,10 +859,11 @@ def _write_form_model(root: Path) -> None:
                 "clay_views": ["front", "profile", "rear", "front34", "rear34", "proportion"],
                 "production_glb_exported": False,
                 "beauty_lookdev_done": False,
-                "product_read_verdict": "pass",
+                "product_read_verdict": "ready_for_critic",
                 "package_fit_ok": True,
                 "first_dump_verdict": "fail",
                 "clay_iteration": 2,
+                "builder": "tools/form/build_form.py",
             },
         ),
         encoding="utf-8",
@@ -833,7 +891,37 @@ def _write_clay(root: Path, stems: tuple[str, ...] | None = None, *, crushed: bo
                 b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", ihdr) + chunk(b"IDAT", compressed) + chunk(b"IEND", b"")
             )
         else:
-            _noise_png(clay / f"{stem}.png", 160, 120, 110)
+            _noise_png(clay / f"{stem}.png", 400, 280, 110)
+
+
+def _write_clay_look(root: Path) -> None:
+    clay = root / "evidence" / "form-clay"
+    views = []
+    for path in sorted(clay.glob("*.png")):
+        views.append(
+            {
+                "file": f"evidence/form-clay/{path.name}",
+                "sha256": clay_png_sha256(path),
+                "png_shows": (
+                    f"{path.stem} shows a compact enclosure and two seated instruments "
+                    f"with a readable seam and no through-floor stem"
+                ),
+            }
+        )
+    (root / "direction").mkdir(parents=True, exist_ok=True)
+    (root / "direction" / "clay_look.yaml").write_text(
+        yaml.dump(
+            {
+                "views": views,
+                "gaps": [
+                    "front still hides the well lips so the instruments read as blobs on a lid",
+                    "profile shows the hinge pin proud of the rear mass and the lid thickness jumping",
+                ],
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
 
 
 def _write_form_critic(root: Path, *, pass_id: str, verdict: str = "pass") -> None:
@@ -919,7 +1007,8 @@ class ProductFormTests(unittest.TestCase):
         self.assertEqual(invoke, ["ACOS-15"])
         self.assertEqual(focus, "industrial_product_design")
         invoke, focus = select_invoke_ids(planned, activations, workflow_stage="FORM_AUTHORING", design_gate="APPROVED")
-        self.assertEqual(set(invoke), {"ACOS-16", "EXT-BLD-01"})
+        self.assertEqual(invoke, ["ACOS-16"])
+        self.assertNotIn("EXT-BLD-01", invoke)
         self.assertNotIn("EXT-BLD-06", invoke)
         self.assertNotIn("EXT-BLD-12", invoke)
         invoke, focus = select_invoke_ids(planned, activations, workflow_stage="FORM_CRITICS", design_gate="APPROVED")
@@ -929,7 +1018,7 @@ class ProductFormTests(unittest.TestCase):
         self.assertNotIn("ACOS-15", invoke)
         self.assertNotIn("ACOS-17", invoke)
 
-    def test_tws_spec_cannot_reject_category_as_clone(self) -> None:
+    def test_tws_rejecting_airpods_language_does_not_invent_a_box(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             direction = root / "direction"
@@ -939,10 +1028,10 @@ class ProductFormTests(unittest.TestCase):
                     "ACOS-15",
                     {
                         "archetype": "in-ear wireless earbuds plus a hinged charging case",
-                        "committed_direction": "ledger brick with keel wedges",
-                        "reads_as": "wide rectangular box",
+                        "committed_direction": "compact pebble case with two in-ear instruments",
+                        "reads_as": "pocket charging case plus two in-ear earbuds",
                         "rejected_directions": ["stem-bud plus bean/pill case (AirPods category silhouette)"],
-                        "form_directions": ["ledger brick", "book clamshell"],
+                        "form_directions": ["compact pebble", "book clamshell"],
                     },
                 ),
                 encoding="utf-8",
@@ -966,8 +1055,8 @@ class ProductFormTests(unittest.TestCase):
                 encoding="utf-8",
             )
             result = validate_product_design(root)
-            self.assertFalse(result["ok"])
-            self.assertTrue(any("clone" in item or "wide bar" in item or "oversized" in item for item in result["invalid"]))
+            self.assertTrue(result["ok"], result)
+            self.assertFalse(any("clone" in item or "wide bar" in item for item in result["invalid"]))
 
     def test_unfinished_form_model_cannot_pass(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -1031,6 +1120,77 @@ class ProductFormTests(unittest.TestCase):
             result = validate_form_model(root)
             self.assertFalse(result["ok"])
             self.assertTrue(any("first" in item or "iteration" in item for item in result["invalid"]))
+
+    def test_producer_cannot_self_pass_product_read(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            _write_product_spec(root)
+            _write_form_scene(root)
+            _write_form_model(root)
+            model = yaml.safe_load((root / "direction" / "form_model.yaml").read_text(encoding="utf-8"))
+            model["product_read_verdict"] = "pass"
+            (root / "direction" / "form_model.yaml").write_text(yaml.dump(model, sort_keys=False), encoding="utf-8")
+            from runtime.host.product_form import validate_form_model
+
+            result = validate_form_model(root)
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("cannot write product_read_verdict: pass" in item for item in result["invalid"]))
+
+    def test_clay_without_look_cannot_go_to_critic(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            _write_product_spec(root)
+            _write_form_scene(root)
+            _write_form_model(root)
+            _write_clay(root)
+            from runtime.host.product_form import validate_form_model
+
+            result = validate_form_model(root)
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("clay_look" in item for item in result["invalid"]))
+
+    def test_stale_or_canned_clay_look_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            _write_product_spec(root)
+            _write_form_scene(root)
+            _write_form_model(root)
+            _write_clay(root)
+            (root / "direction" / "clay_look.yaml").write_text(
+                yaml.dump(
+                    {
+                        "views": [
+                            {
+                                "file": f"evidence/form-clay/{stem}.png",
+                                "sha256": "0" * 64,
+                                "png_shows": "case + two buds",
+                            }
+                            for stem in ("front", "profile", "rear", "front34", "rear34", "proportion")
+                        ],
+                        "gaps": ["fine", "ok"],
+                    },
+                    sort_keys=False,
+                ),
+                encoding="utf-8",
+            )
+            from runtime.host.product_form import validate_clay_look
+
+            result = validate_clay_look(root)
+            self.assertFalse(result["ok"])
+            self.assertTrue(any("stale" in item or "canned" in item or "png_shows" in item for item in result["issues"]))
+
+    def test_matching_clay_look_passes(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            _write_product_spec(root)
+            _write_form_scene(root)
+            _write_form_model(root)
+            _write_clay(root)
+            _write_clay_look(root)
+            from runtime.host.product_form import validate_form_model, validate_clay_look
+
+            self.assertTrue(validate_clay_look(root)["ok"], validate_clay_look(root))
+            self.assertTrue(validate_form_model(root)["ok"], validate_form_model(root))
 
     def test_missing_form_scene_blocks_clay(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -1188,6 +1348,38 @@ class ProductFormTests(unittest.TestCase):
             )
             self.assertFalse(result["ok"])
             self.assertTrue(any("product form gate" in item for item in result["invalid"]))
+
+    def test_form_builder_plans_named_tws_parts_and_cameras(self) -> None:
+        from runtime.host.form_builder import build_plan, write_plan
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            direction = root / "direction"
+            direction.mkdir()
+            (direction / "form_specification.yaml").write_text(
+                yaml.dump(
+                    {
+                        "part_architecture": [
+                            {"name": "Case_Base"},
+                            {"name": "Case_Lid"},
+                            {"name": "Earbud_Left"},
+                            {"name": "Earbud_Right"},
+                        ],
+                        "envelope": {"case_closed": {"width_mm": 54, "depth_mm": 26, "height_mm": 28}},
+                    },
+                    sort_keys=False,
+                ),
+                encoding="utf-8",
+            )
+            plan = build_plan(root)
+            names = [part["name"] for part in plan["parts"]]
+            self.assertEqual(names[:4], ["Case_Base", "Case_Lid", "Earbud_Left", "Earbud_Right"])
+            self.assertEqual([cam["name"] for cam in plan["cameras"]], list(
+                ("front", "profile", "rear", "front34", "rear34", "proportion")
+            ))
+            path = write_plan(root, plan)
+            self.assertTrue(path.is_file())
+            self.assertTrue((direction / "form_scene.yaml").is_file())
 
 
 if __name__ == "__main__":

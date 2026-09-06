@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from runtime.adapter.host_brief import CREATIVE_NOW_IDS
 from runtime.host.artifact_contract import load_yaml, required_creative_files, validate_creative_artifacts
 
 
@@ -12,7 +13,12 @@ def _text(value: Any) -> str:
     return str(value or "").strip()
 
 
+def design_gate_skill_ids(planned_ids: list[str]) -> list[str]:
+    return [sid for sid in planned_ids if sid in CREATIVE_NOW_IDS]
+
+
 def evaluate_host_design_gate(project_dir: Path, planned_ids: list[str], routing_id: str | None = None) -> dict[str, Any]:
+    planned_ids = design_gate_skill_ids(planned_ids)
     files = validate_creative_artifacts(project_dir, planned_ids)
     if files["missing"]:
         return {

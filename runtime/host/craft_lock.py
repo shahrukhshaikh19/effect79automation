@@ -39,7 +39,7 @@ PRIMITIVE_NAME = re.compile(
 
 def required_craft_ids(signals: dict[str, Any] | None, planned_ids: list[str] | None = None) -> list[str]:
     ids = ["EXT-BLD-01", "EXT-BLD-02", "EXT-BLD-03", "EXT-BLD-05", "EXT-BLD-06"]
-    if (signals or {}).get("requires_physical_product") or (planned_ids and "EXT-BLD-13" in planned_ids):
+    if (signals or {}).get("requires_hard_surface") or (planned_ids and "EXT-BLD-13" in planned_ids):
         ids.append("EXT-BLD-13")
     return ids
 

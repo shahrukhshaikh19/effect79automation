@@ -156,7 +156,7 @@ routing_rules:
       - {skill_id: EXT-BLD-08, reason: flagship Blender lighting for lookdev, not a beauty-dish default}
       - {skill_id: EXT-BLD-11, reason: flagship asset budgets before browser import}
       - {skill_id: EXT-BLD-12, reason: flagship GLB export is the production handoff}
-      - {skill_id: EXT-BLD-13, reason: flagship hard-surface for a physical product hero, if: requires_physical_product}
+      - {skill_id: EXT-BLD-13, reason: hard-surface only for weapons / vehicles / sci-fi machinery, if: requires_hard_surface}
 
   - id: flagship_industrial_form
     when:

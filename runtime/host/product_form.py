@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
+import hashlib
 import re
 
 import yaml
@@ -27,6 +28,8 @@ def _load(path: Path) -> dict[str, Any]:
 
 
 CLAY_DIR = "evidence/form-clay"
+CLAY_LOOK = "direction/clay_look.yaml"
+FORM_BUILDER = "tools/form/build_form.py"
 REQUIRED_CLAY_STEMS = ("front", "profile", "rear", "front34", "rear34", "proportion")
 PRODUCT_DESIGN = "direction/product_design.yaml"
 FORM_SPEC = "direction/form_specification.yaml"
@@ -89,9 +92,6 @@ def form_gate_approved(project_dir: Path) -> bool:
     return form_gate_status(project_dir) == "APPROVED"
 
 
-_TWS_ARCHETYPE = re.compile(r"\b(earbud|in-ear|tws|charging case|iem)\b", re.I)
-_CATEGORY_KILL = re.compile(r"pill|bean case|stem-bud|stem bud|airpods|category silhouette", re.I)
-_PRODUCT_READ = re.compile(r"in-ear|ear tip|short stem|housing|compact case|pocket|cup|yoke|headband", re.I)
 _UNFINISHED_CLAY = re.compile(
     r"\b(blockout|placeholder|not a finished|still a box|wedge|cube hero|keel identity are incomplete)\b",
     re.I,
@@ -109,44 +109,16 @@ def _num(data: dict[str, Any], *keys: str) -> float | None:
 
 
 def _package_aspect_issues(envelope: dict[str, Any]) -> list[str]:
-    case = envelope.get("case_closed") if isinstance(envelope.get("case_closed"), dict) else envelope
-    if not isinstance(case, dict):
-        return []
-    width = _num(case, "width_mm", "width")
-    depth = _num(case, "depth_mm", "depth")
-    height = _num(case, "height_mm", "height")
-    issues: list[str] = []
-    if width and height and width / height > 2.85:
-        issues.append("form_specification.yaml: package is a wide bar — not a compact product")
-    if depth and height and depth / height > 1.45:
-        issues.append("form_specification.yaml: package is too deep/chunky versus height")
-    bud = envelope.get("earbud") if isinstance(envelope.get("earbud"), dict) else None
-    if isinstance(bud, dict) and width:
-        bud_w = _num(bud, "acoustic_width_mm", "width_mm", "width")
-        if bud_w and width > 1.2 * (2 * bud_w + 16):
-            issues.append("form_specification.yaml: case is oversized versus the two instruments")
-    return issues
-
-
-def _category_clone_issues(design: dict[str, Any]) -> list[str]:
-    blob = " ".join(
-        [
-            str(design.get("archetype") or ""),
-            str(design.get("committed_direction") or ""),
-            str(design.get("reads_as") or ""),
-            str(design.get("rejected_directions") or ""),
-        ]
-    )
-    if not _TWS_ARCHETYPE.search(str(design.get("archetype") or "")):
-        return []
-    rejected = str(design.get("rejected_directions") or "")
-    committed = f"{design.get('committed_direction') or ''} {design.get('reads_as') or ''}"
-    if _CATEGORY_KILL.search(rejected) and not _PRODUCT_READ.search(committed):
-        return [
-            "direction/product_design.yaml: rejected the category package as a brand clone — "
-            "compact case + in-ear instruments must still read"
-        ]
+    """Envelope numbers belong to the spec. Do not invent a taller/narrower product here."""
+    del envelope
     return []
+
+
+_FAKE_LOOK = re.compile(
+    r"^(case \+ two buds|reads correctly|looks like the product|pass|ok|good|readable|"
+    r"compact case \+ two buds|case and two earbuds)\.?$",
+    re.I,
+)
 
 
 def _part_names(spec: dict[str, Any]) -> list[str]:
@@ -255,7 +227,6 @@ def validate_product_design(project_dir: Path) -> dict[str, Any]:
                 invalid.append(f"{rel}: archetype / committed_direction missing")
             if len(str(data.get("reads_as") or "")) < 20:
                 invalid.append(f"{rel}: reads_as missing — a stranger must name the object from silhouette")
-            invalid.extend(_category_clone_issues(data))
         if rel == FORM_SPEC:
             parts = data.get("part_architecture") or data.get("parts")
             if _list_len(parts) < 3:
@@ -263,8 +234,6 @@ def validate_product_design(project_dir: Path) -> dict[str, Any]:
             envelope = data.get("envelope") or {}
             if not envelope:
                 invalid.append(f"{rel}: envelope dimensions missing")
-            else:
-                invalid.extend(_package_aspect_issues(envelope))
             views = data.get("modeling_views") or []
             if _list_len(views) < 4:
                 invalid.append(f"{rel}: modeling_views must list the clay set")
@@ -285,10 +254,26 @@ def validate_form_model(project_dir: Path) -> dict[str, Any]:
         invalid.append(f"{FORM_MODEL}: beauty lookdev is forbidden before Product Form Gate")
     if not str(data.get("spec_ref") or ""):
         invalid.append(f"{FORM_MODEL}: spec_ref missing")
+    builder = str(data.get("builder") or "").replace("\\", "/")
+    if not builder.endswith("form/build_form.py"):
+        invalid.append(f"{FORM_MODEL}: builder must be {FORM_BUILDER} — do not write _clay_iterN.py novels")
     if _list_len(data.get("clay_views")) < 6:
         invalid.append(f"{FORM_MODEL}: clay_views must list the required stems")
-    if str(data.get("product_read_verdict") or "").lower() != "pass":
-        invalid.append(f"{FORM_MODEL}: product_read_verdict must be pass — clay must read as the product")
+    read_verdict = str(data.get("product_read_verdict") or "").lower()
+    if read_verdict == "pass":
+        invalid.append(
+            f"{FORM_MODEL}: producer cannot write product_read_verdict: pass — "
+            "that verdict belongs to ACOS-17 in a distinct chat"
+        )
+    elif read_verdict == "fail":
+        invalid.append(
+            f"{FORM_MODEL}: product_read_verdict is fail — stay in FORM_AUTHORING or stop; "
+            "do not advance unread clay"
+        )
+    elif read_verdict != "ready_for_critic":
+        invalid.append(
+            f"{FORM_MODEL}: product_read_verdict must be fail or ready_for_critic — never producer pass"
+        )
     if data.get("package_fit_ok") is not True:
         invalid.append(f"{FORM_MODEL}: package_fit_ok must be true — case/parts scale must match the spec")
     try:
@@ -307,6 +292,8 @@ def validate_form_model(project_dir: Path) -> dict[str, Any]:
         invalid.append(f"{FORM_MODEL}: clay is still unfinished blockout — do not advance")
     spec = _load(project_dir / FORM_SPEC)
     invalid.extend(validate_form_scene(project_dir, spec)["issues"])
+    if clay_images(project_dir):
+        invalid.extend(validate_clay_look(project_dir)["issues"])
     if not invalid:
         write_execution_receipt(project_dir, "ACOS-16", FORM_MODEL)
     return {"ok": not invalid, "missing": [], "invalid": invalid}
@@ -321,6 +308,68 @@ def clay_images(project_dir: Path) -> list[Path]:
         if path.is_file() and path.suffix.lower() in {".png", ".webp"} and path.stat().st_size > 4_000:
             found.append(path)
     return sorted(found)
+
+
+def clay_png_sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def validate_clay_look(project_dir: Path) -> dict[str, Any]:
+    """Refuse the next hop unless the current clay PNGs were actually read."""
+    issues: list[str] = []
+    shots = clay_images(project_dir)
+    if not shots:
+        issues.append(f"{CLAY_LOOK}: clay PNGs missing — nothing to look at")
+        return {"ok": False, "issues": issues}
+    path = project_dir / CLAY_LOOK
+    if not path.is_file() or path.stat().st_size < 40:
+        issues.append(
+            f"{CLAY_LOOK} missing — read the clay PNGs, write sha256 + png_shows + gaps; "
+            "no next build_form.py run or advance until then"
+        )
+        return {"ok": False, "issues": issues}
+    data = _load(path)
+    views = data.get("views") or []
+    if not isinstance(views, list) or len(views) < 6:
+        issues.append(f"{CLAY_LOOK}: views[] must cover the clay set")
+    recorded = {
+        str(row.get("file") or row.get("path") or "").replace("\\", "/"): row
+        for row in views
+        if isinstance(row, dict)
+    }
+    live = {f"{CLAY_DIR}/{shot.name}": shot for shot in shots}
+    for rel, shot in live.items():
+        row = recorded.get(rel) or recorded.get(shot.name)
+        if not row:
+            issues.append(f"{CLAY_LOOK}: missing view for {rel}")
+            continue
+        expected = clay_png_sha256(shot)
+        got = str(row.get("sha256") or "").strip().lower()
+        if got != expected:
+            issues.append(
+                f"{CLAY_LOOK}: {rel} sha256 is stale — look at the current PNG before the next hop"
+            )
+        shown = str(row.get("png_shows") or row.get("shows") or "").strip()
+        if len(shown) < 40 or _FAKE_LOOK.search(shown):
+            issues.append(
+                f"{CLAY_LOOK}: {rel} png_shows must name what the pixels show — not a canned pass phrase"
+            )
+    gaps = data.get("gaps") or []
+    if not isinstance(gaps, list) or len(gaps) < 2:
+        issues.append(f"{CLAY_LOOK}: gaps[] must list at least two pixel misses citing a clay stem")
+    else:
+        stems = {shot.stem.lower() for shot in shots}
+        cited = 0
+        for gap in gaps:
+            text = gap if isinstance(gap, str) else " ".join(str(v) for v in (gap or {}).values())
+            if len(text.strip()) < 24:
+                issues.append(f"{CLAY_LOOK}: each gap must say what the picture misses")
+                continue
+            if any(stem in text.lower() for stem in stems):
+                cited += 1
+        if cited < 2:
+            issues.append(f"{CLAY_LOOK}: at least two gaps must cite a clay filename stem")
+    return {"ok": not issues, "issues": issues}
 
 
 def validate_clay_evidence(project_dir: Path, spec: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -349,6 +398,7 @@ def validate_clay_evidence(project_dir: Path, spec: dict[str, Any] | None = None
     if lookdev_images(project_dir) and not shots:
         issues.append("lookdev exists but form-clay does not — lookdev cannot replace clay")
     issues.extend(validate_form_scene(project_dir, spec)["issues"])
+    issues.extend(validate_clay_look(project_dir)["issues"])
     return {"ok": not issues and readable >= 6, "issues": issues}
 
 

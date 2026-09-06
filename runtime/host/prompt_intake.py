@@ -56,6 +56,13 @@ _PHYSICAL_PRODUCT = re.compile(
     r")\b",
     re.I,
 )
+_HARD_SURFACE = re.compile(
+    r"\b("
+    r"weapon|spaceship|sci-?fi|mecha|greeble|panel lines?|"
+    r"fighter (?:jet|craft)|armored vehicle"
+    r")\b",
+    re.I,
+)
 _INDUSTRIAL_FORM = re.compile(
     r"\b("
     r"physical (product|instrument|device|object)|"
@@ -104,6 +111,7 @@ def classify_signals(prompt: str) -> dict[str, Any]:
         "requires_frontend": True,
         "requires_reference_analysis": wants_ref,
         "requires_physical_product": bool(_PHYSICAL_PRODUCT.search(text)),
+        "requires_hard_surface": bool(_HARD_SURFACE.search(text)),
         "requires_industrial_form": bool(_INDUSTRIAL_FORM.search(text)) and wants_3d,
         "reconstruction_path": reconstruction,
         "quality_bar": "flagship" if wants_3d and reconstruction == "blender_authoring" else "standard",

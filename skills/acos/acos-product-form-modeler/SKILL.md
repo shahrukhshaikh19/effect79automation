@@ -88,12 +88,12 @@ Do **not** activate to:
 ## Exact procedure / workflow
 
 1. **ingest_spec** — Read both ACOS-15 files. If spec is adjective-only, return to ACOS-15.
-2. **dimensioned_blockout** — Blockout matches envelope numbers. Default-named Cube/Sphere/Cylinder as the **hero** is a fail even as a start if left untransformed into specified sections. Follow the executable form recipe below — do not stop at bevel-boolean.
+2. **dimensioned_blockout** — Run the checked-in builder `tools/form/build_form.py` (envelope → named parts + clay cameras). Do not write `_clay_iterN.py` novels. After PNGs exist, write `direction/clay_look.yaml` from those pixels before the next run.
 3. **primary_forms** — Build the committed primary volumes as **enclosure + instruments + joint**, not one rounded box. Challenge any mesh that still fits a UV-sphere or plane.
 4. **clay_capture** — Neutral / clay / grey shader. No chromatic beauty, no crushed night studio, no bloom hide.
 5. **proportion_correct** — Fix from clay, not from roughness maps.
-6. **product_read_check** — A stranger looking at clay must name the brief’s product. A rounded box + wedges is a fail even if names are `Case_*` / `Earbud_*`. Set `product_read_verdict: pass` only when that is true. `package_fit_ok: true` only when envelope matches the instruments. Unfinished blockout cannot advance.
-7. **inspect_vs_reads_as** — Same turn: compare each clay view to `reads_as`. The first MCP dump cannot be pass. Record `first_dump_verdict: fail` and `clay_iteration >= 2` before pass. Write `direction/form_scene.yaml` with live `bbox_mm` for every spec part. Buds through the floor or an exploded lid/base cannot advance.
+6. **product_read_check** — A stranger looking at clay must name the brief’s product. A rounded box + wedges is a fail even if names are `Case_*` / `Earbud_*`. This skill **must not** write `product_read_verdict: pass` — that is ACOS-17 in a distinct chat. Write `fail` if unread. Write `ready_for_critic` only when the clay set exists and you are asking the critic to look. `package_fit_ok: true` only when envelope matches the instruments. Unfinished blockout cannot advance.
+7. **inspect_vs_reads_as** — Same turn: compare each clay view to `reads_as`. The first MCP dump cannot be ready. Record `first_dump_verdict: fail` and `clay_iteration >= 2` before `ready_for_critic`. Write `direction/form_scene.yaml` with live `bbox_mm` for every spec part. Buds through the floor or an exploded lid/base cannot advance.
 8. **joints_and_seams** — Set the joint origin **before** parenting. Only after primary silhouette reads.
 9. **handoff_clay** — Required views on disk. Production export is forbidden.
 
@@ -112,7 +112,7 @@ Do not name a brand. Do not copy a reference. Keep the **product class** readabl
 5. **Instruments as three volumes** — For each in-ear / handheld / worn part: primary housing, functional interface (stem, yoke, grip), and contact (tip, pad, cup). One scaled sphere or one extruded cube is not an instrument.
 6. **Joint origin before parent** — Place the empty/pin at the spec pivot. Parent the moving part. Then rotate. Parenting a world-placed lid and then rotating the empty is how assemblies explode.
 7. **Name to spec** — `part_architecture` names only. No leftover Cube/Sphere/Cylinder.
-8. **Look after every hop** — Viewport or clay vs `reads_as`. If the stranger-name fails, do not write `pass`. Iterate.
+8. **Look after every hop** — Viewport or clay vs `reads_as`. If the stranger-name fails, write `fail` and stop. Never write `pass`.
 
 ### Forbidden stops
 
@@ -148,9 +148,9 @@ Must record:
 - `clay_views` list matching files on disk
 - `production_glb_exported: false`
 - `beauty_lookdev_done: false`
-- `product_read_verdict: pass|fail`
+- `product_read_verdict: fail|ready_for_critic` — never `pass`
 - `package_fit_ok: true|false`
-- `first_dump_verdict: fail` and `clay_iteration >= 2` before any pass
+- `first_dump_verdict: fail` and `clay_iteration >= 2` before `ready_for_critic`
 - `direction/form_scene.yaml` — named parts + `bbox_mm` matching the spec
 
 ## Rejection / failure conditions
@@ -164,7 +164,8 @@ Contract fail when:
 - Build stopped at cube + bevel + through-boolean
 - Instruments are a single primitive
 - Joint parented before the origin was set
-- Clay does not read as the product class (`product_read_verdict` not pass)
+- Producer wrote `product_read_verdict: pass` (illegal self-pass)
+- Clay does not read as the product class (`fail` — stay; do not send as ready)
 - First MCP dump marked pass, or `clay_iteration` < 2
 - `form_scene.yaml` missing, buds through the floor, or lid exploded from base
 - Notes still call the form blockout / placeholder / unfinished

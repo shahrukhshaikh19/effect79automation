@@ -42,7 +42,7 @@ skills:
     skill_md_sha256: 40dd4a550bbcb4ce8cddf0b3b5c7887d9e50c059e9fb3747d60ef67ba28bf57e
   - name: acos-product-form-modeler
     canonical: skills/acos/acos-product-form-modeler
-    skill_md_sha256: 6954e91356d71ef33c7901524c29f80a94b3feb245eeadf74416e0f0adafa4ec
+    skill_md_sha256: a44b6930db218b1f3635d7ee2966580f48c0027444225ec57f820d3b0fa049e2
   - name: acos-quality-gate
     canonical: skills/acos/acos-quality-gate
     skill_md_sha256: b6705523fdf831be5142df242715fed3650f0e959f740c140482491b8f4b9ac8
